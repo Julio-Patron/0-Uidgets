@@ -1,0 +1,40 @@
+# ============================================================================================================
+# FULL 6-BOT ZERO-UI SQUAD (v1.1.0) — MASTER CONSOLIDATED ARTIFACTS & SHA-256 MANIFEST ($49.00 USD BUNDLE)
+# ============================================================================================================
+# Platform: Windows x64 Portable (Electron 45.3.1, ASAR isolated, DPAPI local encryption, dirty: false)
+# Web Demo: Standalone HTML5 Desktop Stage (size: 'xl', POSIX /, 0 third-party SaaS/embed traces)
+# Pricing:  $12.00 USD Early Bird individual (reg. $19.00) | $22.00 USD Duo Pack | $49.00 USD Full 6-Bot Squad
+#
+# +-----------+---------------------------+----------------+---------------+------------------------------------------------------------------+
+# | Species   | Artifact                  | Size (MB)      | Size (Bytes)  | SHA-256                                                          |
+# +-----------+---------------------------+----------------+---------------+------------------------------------------------------------------+
+# | buggy     | Buggy-1.1.0-portable.exe  | 106.85 MB      |   112,039,425 | f1e4c3b6da053dad06118693741fbc45b54492171a14d9acd95ea70c3ecd69e9 |
+# | buggy     | Buggy-1.1.0-web-demo.zip  |   0.56 MB      |       589,160 | 7c0ff755cc96dbf4bac2b6de7faaff2a599effa917af09ee5384c7757ade8069 |
+# | pyxol     | Pyxol-1.1.0-portable.exe  | 106.75 MB      |   111,933,185 | f776ae66a6fc88aa8eb606fd0e642682dea49087d34065b2b248d43fd318f085 |
+# | pyxol     | Pyxol-1.1.0-web-demo.zip  |   0.60 MB      |       629,047 | 6288867aae86325525293f054984ab7ee82c841772348e506a5fd45404184641 |
+# | velkarion | Velkarion-1.1.0-portable.exe | 106.93 MB   |   112,127,125 | 44732fa09c3b021c2167fa66426ef71dfb821d217bf6d25ee250fff34a910b90 |
+# | velkarion | Velkarion-1.1.0-web-demo.zip |   0.58 MB   |       607,760 | 1d50ede6d88901b35d0433dedcaa967064e2a4d452d01ef68518ad66565bcd94 |
+# | nimpu     | Nimpu-1.1.0-portable.exe  | 106.74 MB      |   111,929,954 | 76b08a7f7c07742a05af93248fbf2f238cf081dec7fafbbfd386f603ce0c9e22 |
+# | nimpu     | Nimpu-1.1.0-web-demo.zip  |   0.53 MB      |       553,504 | f503ad94c09c7ff48bb314703dc3ea82caaf838ea3a056e62dde1eede2e1e2ad |
+# | lumilisk  | Lumilisk-1.1.0-portable.exe | 106.75 MB    |   111,934,438 | a92afe3e4d7117d05b4babcf587dee52dc761ab97f25baf9a77dbe3b05ab5a00 |
+# | lumilisk  | Lumilisk-1.1.0-web-demo.zip |   0.53 MB    |       560,153 | 75123f4636c59487fdeeb24e9d637508cf70ad5431bc9b0c13beb0428a868f44 |
+# | yuravax   | Yuravax-1.1.0-portable.exe | 106.94 MB     |   112,137,926 | 667bcc058132ad92885f61a7400ca14dec2e1cea96402377af780e0be2aed1d9 |
+# | yuravax   | Yuravax-1.1.0-web-demo.zip |   0.57 MB     |       600,291 | 1a2728dc60983a0c744408661a27e3756d1c89f06dffdd30524a5ae06e216022 |
+# +-----------+---------------------------+----------------+---------------+------------------------------------------------------------------+
+# | TOTAL 6 EXE PORTABLES                 | 640.97 MB      |   672,102,053 | 6 isolated standalone Windows x64 executables                    |
+# | TOTAL 6 HTML5 WEB DEMOS               |   3.38 MB      |     3,539,915 | 6 itch.io browser-playable Zero-UI 3D stages                     |
+# | GRAND TOTAL (12 OFFICIAL ARTIFACTS)   | 644.34 MB      |   675,641,968 | 100% verified                                                    |
+# +---------------------------------------+----------------+---------------+------------------------------------------------------------------+
+
+f1e4c3b6da053dad06118693741fbc45b54492171a14d9acd95ea70c3ecd69e9  buggy/Buggy-1.1.0-portable.exe
+7c0ff755cc96dbf4bac2b6de7faaff2a599effa917af09ee5384c7757ade8069  buggy/Buggy-1.1.0-web-demo.zip
+f776ae66a6fc88aa8eb606fd0e642682dea49087d34065b2b248d43fd318f085  pyxol/Pyxol-1.1.0-portable.exe
+6288867aae86325525293f054984ab7ee82c841772348e506a5fd45404184641  pyxol/Pyxol-1.1.0-web-demo.zip
+44732fa09c3b021c2167fa66426ef71dfb821d217bf6d25ee250fff34a910b90  velkarion/Velkarion-1.1.0-portable.exe
+1d50ede6d88901b35d0433dedcaa967064e2a4d452d01ef68518ad66565bcd94  velkarion/Velkarion-1.1.0-web-demo.zip
+76b08a7f7c07742a05af93248fbf2f238cf081dec7fafbbfd386f603ce0c9e22  nimpu/Nimpu-1.1.0-portable.exe
+f503ad94c09c7ff48bb314703dc3ea82caaf838ea3a056e62dde1eede2e1e2ad  nimpu/Nimpu-1.1.0-web-demo.zip
+a92afe3e4d7117d05b4babcf587dee52dc761ab97f25baf9a77dbe3b05ab5a00  lumilisk/Lumilisk-1.1.0-portable.exe
+75123f4636c59487fdeeb24e9d637508cf70ad5431bc9b0c13beb0428a868f44  lumilisk/Lumilisk-1.1.0-web-demo.zip
+667bcc058132ad92885f61a7400ca14dec2e1cea96402377af780e0be2aed1d9  yuravax/Yuravax-1.1.0-portable.exe
+1a2728dc60983a0c744408661a27e3756d1c89f06dffdd30524a5ae06e216022  yuravax/Yuravax-1.1.0-web-demo.zip

@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "species": "lumilisk",
+  "name": "LUMILISK",
+  "color": "#06b6d4",
+  "physics": "float",
+  "defaultStage": 2,
+  "stages": {
+    "1": {
+      "label": "hatchling",
+      "sprite": "lumilisk_1.webp",
+      "normal": "normals/lumilisk_1.webp",
+      "preview": "preview/lumilisk_1.webp"
+    },
+    "2": {
+      "label": "rookie",
+      "sprite": "lumilisk_2.webp",
+      "normal": "normals/lumilisk_2.webp",
+      "preview": "preview/lumilisk_2.webp"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "species": "buggy",
+  "name": "BUGGY",
+  "color": "#22c55e",
+  "physics": "jelly",
+  "defaultStage": 2,
+  "stages": {
+    "1": {
+      "label": "hatchling",
+      "sprite": "buggy_1.webp",
+      "normal": "normals/buggy_1.webp",
+      "preview": "preview/buggy_1.webp"
+    },
+    "2": {
+      "label": "rookie",
+      "sprite": "buggy_2.webp",
+      "normal": "normals/buggy_2.webp",
+      "preview": "preview/buggy_2.webp"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "species": "nimpu",
+  "name": "NIMPU",
+  "color": "#38bdf8",
+  "physics": "float",
+  "defaultStage": 2,
+  "stages": {
+    "1": {
+      "label": "hatchling",
+      "sprite": "nimpu_1.webp",
+      "normal": "normals/nimpu_1.webp",
+      "preview": "preview/nimpu_1.webp"
+    },
+    "2": {
+      "label": "rookie",
+      "sprite": "nimpu_2.webp",
+      "normal": "normals/nimpu_2.webp",
+      "preview": "preview/nimpu_2.webp"
+    }
+  }
+}
