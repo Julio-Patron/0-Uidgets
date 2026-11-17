@@ -1,11 +1,10 @@
 /**
  * Zero-UI 3D Desktop Bots (v1.1.0) — Main Landing Controller
  * Handles live --accent theming, single-context WebGL iframe orchestration,
- * instant EN/ES switching, CRO catalog rendering & SHA-256 clipboard verification.
+ * instant EN/ES switching, 6-species universal catalog, $12 vs $49 pricing & SHA-256 / VirusTotal verification.
  */
 
 import {
-  DUO_BUNDLES,
   I18N,
   SPECIES_CATALOG,
   SPECIES_ORDER,
@@ -13,10 +12,10 @@ import {
 } from './catalog-data.js';
 
 const PROOF_IMAGES = [
-  './assets/showcase/squad-all-6-live.jpg',
+  './assets/showcase/win11-squad-desktop.png',
   './assets/showcase/win11-settings-bond.jpg',
   './assets/showcase/lumilisk-hatchling-vs-rookie.png',
-  './assets/showcase/buggy-frameless-overlay.png',
+  './assets/showcase/vscode-terminal-zeroui.png',
 ];
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -40,7 +39,6 @@ const paramSpecies = (urlParams.get('species') || '').toLowerCase();
 let activeSpecies = SPECIES_ORDER.includes(paramSpecies) ? paramSpecies : 'buggy';
 let activeSize = 'xl';
 let activeStage = 2;
-let shaFilter = 'all'; // 'all' | 'exe' | 'zip'
 let mountedIframeSpecies = null;
 
 function t() {
@@ -253,10 +251,26 @@ function renderStaticI18n() {
   setTxt('cat-title', dict.catalog.title);
   setTxt('cat-subtitle', dict.catalog.subtitle);
 
-  // Pricing header & Squad
+  // Pricing header: Single ($12) vs Full 6-Bot Squad ($49)
   setTxt('price-kicker', dict.pricing.kicker);
   setTxt('price-title', dict.pricing.title);
   setTxt('price-subtitle', dict.pricing.subtitle);
+
+  setTxt('single-badge', dict.pricing.single.badge);
+  setTxt('single-title', dict.pricing.single.title);
+  setTxt('single-subtitle', dict.pricing.single.subtitle);
+  setTxt('single-regular-anchor', dict.pricing.single.regularAnchor);
+  setTxt('single-per-bot', dict.pricing.single.perBotBadge);
+  setTxt('single-cta-btn', dict.pricing.single.cta);
+  setTxt('single-cta-sub', dict.pricing.single.ctaSub);
+
+  const singleBullets = document.getElementById('single-bullets');
+  if (singleBullets) {
+    singleBullets.innerHTML = dict.pricing.single.bullets
+      .map((b) => `<li>${escapeHtml(b)}</li>`)
+      .join('');
+  }
+
   setTxt('squad-ribbon', dict.pricing.squad.ribbon);
   setTxt('squad-title', dict.pricing.squad.title);
   setTxt('squad-subtitle', dict.pricing.squad.subtitle);
@@ -265,12 +279,6 @@ function renderStaticI18n() {
   setTxt('squad-per-bot', dict.pricing.squad.perBotBadge);
   setTxt('squad-cta-btn', dict.pricing.squad.cta);
   setTxt('squad-cta-sub', dict.pricing.squad.ctaSub);
-  setTxt('duos-heading', dict.pricing.duosHeading);
-  setTxt('duos-sub', dict.pricing.duosSub);
-  setTxt('ind-summary-badge', dict.pricing.individualSummary.badge);
-  setTxt('ind-summary-title', dict.pricing.individualSummary.title);
-  setTxt('ind-summary-desc', dict.pricing.individualSummary.desc);
-  setTxt('ind-summary-cta', dict.pricing.individualSummary.cta);
 
   const squadBullets = document.getElementById('squad-bullets');
   if (squadBullets) {
@@ -279,7 +287,7 @@ function renderStaticI18n() {
       .join('');
   }
 
-  // Trust & SHA-256
+  // Trust, SHA-256 & VirusTotal
   setTxt('trust-kicker', dict.trust.kicker);
   setTxt('trust-title', dict.trust.title);
   setTxt('trust-subtitle', dict.trust.subtitle);
@@ -289,16 +297,12 @@ function renderStaticI18n() {
   setTxt('copy-ps-btn', dict.trust.copyCmdBtn);
   setTxt('manifest-raw-link', dict.trust.manifestLink);
   setTxt('manifest-accordion-summary', dict.trust.accordionSummary);
-  setTxt('sha-filter-all', dict.trust.filterAll);
-  setTxt('sha-filter-exe', dict.trust.filterExe);
-  setTxt('sha-filter-zip', dict.trust.filterZip);
   setTxt('sha-col-species', dict.trust.colSpecies);
   setTxt('sha-col-artifact', dict.trust.colArtifact);
   setTxt('sha-col-size', dict.trust.colSize);
   setTxt('sha-col-hash', dict.trust.colHash);
   setTxt('sha-col-action', dict.trust.colAction);
   setTxt('tot-exe', dict.trust.totalsExe);
-  setTxt('tot-zip', dict.trust.totalsZip);
   setTxt('tot-grand', dict.trust.totalsGrand);
   setTxt('faq-title', dict.trust.faqTitle);
 
@@ -524,11 +528,11 @@ function renderCatalogGrid() {
             </span>
           </div>
 
-          <p class="bot-role">${escapeHtml(copy.role)}</p>
+          <p class="bot-role">${escapeHtml(copy.speciesDesc)}</p>
           <p class="bot-summary">${escapeHtml(copy.summary)}</p>
 
           <div class="bot-preset-pills">
-            ${copy.quickPills
+            ${copy.traitPills
               .map((pill) => `<span class="bot-preset-pill">${escapeHtml(pill)}</span>`)
               .join('')}
           </div>
@@ -566,8 +570,7 @@ function renderCatalogGrid() {
   }).join('');
 }
 
-function renderPricingAndBundles() {
-  // Squad interactive preview chips
+function renderPricingSection() {
   const squadChips = document.getElementById('squad-member-chips');
   if (squadChips) {
     squadChips.innerHTML = SPECIES_ORDER.map((id) => {
@@ -582,62 +585,7 @@ function renderPricingAndBundles() {
   }
 
   const squadCtaBtn = document.getElementById('squad-cta-btn');
-  if (squadCtaBtn) squadCtaBtn.href = STORE_LINKS.bundles.fullSquad;
-
-  // 3 Duo Packs
-  const duosGrid = document.getElementById('duos-grid');
-  if (!duosGrid) return;
-  const saveWord = currentLang === 'es' ? 'Ahorras' : 'Save';
-
-  duosGrid.innerHTML = DUO_BUNDLES.map((duo) => {
-    const copy = duo.copy[currentLang] || duo.copy.en;
-    const [m1, m2] = duo.members.map((m) => SPECIES_CATALOG[m]);
-    return `
-      <article class="duo-card">
-        <div>
-          <div class="duo-avatars">
-            <div class="duo-avatar-pair">
-              <button
-                type="button"
-                class="duo-avatar-btn"
-                data-try-species="${m1.id}"
-                title="${escapeHtml(m1.name)}"
-                style="border-color:${m1.glowColor}"
-              >
-                <img src="${m1.avatar}" alt="${escapeHtml(m1.name)}" />
-              </button>
-              <button
-                type="button"
-                class="duo-avatar-btn"
-                data-try-species="${m2.id}"
-                title="${escapeHtml(m2.name)}"
-                style="border-color:${m2.glowColor}"
-              >
-                <img src="${m2.avatar}" alt="${escapeHtml(m2.name)}" />
-              </button>
-            </div>
-            <div class="duo-price-tag">
-              <strong>${escapeHtml(duo.price)} <span style="font-size:12px;color:var(--text-muted)">USD</span></strong>
-              <small><span class="strike-price">${escapeHtml(duo.regularPrice)}</span> ${saveWord} ${escapeHtml(duo.saveAmount)}</small>
-            </div>
-          </div>
-
-          <h4 style="margin-top:14px">${duo.icon} ${escapeHtml(copy.title)}</h4>
-          <p class="duo-sub">${escapeHtml(copy.subtitle)}</p>
-          <p class="duo-desc">${escapeHtml(copy.desc)}</p>
-        </div>
-
-        <a
-          href="${duo.url}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-ghost"
-        >
-          ${escapeHtml(copy.cta)} ↗
-        </a>
-      </article>
-    `;
-  }).join('');
+  if (squadCtaBtn) squadCtaBtn.href = STORE_LINKS.fullSquad;
 }
 
 function updatePowershellVerifySnippet() {
@@ -651,64 +599,49 @@ function updatePowershellVerifySnippet() {
 function renderShaTable() {
   const tbody = document.getElementById('sha-table-body');
   if (!tbody) return;
+  const vtLabel = t().trust.vtBtn;
   const copyLabel = t().trust.copyHashBtn;
 
-  const rows = [];
-  for (const id of SPECIES_ORDER) {
+  tbody.innerHTML = SPECIES_ORDER.map((id) => {
     const sp = SPECIES_CATALOG[id];
-    if (shaFilter === 'all' || shaFilter === 'exe') {
-      rows.push({
-        species: sp.name,
-        color: sp.glowColor,
-        filename: sp.exe.filename,
-        sizeMb: sp.exe.sizeMb,
-        sizeBytes: sp.exe.sizeBytes,
-        sha256: sp.exe.sha256,
-        kind: 'EXE',
-      });
-    }
-    if (shaFilter === 'all' || shaFilter === 'zip') {
-      rows.push({
-        species: sp.name,
-        color: sp.glowColor,
-        filename: sp.zip.filename,
-        sizeMb: sp.zip.sizeMb,
-        sizeBytes: sp.zip.sizeBytes,
-        sha256: sp.zip.sha256,
-        kind: 'ZIP',
-      });
-    }
-  }
-
-  tbody.innerHTML = rows
-    .map(
-      (r) => `
+    const exe = sp.exe;
+    return `
       <tr>
         <td>
           <span style="display:inline-flex;align-items:center;gap:7px;font-weight:700">
-            <i class="swatch-dot" style="background:${r.color}"></i>
-            ${escapeHtml(r.species)}
+            <i class="swatch-dot" style="background:${sp.glowColor}"></i>
+            ${escapeHtml(sp.name)}
           </span>
         </td>
-        <td><code>${escapeHtml(r.filename)}</code></td>
+        <td><code>${escapeHtml(exe.filename)}</code></td>
         <td>
-          <strong>${escapeHtml(r.sizeMb)}</strong>
-          <span style="color:var(--text-muted);font-size:11px">(${escapeHtml(r.sizeBytes)} B)</span>
+          <strong>${escapeHtml(exe.sizeMb)}</strong>
+          <span style="color:var(--text-muted);font-size:11px">(${escapeHtml(exe.sizeBytes)} B)</span>
         </td>
-        <td class="sha-hash-cell">${escapeHtml(r.sha256)}</td>
+        <td class="sha-hash-cell">${escapeHtml(exe.sha256)}</td>
         <td>
-          <button
-            type="button"
-            class="copy-hash-btn"
-            data-copy-hash="${escapeHtml(r.sha256)}"
-          >
-            ${escapeHtml(copyLabel)}
-          </button>
+          <div class="sha-actions-wrap">
+            <a
+              href="${exe.virustotalUrl}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="vt-report-btn"
+              title="Open official clean SHA-256 report on VirusTotal"
+            >
+              ${escapeHtml(vtLabel)}
+            </a>
+            <button
+              type="button"
+              class="copy-hash-btn"
+              data-copy-hash="${escapeHtml(exe.sha256)}"
+            >
+              ${escapeHtml(copyLabel)}
+            </button>
+          </div>
         </td>
       </tr>
-    `
-    )
-    .join('');
+    `;
+  }).join('');
 }
 
 function renderFaq() {
@@ -742,7 +675,7 @@ function renderAll() {
   renderSuperpowersSection();
   renderProofGallery();
   renderCatalogGrid();
-  renderPricingAndBundles();
+  renderPricingSection();
   updatePowershellVerifySnippet();
   renderShaTable();
   renderFaq();
@@ -844,19 +777,6 @@ function setupInteractions() {
         b.setAttribute('data-active', String(b === btn));
       });
       postToStage({ type: 'ZUI_COMMAND', action: 'stage', value: st });
-    });
-  });
-
-  // SHA-256 filter tabs
-  document.querySelectorAll('[data-sha-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const f = btn.getAttribute('data-sha-filter');
-      if (!f) return;
-      shaFilter = f;
-      document.querySelectorAll('[data-sha-filter]').forEach((b) => {
-        b.setAttribute('data-active', String(b === btn));
-      });
-      renderShaTable();
     });
   });
 

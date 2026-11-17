@@ -1,109 +1,58 @@
-# Zero-UI 3D Desktop Bots (`v1.1.0`) — Official Public Catalog & Bundles Landing
+# Zero-UI 3D Desktop Bots (`v1.1.0`) — Official Public Catalog & Squad Landing
 
-Official static landing page and live in-browser 3D WebGL stage for the **Zero-UI 3D Desktop Bots (`v1.1.0`)** lineup for Windows 10/11 (`x64` portable `.exe` + 100% offline 3D companion mode + optional BYOK AI via local Ollama, Google Gemini, or OpenAI-compatible endpoints).
+Official static landing page and live in-browser 3D WebGL stage for the **Zero-UI 3D Desktop Bots (`v1.1.0`)** lineup for Windows 10/11 (`x64` portable `.exe` + universal 100% offline 3D companion engine + optional BYOK AI via local Ollama, Google Gemini, or OpenAI-compatible endpoints + custom Personality Cartridges).
 
-## Architecture & Security Guarantees
+## Architecture & Product Highlights
 
-- **100% Sanitized Static Assets (Zero Proprietary Source Code):** Contains **no** `.ts` source files and **no** `electron/` runtime code. Uses only the compiled, species-isolated WebGL ESM bundles (`widget/<species>-widget.js`), WebP/normal-map 3D assets (`assets/<species>/**`), and 3D avatars (`<species>-avatar-3d.png`) extracted from the audited `v1.1.0` web-demo archives.
-- **Strict Single-Context WebGL Lifecycle:** The Hero Windows 11 Desktop Simulator mounts a single isolated `<iframe src="./stage.html?species=...">` at a time. Switching creatures explicitly calls `destroy()` and `WEBGL_lose_context` before replacing the stage URL (`location.replace`), preventing browser WebGL context exhaustion and keeping 60 FPS on laptops and mobile devices.
-- **Zero-Build Static ES Modules:** Pure HTML5 + CSS3 + native ES Modules (`js/catalog-data.js`, `js/app.js`, `js/stage-host.js`) with relative POSIX paths (`./`) so it deploys out of the box to root domains or subfolder paths without bundlers or `node_modules`.
-- **Instant EN / ES Localization:** Defaults to English (`EN`) for global USD traffic and switches the entire page + live 3D stage HUD to Spanish (`ES`) in 1 click (also supports `?lang=es` and `?species=pyxol` deep links).
-
----
-
-## Repository Structure
-
-```text
-zero-ui-bots-landing/
-├── index.html                      # Main catalog, 5 native workflows, bundles, SHA-256 & SEO/JSON-LD
-├── stage.html                      # Isolated single-WebGL-context Windows 11 desktop stage
-├── SHA256SUMS-ALL-SQUAD.txt        # Official consolidated SHA-256 manifest (12 verified artifacts)
-├── css/
-│   ├── styles.css                  # Windows 11 dark Mica/Acrylic UI & dynamic --accent system
-│   └── stage.css                   # Simulated Windows 11 desktop backdrop & taskbar HUD
-├── js/
-│   ├── catalog-data.js             # Official species specs, presets, pricing, URLs & EN/ES copy
-│   ├── app.js                      # Landing controller, dynamic theme, EN/ES toggle & SHA-256 copy
-│   └── stage-host.js               # Isolated WebGL loader, postMessage bridge & GPU cleanup
-├── widget/                         # Sanitized compiled ESM 3D bundles (1 per species)
-├── assets/
-│   ├── <species>/                  # 3D WebP renders, normal maps, previews & manifest.json
-│   └── showcase/                   # Real Windows 11 desktop proof screenshots, OG image & MP4 capture
-└── <species>-avatar-3d.png         # Root 3D avatars & dynamic favicons
-```
+- **Universal Engine Across All 6 Species:** Every creature (`Buggy`, `Pyxol`, `Velkarion`, `Nimpu`, `Lumilisk`, and `Yuravax`) runs the exact same full desktop engine and supports editable System Prompts and `.json`/`.md` Personality Cartridges.
+- **Clean Conversion Funnel (`$12` Single vs. `$49` Full 6-Bot Squad):** Focused binary pricing with zero dead bundle tiers.
+- **6 Official `*-1.1.0-portable.exe` SHA-256 & VirusTotal Links:** Direct 1:1 table matching the 6 Windows `x64` portables uploaded to itch.io & Gumroad, each wired directly to `https://www.virustotal.com/gui/file/<sha256>`.
+- **100% Sanitized Static Assets (Zero Proprietary Source Code):** Contains **no** `.ts` source files and **no** `electron/` runtime code.
+- **Strict Single-Context WebGL Lifecycle:** Mounts a single isolated `<iframe src="./stage.html?species=...">` at a time and explicitly releases GPU contexts (`destroy()` + `WEBGL_lose_context`) on species switch.
 
 ---
 
-## Updating Bundle URLs (`$22` Duo Packs & `$49` Full Squad)
+## Updating the Full Squad Bundle URL (`$49`)
 
-All 6 individual itch.io store URLs are pre-wired in `js/catalog-data.js`:
-
-- `https://elbuilder77.itch.io/buggy-3d-bot`
-- `https://elbuilder77.itch.io/pyxol-3d-bot`
-- `https://elbuilder77.itch.io/velkarion-3d-bot`
-- `https://elbuilder77.itch.io/nimpu-3d-bot`
-- `https://elbuilder77.itch.io/lumilisk-3d-bot`
-- `https://elbuilder77.itch.io/yuravax-3d-bot`
-
-Once you publish your itch.io Bundle / Sale pages (`Dashboard → Promotions → Create bundle`), update `STORE_LINKS.bundles` at the top of `js/catalog-data.js`:
+All 6 individual itch.io store URLs are pre-wired in `js/catalog-data.js`. To point the `$49` Full Squad CTA directly to an itch.io or Gumroad bundle checkout URL, update `STORE_LINKS.fullSquad` at the top of `js/catalog-data.js`:
 
 ```js
-bundles: {
+export const STORE_LINKS = {
+  creatorHub: 'https://elbuilder77.itch.io',
   fullSquad: 'https://itch.io/s/XXXXXX/full-6-bot-zero-ui-squad',
-  buildersDuo: 'https://itch.io/s/XXXXXX/builders-duo-pack',
-  commandDuo: 'https://itch.io/s/XXXXXX/command-clarity-duo',
-  calmDuo: 'https://itch.io/s/XXXXXX/calm-creative-duo',
-}
+  // ...
+};
 ```
-
-> **Canonical OpenGraph Domain:** When attaching your custom production domain (e.g. `https://zerouibots.com`), you can optionally replace `./assets/showcase/og-squad-v110.jpg` in `index.html`'s `og:image` and `twitter:image` tags with the absolute HTTPS URL (`https://your-domain.com/assets/showcase/og-squad-v110.jpg`) for social crawlers that require absolute URLs.
 
 ---
 
 ## Local Preview
 
-Because ES Modules (`type="module"`) require HTTP(S) rather than `file://`, serve the folder locally with any static server:
-
 ```powershell
-# Option A: Python 3 (built-in)
+# Option A: Python 3
 python -m http.server 8080
 
-# Option B: Node.js (npx serve)
+# Option B: Node.js
 npx serve . -l 8080
 ```
 
-Then open `http://localhost:8080` in your browser.
+Open `http://localhost:8080`.
 
 ---
 
 ## Static Hosting Deployment (Zero Build Step)
 
 ### 1. Cloudflare Pages
-1. Push this repository to GitHub or GitLab (or deploy directly via Wrangler CLI).
-2. In **Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git**, select `zero-ui-bots-landing`.
-3. Configure build settings:
-   - **Framework preset:** `None`
-   - **Build command:** *(leave empty)*
-   - **Build output directory:** `/` (or `.`)
-4. Or deploy directly from terminal:
-   ```powershell
-   npx wrangler pages deploy . --project-name=zero-ui-bots-landing
-   ```
+- **Framework preset:** `None`
+- **Build command:** *(empty)*
+- **Build output directory:** `/`
+- Or via CLI: `npx wrangler pages deploy . --project-name=zero-ui-bots-landing`
 
 ### 2. Vercel
-1. Import `zero-ui-bots-landing` in **Vercel → Add New Project**.
-2. Set:
-   - **Framework Preset:** `Other`
-   - **Build Command:** *(leave empty)*
-   - **Output Directory:** `.`
-3. Or deploy via Vercel CLI:
-   ```powershell
-   npx vercel --prod
-   ```
+- **Framework Preset:** `Other`
+- **Build Command:** *(empty)*
+- **Output Directory:** `.`
+- Or via CLI: `npx vercel --prod`
 
 ### 3. GitHub Pages
-1. Push this repository to GitHub (`main` branch).
-2. Open **Settings → Pages**:
-   - **Source:** `Deploy from a branch`
-   - **Branch:** `main` / `/ (root)` → **Save**.
-3. Because all asset, iframe, CSS, and module URLs use relative POSIX paths (`./`), the landing and 3D WebGL stage work seamlessly both at `https://<username>.github.io/zero-ui-bots-landing/` and on a custom root domain.
+- **Settings → Pages → Deploy from a branch:** `main` / `/ (root)`.
