@@ -8,3 +8,17 @@ desktop.ini
 # Optional local tooling
 node_modules/
 *.log
+
+# Local design and browser review artifacts
+.qa/
+.superdesign/
+
+# This repository publishes only the static storefront and sanitized web demo.
+*.exe
+*.appx
+*.msix
+*.appxbundle
+*.msixbundle
+*.ts
+electron/
+.env*

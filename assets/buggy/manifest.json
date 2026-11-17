@@ -8,15 +8,11 @@
   "stages": {
     "1": {
       "label": "hatchling",
-      "sprite": "buggy_1.webp",
-      "normal": "normals/buggy_1.webp",
-      "preview": "preview/buggy_1.webp"
+      "normal": "normals/buggy_1.webp"
     },
     "2": {
       "label": "rookie",
-      "sprite": "buggy_2.webp",
-      "normal": "normals/buggy_2.webp",
-      "preview": "preview/buggy_2.webp"
+      "normal": "normals/buggy_2.webp"
     }
   }
 }

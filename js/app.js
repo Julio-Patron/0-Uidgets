@@ -1,833 +1,370 @@
-/**
- * Zero-UI 3D Desktop Bots (v1.1.0) — Main Landing Controller
- * Handles live --accent theming, single-context WebGL iframe orchestration,
- * instant EN/ES switching, 6-species universal catalog, $12 vs $49 pricing & SHA-256 / VirusTotal verification.
- */
+import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, PROOF_MEDIA } from './catalog-data.js';
 
-import {
-  I18N,
-  SPECIES_CATALOG,
-  SPECIES_ORDER,
-  STORE_LINKS,
-} from './catalog-data.js';
-
-const PROOF_IMAGES = [
-  './assets/showcase/win11-squad-desktop.png',
-  './assets/showcase/win11-settings-bond.jpg',
-  './assets/showcase/lumilisk-hatchling-vs-rookie.png',
-  './assets/showcase/vscode-terminal-zeroui.png',
-];
-
-const urlParams = new URLSearchParams(window.location.search);
-const paramLang = (urlParams.get('lang') || '').toLowerCase();
-const savedLang = (() => {
-  try {
-    return localStorage.getItem('zui_landing_lang') || '';
-  } catch {
-    return '';
-  }
-})();
-
-let currentLang =
-  paramLang === 'es' || paramLang === 'en'
-    ? paramLang
-    : savedLang === 'es'
-      ? 'es'
-      : 'en';
-
-const paramSpecies = (urlParams.get('species') || '').toLowerCase();
-let activeSpecies = SPECIES_ORDER.includes(paramSpecies) ? paramSpecies : 'buggy';
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const savedLang = (() => { try { return localStorage.getItem('zui_landing_lang'); } catch { return null; } })();
+const validLang = (value) => value === 'en' || value === 'es';
+let language = validLang(params.get('lang')) ? params.get('lang') : validLang(savedLang) ? savedLang : navigator.language.startsWith('es') ? 'es' : 'en';
+let activeSpecies = SPECIES_ORDER.includes(params.get('species')) ? params.get('species') : 'buggy';
 let activeSize = 'xl';
 let activeStage = 2;
-let mountedIframeSpecies = null;
+let activeDuo = BUNDLES[0].id;
+let activeVideo = 0;
+let activeShot = 0;
+let mountedSpecies = null;
+let navigationTimer;
+let readyTimer;
+let lightboxTrigger;
+const frame = $('hero-stage-frame');
+const video = $('proof-video');
+const dialog = $('lightbox');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const t = (key) => I18N[language].labels[key];
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const httpsUrl = (value) => {
+  if (!value || typeof value !== 'string') return '';
+  try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? url.href : ''; } catch { return ''; }
+};
+const channels = [
+  { key: 'microsoftStore', label: 'Microsoft Store' },
+  { key: 'itchIo', label: 'itch.io' },
+  { key: 'gumroad', label: 'Gumroad' },
+];
 
-function t() {
-  return I18N[currentLang] || I18N.en;
+function externalLink(url, label, className = 'store-link', accessibleLabel = label) {
+  const safeUrl = httpsUrl(url);
+  return safeUrl ? `<a class="${className}" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(accessibleLabel)}">${escapeHtml(label)} <span aria-hidden="true">↗</span></a>` : '';
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+function storeButtons(links, product, bundle = false) {
+  const available = channels.filter(({ key }) => httpsUrl(links?.[key]));
+  let html = available.map(({ key, label }, index) => externalLink(links[key], label,
+    'store-link' + (index === 0 ? ' store-link-primary' : ''), `${t('buyOn')} ${label} · ${product}`)).join('');
+  if (bundle && !available.length) html += `<span class="store-pending">${t('bundleSoon')}</span>`;
+  if (!httpsUrl(links?.microsoftStore)) html += `<span class="store-pending">${t('storeSoon')}</span>`;
+  return `<div class="store-links">${html}</div>`;
 }
 
-function applyAccentCssVars(speciesId) {
-  const spec = SPECIES_CATALOG[speciesId] || SPECIES_CATALOG.buggy;
-  const root = document.documentElement;
-  root.style.setProperty('--accent', spec.glowColor);
-  root.style.setProperty('--accent-rgb', spec.glowRgb);
-  root.style.setProperty('--accent-secondary', spec.secondaryColor);
-  root.style.setProperty('--accent-sec-rgb', spec.secondaryRgb);
-
-  const favicon = document.getElementById('dynamic-favicon');
-  if (favicon) favicon.href = spec.avatar;
+function updateAddress() {
+  const url = new URL(location.href);
+  url.searchParams.set('lang', language);
+  url.searchParams.set('species', activeSpecies);
+  history.replaceState(null, '', url);
 }
 
-function buildStageUrl(speciesId) {
-  const q = new URLSearchParams({
-    species: speciesId,
-    size: activeSize,
-    stage: String(activeStage),
-    lang: currentLang,
+function command(action, value) {
+  frame.contentWindow?.postMessage({ type: 'ZUI_COMMAND', action, value }, location.origin);
+}
+
+function stageLoading(error = false) {
+  const overlay = $('stage-loading-overlay');
+  overlay.dataset.visible = 'true';
+  overlay.dataset.error = String(error);
+  $('stage-loading-text').textContent = t(error ? 'stageError' : 'stageLoading');
+  $('stage-retry').hidden = !error;
+}
+
+function mountSpecies(species, force = false) {
+  if (!force && mountedSpecies === species) return;
+  // Keep one iframe. Cancel stale navigations before asking its current host to
+  // destroy the widget and lose its WebGL context, then navigate that same iframe.
+  clearTimeout(navigationTimer);
+  clearTimeout(readyTimer);
+  stageLoading();
+  frame.contentWindow?.postMessage({ type: 'ZUI_DESTROY' }, location.origin);
+  mountedSpecies = species;
+  navigationTimer = setTimeout(() => {
+    const query = new URLSearchParams({ species, size: activeSize, stage: String(activeStage), lang: language });
+    const url = './stage.html?' + query;
+    try { frame.contentWindow.location.replace(url); } catch { frame.src = url; }
+    readyTimer = setTimeout(() => stageLoading(true), 20000);
+  }, 40);
+}
+
+function updateSpecies() {
+  const species = SPECIES_CATALOG[activeSpecies];
+  document.documentElement.style.setProperty('--accent', species.glowColor);
+  document.documentElement.style.setProperty('--accent-rgb', species.glowRgb);
+  document.querySelectorAll('[data-select-species], [data-try-species]').forEach((button) => {
+    const id = button.dataset.selectSpecies || button.dataset.trySpecies;
+    button.setAttribute('aria-pressed', String(id === activeSpecies));
   });
-  return `./stage.html?${q.toString()}`;
+  $('stage-identity').innerHTML = `<strong>${species.name}</strong><span>${escapeHtml(species.copy[language].tagline)}</span>`;
 }
 
-function postToStage(payload) {
-  const frame = document.getElementById('hero-stage-frame');
-  if (!frame || !frame.contentWindow) return;
-  try {
-    frame.contentWindow.postMessage(payload, '*');
-  } catch {
-    // Ignore cross-frame timing issues during navigation
-  }
-}
-
-function mountSpeciesInStage(speciesId, forceReload = false) {
-  const frame = document.getElementById('hero-stage-frame');
-  const overlay = document.getElementById('stage-loading-overlay');
-  if (!frame) return;
-
-  if (!forceReload && mountedIframeSpecies === speciesId) {
-    postToStage({ type: 'ZUI_COMMAND', action: 'lang', value: currentLang });
-    return;
-  }
-
-  if (overlay) overlay.dataset.visible = 'true';
-
-  // Explicitly dispose previous WebGL context before navigating single iframe
-  postToStage({ type: 'ZUI_DESTROY' });
-  mountedIframeSpecies = speciesId;
-
-  const nextUrl = buildStageUrl(speciesId);
-  window.setTimeout(() => {
-    try {
-      if (frame.contentWindow && frame.contentWindow.location) {
-        frame.contentWindow.location.replace(nextUrl);
-      } else {
-        frame.src = nextUrl;
-      }
-    } catch {
-      frame.src = nextUrl;
-    }
-  }, 25);
-}
-
-function selectSpecies(speciesId, options = {}) {
-  if (!SPECIES_CATALOG[speciesId]) return;
-  activeSpecies = speciesId;
-  applyAccentCssVars(speciesId);
-  renderSpeciesTabs();
-  renderSpeciesInspector();
-  renderSuperpowersSection();
-  updatePowershellVerifySnippet();
-  mountSpeciesInStage(speciesId);
-
-  if (options.scrollToStage) {
-    const el = document.getElementById('live-stage');
-    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+function selectSpecies(id, scroll = false) {
+  if (!Object.hasOwn(SPECIES_CATALOG, id)) return;
+  activeSpecies = id;
+  updateSpecies();
+  updateAddress();
+  mountSpecies(id);
+  if (scroll) {
+    $('live-stage').scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'center' });
+    document.querySelector(`[data-select-species="${id}"]`)?.focus({ preventScroll: true });
   }
 }
 
-async function copyTextWithFeedback(text, buttonEl, defaultLabel) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    ta.remove();
-  }
-  if (!buttonEl) return;
-  buttonEl.dataset.copied = 'true';
-  buttonEl.textContent = t().trust.copiedText;
-  window.setTimeout(() => {
-    buttonEl.dataset.copied = 'false';
-    buttonEl.textContent = defaultLabel;
-  }, 1600);
+function renderStaticText() {
+  const dictionary = I18N[language];
+  document.documentElement.lang = language;
+  document.title = dictionary.metaTitle;
+  document.querySelector('meta[name="description"]').content = dictionary.metaDescription;
+  for (const selector of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) document.querySelector(selector).content = dictionary.metaTitle;
+  for (const selector of ['meta[property="og:description"]', 'meta[name="twitter:description"]']) document.querySelector(selector).content = dictionary.metaDescription;
+  document.querySelector('meta[property="og:image:alt"]').content = PROOF_MEDIA[0].alt[language];
+  document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-aria]').forEach((node) => node.setAttribute('aria-label', t(node.dataset.i18nAria)));
+  document.querySelectorAll('[data-i18n-title]').forEach((node) => node.setAttribute('title', t(node.dataset.i18nTitle)));
+  document.querySelectorAll('[data-lang]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.lang === language)));
+  $('single-regular-price').setAttribute('aria-label', t('regular') + ' $19 USD');
+  if ($('stage-loading-overlay').dataset.error === 'true') $('stage-loading-text').textContent = t('stageError');
 }
 
-/* ==========================================================================
-   Section Renderers
-   ========================================================================== */
-
-function renderStaticI18n() {
-  const dict = t();
-  document.documentElement.lang = currentLang;
-  document.title = dict.metaTitle;
-  const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc) metaDesc.setAttribute('content', dict.metaDescription);
-
-  const setTxt = (id, val) => {
-    const el = document.getElementById(id);
-    if (el && val !== undefined) el.textContent = val;
-  };
-
-  // Navbar
-  setTxt('nav-stage', dict.nav.stage);
-  setTxt('nav-superpowers', dict.nav.superpowers);
-  setTxt('nav-proof', dict.nav.proof);
-  setTxt('nav-catalog', dict.nav.catalog);
-  setTxt('nav-pricing', dict.nav.pricing);
-  setTxt('nav-checksums', dict.nav.checksums);
-  setTxt('nav-cta-squad', dict.nav.ctaSquad);
-
-  const langBtn = document.getElementById('lang-switch-btn');
-  if (langBtn) {
-    langBtn.innerHTML = `🌐 <span>${escapeHtml(dict.nav.langLabel)}</span>`;
-    langBtn.title = dict.nav.langTitle;
-  }
-
-  // Hero
-  setTxt('hero-eyebrow', dict.hero.eyebrow);
-  setTxt('hero-title-1', dict.hero.titleLine1);
-  setTxt('hero-title-2', dict.hero.titleLine2);
-  setTxt('hero-lead', dict.hero.lead);
-  setTxt('hero-primary-cta', dict.hero.primaryCta);
-  setTxt('hero-primary-sub', dict.hero.primarySub);
-  setTxt('hero-secondary-cta', dict.hero.secondaryCta);
-
-  const pillsWrap = document.getElementById('hero-trust-pills');
-  if (pillsWrap) {
-    pillsWrap.innerHTML = dict.hero.pills
-      .map((p) => `<span class="trust-pill">${escapeHtml(p)}</span>`)
-      .join('');
-  }
-
-  // Stage Chrome & Controls
-  setTxt('species-selector-label', dict.hero.selectPrompt);
-  setTxt('stage-header-title', dict.hero.stageHeaderTitle);
-  setTxt('stage-header-badge', dict.hero.stageHeaderBadge);
-  setTxt('stage-loading-text', dict.hero.stageLoading);
-  setTxt('ctrl-pet', dict.hero.controls.pet);
-  setTxt('ctrl-spin', dict.hero.controls.spin);
-  setTxt('ctrl-power', dict.hero.controls.power);
-  setTxt('ctrl-center', dict.hero.controls.center);
-  setTxt('ctrl-size-label', dict.hero.controls.sizeLabel);
-  setTxt('ctrl-stage-1', dict.hero.controls.stageHatchling);
-  setTxt('ctrl-stage-2', dict.hero.controls.stageRookie);
-  setTxt('stage-drag-hint', dict.hero.controls.dragHint);
-
-  // Contrast
-  setTxt('contrast-kicker', dict.contrast.kicker);
-  setTxt('contrast-title', dict.contrast.title);
-  setTxt('contrast-subtitle', dict.contrast.subtitle);
-  setTxt('contrast-old-title', dict.contrast.oldTitle);
-  setTxt('contrast-new-title', dict.contrast.newTitle);
-
-  const oldList = document.getElementById('contrast-old-list');
-  if (oldList) {
-    oldList.innerHTML = dict.contrast.oldItems
-      .map((item) => `<li>${escapeHtml(item)}</li>`)
-      .join('');
-  }
-  const newList = document.getElementById('contrast-new-list');
-  if (newList) {
-    newList.innerHTML = dict.contrast.newItems
-      .map((item) => `<li>${escapeHtml(item)}</li>`)
-      .join('');
-  }
-
-  // Superpowers header
-  setTxt('sp-kicker', dict.superpowers.kicker);
-  setTxt('sp-title', dict.superpowers.title);
-  setTxt('sp-subtitle', dict.superpowers.subtitle);
-
-  // Proof header
-  setTxt('proof-kicker', dict.proof.kicker);
-  setTxt('proof-title', dict.proof.title);
-  setTxt('proof-subtitle', dict.proof.subtitle);
-  setTxt('proof-video-badge', dict.proof.videoBadge);
-  setTxt('proof-video-caption', dict.proof.videoCaption);
-
-  // Catalog header
-  setTxt('cat-kicker', dict.catalog.kicker);
-  setTxt('cat-title', dict.catalog.title);
-  setTxt('cat-subtitle', dict.catalog.subtitle);
-
-  // Pricing header: Single ($12) vs Full 6-Bot Squad ($49)
-  setTxt('price-kicker', dict.pricing.kicker);
-  setTxt('price-title', dict.pricing.title);
-  setTxt('price-subtitle', dict.pricing.subtitle);
-
-  setTxt('single-badge', dict.pricing.single.badge);
-  setTxt('single-title', dict.pricing.single.title);
-  setTxt('single-subtitle', dict.pricing.single.subtitle);
-  setTxt('single-regular-anchor', dict.pricing.single.regularAnchor);
-  setTxt('single-per-bot', dict.pricing.single.perBotBadge);
-  setTxt('single-cta-btn', dict.pricing.single.cta);
-  setTxt('single-cta-sub', dict.pricing.single.ctaSub);
-
-  const singleBullets = document.getElementById('single-bullets');
-  if (singleBullets) {
-    singleBullets.innerHTML = dict.pricing.single.bullets
-      .map((b) => `<li>${escapeHtml(b)}</li>`)
-      .join('');
-  }
-
-  setTxt('squad-ribbon', dict.pricing.squad.ribbon);
-  setTxt('squad-title', dict.pricing.squad.title);
-  setTxt('squad-subtitle', dict.pricing.squad.subtitle);
-  setTxt('squad-preview-hint', dict.pricing.squad.previewHint);
-  setTxt('squad-regular-anchor', dict.pricing.squad.regularAnchor);
-  setTxt('squad-per-bot', dict.pricing.squad.perBotBadge);
-  setTxt('squad-cta-btn', dict.pricing.squad.cta);
-  setTxt('squad-cta-sub', dict.pricing.squad.ctaSub);
-
-  const squadBullets = document.getElementById('squad-bullets');
-  if (squadBullets) {
-    squadBullets.innerHTML = dict.pricing.squad.bullets
-      .map((b) => `<li>${escapeHtml(b)}</li>`)
-      .join('');
-  }
-
-  // Trust, SHA-256 & VirusTotal
-  setTxt('trust-kicker', dict.trust.kicker);
-  setTxt('trust-title', dict.trust.title);
-  setTxt('trust-subtitle', dict.trust.subtitle);
-  setTxt('smartscreen-title', dict.trust.smartscreenTitle);
-  setTxt('smartscreen-body', dict.trust.smartscreenBody);
-  setTxt('ps-verify-label', dict.trust.powershellLabel);
-  setTxt('copy-ps-btn', dict.trust.copyCmdBtn);
-  setTxt('manifest-raw-link', dict.trust.manifestLink);
-  setTxt('manifest-accordion-summary', dict.trust.accordionSummary);
-  setTxt('sha-col-species', dict.trust.colSpecies);
-  setTxt('sha-col-artifact', dict.trust.colArtifact);
-  setTxt('sha-col-size', dict.trust.colSize);
-  setTxt('sha-col-hash', dict.trust.colHash);
-  setTxt('sha-col-action', dict.trust.colAction);
-  setTxt('tot-exe', dict.trust.totalsExe);
-  setTxt('tot-grand', dict.trust.totalsGrand);
-  setTxt('faq-title', dict.trust.faqTitle);
-
-  // Footer
-  setTxt('footer-tagline', dict.footer.tagline);
-  setTxt('footer-meta', dict.footer.meta);
-  setTxt('footer-links-title', dict.footer.linksTitle);
-  setTxt('footer-hub-link', dict.footer.hubLinkLabel);
-}
-
-function renderSpeciesTabs() {
-  const container = document.getElementById('species-tabs');
-  if (!container) return;
-  container.innerHTML = SPECIES_ORDER.map((id) => {
+function renderSpecies() {
+  $('species-tabs').innerHTML = SPECIES_ORDER.map((id) => {
     const sp = SPECIES_CATALOG[id];
-    const copy = sp.copy[currentLang] || sp.copy.en;
-    const isSelected = id === activeSpecies;
-    return `
-      <button
-        type="button"
-        class="species-tab"
-        role="tab"
-        aria-selected="${isSelected}"
-        data-select-species="${sp.id}"
-      >
-        <img src="${sp.avatar}" alt="${escapeHtml(sp.name)}" width="34" height="34" />
-        <span class="species-tab-meta">
-          <span class="species-tab-name">
-            <span class="species-tab-dot" style="background:${sp.glowColor}"></span>
-            ${escapeHtml(sp.name)}
-          </span>
-          <span class="species-tab-sub">${escapeHtml(copy.badge)}</span>
-        </span>
-      </button>
-    `;
+    return `<button type="button" class="species-tab" data-select-species="${id}" aria-pressed="${id === activeSpecies}" style="--species-color:${sp.glowColor}"><i class="species-dot" aria-hidden="true"></i>${sp.name}</button>`;
   }).join('');
-}
-
-function renderSpeciesInspector() {
-  const container = document.getElementById('species-inspector');
-  if (!container) return;
-  const sp = SPECIES_CATALOG[activeSpecies];
-  const copy = sp.copy[currentLang] || sp.copy.en;
-  const insp = t().hero.inspector;
-
-  container.innerHTML = `
-    <div>
-      <div class="inspector-head">
-        <div class="inspector-identity">
-          <img src="${sp.avatar}" alt="${escapeHtml(sp.name)}" width="52" height="52" />
-          <div>
-            <div class="inspector-name-row">
-              <h2 class="inspector-name">${escapeHtml(sp.name)}</h2>
-              <span class="inspector-hex-chip">${escapeHtml(sp.glowColor)}</span>
-            </div>
-            <p class="inspector-tagline">${escapeHtml(copy.tagline)}</p>
-          </div>
-        </div>
-      </div>
-
-      <blockquote class="inspector-quote" style="margin-top:12px">
-        ${escapeHtml(copy.voiceQuote)}
-      </blockquote>
-
-      <div class="inspector-badges" style="margin-top:12px">
-        <div class="mini-stat-box">
-          <span>${escapeHtml(insp.physicsTag)}</span>
-          <strong>${escapeHtml(copy.physicsLabel)} (${escapeHtml(sp.physics)})</strong>
-        </div>
-        <div class="mini-stat-box">
-          <span>${escapeHtml(insp.powerTag)}</span>
-          <strong>${escapeHtml(copy.powerLabel)}</strong>
-        </div>
-      </div>
-
-      <div style="margin-top:14px">
-        <h3 class="inspector-presets-title">${escapeHtml(insp.presetsTitle)}</h3>
-        <ul class="inspector-workflow-list">
-          <li class="inspector-workflow-item">
-            <strong>${escapeHtml(copy.workflows.drop.label)}</strong>
-            <span>${escapeHtml(copy.workflows.drop.desc)}</span>
-          </li>
-          <li class="inspector-workflow-item">
-            <strong>${escapeHtml(copy.workflows.snip.label)}</strong>
-            <span>${escapeHtml(copy.workflows.snip.desc)}</span>
-          </li>
-          <li class="inspector-workflow-item">
-            <strong>${escapeHtml(copy.workflows.clipboard.label)}</strong>
-            <span>${escapeHtml(copy.workflows.clipboard.desc)}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="inspector-buy-box">
-      <div class="inspector-price-meta">
-        <span>
-          <span class="strike-price">${escapeHtml(insp.regPriceTag)}</span>
-          <strong>$12 USD</strong>
-        </span>
-        <span class="promo-pill">${escapeHtml(insp.promoBadge)}</span>
-      </div>
-      <a
-        href="${sp.storeUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn btn-accent"
-      >
-        ${escapeHtml(insp.buySinglePrefix)} ${escapeHtml(sp.name)} ${escapeHtml(insp.buySingleSuffix)} ↗
-      </a>
-    </div>
-  `;
-}
-
-function renderSuperpowersSection() {
-  const grid = document.getElementById('superpowers-grid');
-  if (!grid) return;
-  const dict = t().superpowers;
-  const sp = SPECIES_CATALOG[activeSpecies];
-  const spCopy = sp.copy[currentLang] || sp.copy.en;
-
-  grid.innerHTML = dict.cards
-    .map((card) => {
-      let bottomHtml = '';
-      if (card.presetKey && spCopy.workflows[card.presetKey]) {
-        const wf = spCopy.workflows[card.presetKey];
-        bottomHtml = `
-          <div class="power-live-preset">
-            <small>${escapeHtml(dict.activePreviewLabel)} ${escapeHtml(sp.name)}</small>
-            <strong>${escapeHtml(wf.label)}</strong>
-          </div>
-        `;
-      } else if (card.staticBadge) {
-        bottomHtml = `
-          <div class="power-live-preset">
-            <small>Windows 10 / 11 Native</small>
-            <strong>${escapeHtml(card.staticBadge)}</strong>
-          </div>
-        `;
-      }
-
-      return `
-        <article class="power-card">
-          <div>
-            <div class="power-card-top">
-              <span class="power-icon-badge">
-                <span>${card.icon}</span>
-                <span class="power-num">${escapeHtml(card.num)}</span>
-              </span>
-              <span class="kbd-shortcut">${escapeHtml(card.shortcut)}</span>
-            </div>
-            <h3>${escapeHtml(card.title)}</h3>
-            <p>${escapeHtml(card.desc)}</p>
-          </div>
-          ${bottomHtml}
-        </article>
-      `;
-    })
-    .join('');
-}
-
-function renderProofGallery() {
-  const grid = document.getElementById('proof-gallery-grid');
-  if (!grid) return;
-  const cards = t().proof.cards;
-
-  grid.innerHTML = cards
-    .map((c, idx) => {
-      const imgSrc = PROOF_IMAGES[idx] || PROOF_IMAGES[0];
-      return `
-        <button
-          type="button"
-          class="proof-shot-card"
-          data-lightbox-src="${imgSrc}"
-          data-lightbox-caption="${escapeHtml(c.title)} — ${escapeHtml(c.desc)}"
-        >
-          <img src="${imgSrc}" alt="${escapeHtml(c.title)}" loading="lazy" />
-          <div class="proof-shot-meta">
-            <strong>${escapeHtml(c.title)}</strong>
-            <span>${escapeHtml(c.desc)}</span>
-          </div>
-        </button>
-      `;
-    })
-    .join('');
-}
-
-function renderCatalogGrid() {
-  const grid = document.getElementById('catalog-grid');
-  if (!grid) return;
-  const cat = t().catalog;
-  const hatchLabel = currentLang === 'es' ? '🥚 Cría incluida' : '🥚 Hatchling included';
-
-  grid.innerHTML = SPECIES_ORDER.map((id) => {
+  $('catalog-grid').innerHTML = SPECIES_ORDER.map((id, index) => {
     const sp = SPECIES_CATALOG[id];
-    const copy = sp.copy[currentLang] || sp.copy.en;
-    return `
-      <article
-        class="bot-card"
-        style="--bot-color:${sp.glowColor};--bot-rgb:${sp.glowRgb};--bot-sec:${sp.secondaryColor}"
-      >
-        <div>
-          <div class="bot-card-visual">
-            <img
-              class="rookie-render"
-              src="${sp.renderRookie}"
-              alt="${escapeHtml(sp.name)} 3D Rookie"
-              loading="lazy"
-            />
-            <span class="bot-hatchling-pip">
-              <img src="${sp.renderHatchling}" alt="" loading="lazy" />
-              <span>${escapeHtml(hatchLabel)}</span>
-            </span>
-            <span class="bot-physics-chip">physics: ${escapeHtml(sp.physics)}</span>
-          </div>
-
-          <div class="bot-card-head" style="margin-top:14px">
-            <h3>${escapeHtml(sp.name)}</h3>
-            <span class="bot-swatches">
-              <i class="swatch-dot" style="background:${sp.glowColor}"></i>
-              <i class="swatch-dot" style="background:${sp.secondaryColor}"></i>
-              ${escapeHtml(sp.glowColor)}
-            </span>
-          </div>
-
-          <p class="bot-role">${escapeHtml(copy.speciesDesc)}</p>
-          <p class="bot-summary">${escapeHtml(copy.summary)}</p>
-
-          <div class="bot-preset-pills">
-            ${copy.traitPills
-              .map((pill) => `<span class="bot-preset-pill">${escapeHtml(pill)}</span>`)
-              .join('')}
-          </div>
-        </div>
-
-        <div class="bot-card-footer">
-          <div class="bot-price-row">
-            <span class="bot-price-now">
-              $12 <small>USD · <span class="strike-price">${escapeHtml(cat.regPrice)}</span></small>
-            </span>
-            <span class="promo-pill" style="color:${sp.glowColor};border-color:rgba(${sp.glowRgb},0.4);background:rgba(${sp.glowRgb},0.14)">
-              ${escapeHtml(cat.earlyBirdTag)}
-            </span>
-          </div>
-          <div class="bot-card-actions">
-            <button
-              type="button"
-              class="btn btn-sm btn-ghost"
-              data-try-species="${sp.id}"
-            >
-              ${escapeHtml(cat.tryInStageBtn)}
-            </button>
-            <a
-              href="${sp.storeUrl}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-sm btn-bot-buy"
-            >
-              ${escapeHtml(cat.buyIndividualBtn)} ↗
-            </a>
-          </div>
-        </div>
-      </article>
-    `;
+    return `<article class="creature-card" style="--species-color:${sp.glowColor}">
+      <div class="creature-heading"><h3>${sp.name}</h3><span class="creature-number">0${index + 1}</span></div>
+      <p class="creature-vibe">${escapeHtml(sp.copy[language].tagline)}</p>
+      <div class="creature-preview-row"><button type="button" class="creature-preview" data-try-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${t('try')} · ${sp.name}"><i class="species-dot" aria-hidden="true"></i>${t('try')} <span aria-hidden="true">↗</span></button><strong class="mini-price">$12 <small>USD</small></strong></div>
+      ${storeButtons(STORE_LINKS.species[id], sp.name)}
+    </article>`;
   }).join('');
+  updateSpecies();
 }
 
-function renderPricingSection() {
-  const squadChips = document.getElementById('squad-member-chips');
-  if (squadChips) {
-    squadChips.innerHTML = SPECIES_ORDER.map((id) => {
-      const sp = SPECIES_CATALOG[id];
-      return `
-        <button type="button" class="squad-chip" data-try-species="${sp.id}">
-          <img src="${sp.avatar}" alt="" />
-          <span>${escapeHtml(sp.name)}</span>
-        </button>
-      `;
-    }).join('');
-  }
-
-  const squadCtaBtn = document.getElementById('squad-cta-btn');
-  if (squadCtaBtn) squadCtaBtn.href = STORE_LINKS.fullSquad;
+function updateVideoLabels() {
+  const media = PROOF_MEDIA[activeVideo];
+  $('video-caption').textContent = media.title[language];
+  video.setAttribute('aria-label', media.title[language]);
+  document.querySelectorAll('[data-video]').forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.video) === activeVideo)));
 }
 
-function updatePowershellVerifySnippet() {
-  const sp = SPECIES_CATALOG[activeSpecies] || SPECIES_CATALOG.buggy;
-  const codeEl = document.getElementById('ps-verify-code');
-  if (codeEl) {
-    codeEl.textContent = `Get-FileHash .\\${sp.exe.filename} -Algorithm SHA256`;
+function renderMedia() {
+  $('video-picker').innerHTML = PROOF_MEDIA.map((media, index) =>
+    `<button type="button" class="video-choice" data-video="${index}" aria-pressed="${index === activeVideo}"><span class="video-number">0${index + 1}</span><span>${media.title[language]}</span><span class="video-duration">${media.duration}</span></button>`).join('');
+  $('proof-gallery').innerHTML = PROOF_MEDIA.map((media, index) =>
+    `<button type="button" class="proof-shot" data-shot="${index}" aria-haspopup="dialog" aria-label="${t('proofGallery')} · ${escapeHtml(media.title[language])}"><img src="${media.poster}" alt="${escapeHtml(media.alt[language])}" width="${media.width}" height="${media.height}" loading="lazy" decoding="async" /><span>${media.title[language]}<b aria-hidden="true">↗</b></span></button>`).join('');
+  updateVideoLabels();
+  if (dialog.open) updateLightbox();
+}
+
+function selectVideo(index) {
+  if (!PROOF_MEDIA[index] || index === activeVideo) return;
+  const wasPlaying = !video.paused;
+  video.pause();
+  activeVideo = index;
+  const media = PROOF_MEDIA[index];
+  video.poster = media.poster;
+  video.querySelector('source').src = media.src;
+  video.load();
+  updateVideoLabels();
+  if (wasPlaying) video.play().catch(() => {});
+}
+
+function renderPricing() {
+  $('duo-selector').innerHTML = BUNDLES.map((bundle) =>
+    `<button type="button" class="duo-option" data-duo="${bundle.id}" aria-pressed="${bundle.id === activeDuo}"><span class="duo-orbs" aria-hidden="true">${bundle.members.map((id) => `<i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}"></i>`).join('')}</span><span><strong>${bundle.title[language]}</strong><small>${bundle.members.map((id) => SPECIES_CATALOG[id].name).join(' + ')}</small></span></button>`).join('');
+  renderDuoLinks();
+  $('squad-dots').innerHTML = SPECIES_ORDER.map((id) => `<button type="button" class="squad-dot" data-try-species="${id}" aria-label="${t('try')} · ${SPECIES_CATALOG[id].name}" title="${SPECIES_CATALOG[id].name}"><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i></button>`).join('');
+  const squadLinks = STORE_LINKS.bundles.fullSquad;
+  const available = channels.some(({ key }) => httpsUrl(squadLinks[key]));
+  $('squad-store-links').innerHTML = (available ? '' : `<a class="button" href="#catalog">${t('squadCta')} <span aria-hidden="true">↗</span></a>`) + storeButtons(squadLinks, 'Full 6-Bot Squad', true);
+  const storeHub = httpsUrl(STORE_LINKS.creatorHub.microsoftStore);
+  const storeSpecies = SPECIES_ORDER.some((id) => httpsUrl(STORE_LINKS.species[id].microsoftStore));
+  const storeBundles = Object.values(STORE_LINKS.bundles).some((links) => httpsUrl(links.microsoftStore));
+  $('store-edition-action').innerHTML = storeHub ? externalLink(storeHub, 'Microsoft Store', 'text-link')
+    : storeSpecies ? `<a class="text-link" href="#catalog">${t('installCta')}</a>`
+      : storeBundles ? `<a class="text-link" href="#pricing">${t('navPricing')}</a>`
+        : `<span class="quiet-badge">${t('storeSoon')}</span>`;
+  $('creator-links').innerHTML = channels.map(({ key, label }) => externalLink(STORE_LINKS.creatorHub[key], t('creator') + ' · ' + label, 'footer-store')).join('');
+}
+
+function renderDuoLinks() {
+  const duo = BUNDLES.find(({ id }) => id === activeDuo);
+  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '), true);
+}
+
+function renderTrust() {
+  const openFaqs = new Set([...document.querySelectorAll('[data-faq][open]')].map((el) => el.dataset.faq));
+  $('faq-list').innerHTML = I18N[language].faqs.map((faq, index) => `<details class="faq-item" data-faq="${index}"${openFaqs.has(String(index)) ? ' open' : ''}><summary>${escapeHtml(faq.q)}</summary><p>${escapeHtml(faq.a)}</p></details>`).join('');
+  for (const type of ['exe', 'appx']) {
+    $(type + '-hashes').innerHTML = '<div class="hash-list">' + SPECIES_ORDER.map((id) => {
+      const file = SPECIES_CATALOG[id][type];
+      const mb = (file.sizeBytes / 1048576).toFixed(2);
+      return `<div class="hash-row"><div class="hash-name"><code>${file.filename}</code><span class="hash-size">${mb} MiB</span></div><code class="sha-hash">${file.sha256}</code><div class="hash-actions"><button type="button" class="copy-hash" data-copy-hash="${file.sha256}" aria-label="${t('copyHash')} · ${file.filename}">${t('copyHash')}</button>${type === 'exe' ? externalLink(file.virustotalUrl, t('report'), 'report-link', t('report') + ' · ' + file.filename) : ''}</div></div>`;
+    }).join('') + '</div>';
   }
 }
 
-function renderShaTable() {
-  const tbody = document.getElementById('sha-table-body');
-  if (!tbody) return;
-  const vtLabel = t().trust.vtBtn;
-  const copyLabel = t().trust.copyHashBtn;
-
-  tbody.innerHTML = SPECIES_ORDER.map((id) => {
-    const sp = SPECIES_CATALOG[id];
-    const exe = sp.exe;
-    return `
-      <tr>
-        <td>
-          <span style="display:inline-flex;align-items:center;gap:7px;font-weight:700">
-            <i class="swatch-dot" style="background:${sp.glowColor}"></i>
-            ${escapeHtml(sp.name)}
-          </span>
-        </td>
-        <td><code>${escapeHtml(exe.filename)}</code></td>
-        <td>
-          <strong>${escapeHtml(exe.sizeMb)}</strong>
-          <span style="color:var(--text-muted);font-size:11px">(${escapeHtml(exe.sizeBytes)} B)</span>
-        </td>
-        <td class="sha-hash-cell">${escapeHtml(exe.sha256)}</td>
-        <td>
-          <div class="sha-actions-wrap">
-            <a
-              href="${exe.virustotalUrl}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="vt-report-btn"
-              title="Open official clean SHA-256 report on VirusTotal"
-            >
-              ${escapeHtml(vtLabel)}
-            </a>
-            <button
-              type="button"
-              class="copy-hash-btn"
-              data-copy-hash="${escapeHtml(exe.sha256)}"
-            >
-              ${escapeHtml(copyLabel)}
-            </button>
-          </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
-
-function renderFaq() {
-  const grid = document.getElementById('faq-grid');
-  if (!grid) return;
-  grid.innerHTML = t()
-    .trust.faqs.map(
-      (item, idx) => `
-      <details class="faq-item" ${idx < 2 ? 'open' : ''}>
-        <summary>${escapeHtml(item.q)}</summary>
-        <p>${escapeHtml(item.a)}</p>
-      </details>
-    `
-    )
-    .join('');
-}
-
-function renderFooterLinks() {
-  const list = document.getElementById('footer-store-list');
-  if (!list) return;
-  list.innerHTML = SPECIES_ORDER.map((id) => {
-    const sp = SPECIES_CATALOG[id];
-    return `<a href="${sp.storeUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(sp.name)} ($12) ↗</a>`;
-  }).join('');
+function renderStructuredData() {
+  let script = $('storefront-schema');
+  if (!script) {
+    script = document.createElement('script');
+    script.id = 'storefront-schema';
+    script.type = 'application/ld+json';
+    document.head.append(script);
+  }
+  // Publish only offers with real product URLs; pending bundles are not InStock.
+  const products = SPECIES_ORDER.map((id) => ({
+    '@type': 'SoftwareApplication', name: 'Zero-UI ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.0',
+    operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
+    offers: channels.filter(({ key }) => httpsUrl(STORE_LINKS.species[id][key])).map(({ key }) => ({
+      '@type': 'Offer', price: '12.00', priceCurrency: 'USD', url: httpsUrl(STORE_LINKS.species[id][key]),
+    })),
+  }));
+  script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })) });
 }
 
 function renderAll() {
-  renderStaticI18n();
-  renderSpeciesTabs();
-  renderSpeciesInspector();
-  renderSuperpowersSection();
-  renderProofGallery();
-  renderCatalogGrid();
-  renderPricingSection();
-  updatePowershellVerifySnippet();
-  renderShaTable();
-  renderFaq();
-  renderFooterLinks();
+  renderStaticText();
+  renderSpecies();
+  renderMedia();
+  renderPricing();
+  renderTrust();
+  renderStructuredData();
 }
 
-/* ==========================================================================
-   Event Wiring & Initialization
-   ========================================================================== */
-
-function setupInteractions() {
-  // Language switch
-  document.getElementById('lang-switch-btn')?.addEventListener('click', () => {
-    currentLang = currentLang === 'en' ? 'es' : 'en';
-    try {
-      localStorage.setItem('zui_landing_lang', currentLang);
-    } catch {
-      // Ignore storage blocks
-    }
-    renderAll();
-    postToStage({ type: 'ZUI_COMMAND', action: 'lang', value: currentLang });
-  });
-
-  // Delegated clicks across tabs, catalog Try buttons, copy buttons & lightbox
-  document.addEventListener('click', (e) => {
-    const target = e.target instanceof Element ? e.target : null;
-    if (!target) return;
-
-    const tabBtn = target.closest('[data-select-species]');
-    if (tabBtn) {
-      const spId = tabBtn.getAttribute('data-select-species');
-      if (spId) selectSpecies(spId, { scrollToStage: false });
-      return;
-    }
-
-    const tryBtn = target.closest('[data-try-species]');
-    if (tryBtn) {
-      const spId = tryBtn.getAttribute('data-try-species');
-      if (spId) selectSpecies(spId, { scrollToStage: true });
-      return;
-    }
-
-    const hashBtn = target.closest('[data-copy-hash]');
-    if (hashBtn instanceof HTMLElement) {
-      const hash = hashBtn.getAttribute('data-copy-hash');
-      if (hash) copyTextWithFeedback(hash, hashBtn, t().trust.copyHashBtn);
-      return;
-    }
-
-    const shotBtn = target.closest('[data-lightbox-src]');
-    if (shotBtn) {
-      const src = shotBtn.getAttribute('data-lightbox-src');
-      const cap = shotBtn.getAttribute('data-lightbox-caption') || '';
-      const modal = document.getElementById('lightbox-backdrop');
-      const img = document.getElementById('lightbox-img');
-      const capEl = document.getElementById('lightbox-caption');
-      if (modal && img && src) {
-        img.src = src;
-        if (capEl) capEl.textContent = cap;
-        modal.hidden = false;
-      }
-      return;
-    }
-  });
-
-  // Stage quick-action buttons
-  document.getElementById('ctrl-pet')?.addEventListener('click', () => {
-    postToStage({ type: 'ZUI_COMMAND', action: 'pet' });
-  });
-  document.getElementById('ctrl-spin')?.addEventListener('click', () => {
-    postToStage({ type: 'ZUI_COMMAND', action: 'spin' });
-  });
-  document.getElementById('ctrl-power')?.addEventListener('click', () => {
-    postToStage({ type: 'ZUI_COMMAND', action: 'power' });
-  });
-  document.getElementById('ctrl-center')?.addEventListener('click', () => {
-    postToStage({ type: 'ZUI_COMMAND', action: 'center' });
-  });
-
-  // Size S-XL buttons
-  document.querySelectorAll('[data-stage-size]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const size = btn.getAttribute('data-stage-size');
-      if (!size) return;
-      activeSize = size;
-      document.querySelectorAll('[data-stage-size]').forEach((b) => {
-        b.setAttribute('data-active', String(b === btn));
-      });
-      postToStage({ type: 'ZUI_COMMAND', action: 'size', value: size });
-    });
-  });
-
-  // Evolution Stage 1 (Hatchling) <-> 2 (Rookie)
-  document.querySelectorAll('[data-stage-evo]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const st = Number(btn.getAttribute('data-stage-evo')) === 1 ? 1 : 2;
-      activeStage = st;
-      document.querySelectorAll('[data-stage-evo]').forEach((b) => {
-        b.setAttribute('data-active', String(b === btn));
-      });
-      postToStage({ type: 'ZUI_COMMAND', action: 'stage', value: st });
-    });
-  });
-
-  // Copy PowerShell verify command
-  const psBtn = document.getElementById('copy-ps-btn');
-  psBtn?.addEventListener('click', () => {
-    const code = document.getElementById('ps-verify-code')?.textContent || '';
-    if (code) copyTextWithFeedback(code, psBtn, t().trust.copyCmdBtn);
-  });
-
-  // Lightbox close
-  const closeLightbox = () => {
-    const modal = document.getElementById('lightbox-backdrop');
-    if (modal) modal.hidden = true;
-  };
-  document.getElementById('lightbox-close')?.addEventListener('click', closeLightbox);
-  document.getElementById('lightbox-backdrop')?.addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) closeLightbox();
-  });
-
-  // Global keyboard forwarding ('R' spin & 'Escape' lightbox/spin)
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeLightbox();
-      return;
-    }
-    const activeTag = document.activeElement?.tagName;
-    if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
-    if ((e.key === 'r' || e.key === 'R') && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      postToStage({ type: 'ZUI_COMMAND', action: 'spin' });
-    }
-  });
-
-  // Listen for ZUI_READY from isolated stage.html
-  window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'ZUI_READY') {
-      const overlay = document.getElementById('stage-loading-overlay');
-      if (overlay) overlay.dataset.visible = 'false';
-    }
-  });
-
-  const frame = document.getElementById('hero-stage-frame');
-  frame?.addEventListener('load', () => {
-    window.setTimeout(() => {
-      const overlay = document.getElementById('stage-loading-overlay');
-      if (overlay) overlay.dataset.visible = 'false';
-    }, 350);
-  });
+function setLanguage(next) {
+  if (!validLang(next) || next === language) return;
+  language = next;
+  try { localStorage.setItem('zui_landing_lang', language); } catch { /* Storage is optional. */ }
+  renderAll();
+  command('lang', language);
+  updateAddress();
 }
 
-applyAccentCssVars(activeSpecies);
+function updateLightbox() {
+  const media = PROOF_MEDIA[activeShot];
+  $('lightbox-image').src = media.poster;
+  $('lightbox-image').alt = media.alt[language];
+  $('lightbox-caption').textContent = media.title[language];
+  $('lightbox-counter').textContent = `${activeShot + 1} / ${PROOF_MEDIA.length}`;
+}
+
+function showLightbox(index, trigger) {
+  activeShot = index;
+  lightboxTrigger = trigger;
+  updateLightbox();
+  video.pause();
+  dialog.showModal();
+  document.body.classList.add('modal-open');
+  $('lightbox-close').focus();
+}
+
+async function copyHash(hash, button) {
+  try {
+    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(hash);
+    else {
+      const field = document.createElement('textarea');
+      field.value = hash;
+      field.className = 'visually-hidden';
+      document.body.append(field);
+      field.select();
+      const copied = document.execCommand('copy');
+      field.remove();
+      button.focus();
+      if (!copied) throw new Error('Copy unavailable');
+    }
+    button.textContent = t('copied');
+    $('site-announcement').textContent = t('copied');
+    setTimeout(() => { if (button.isConnected) button.textContent = t('copyHash'); }, 1700);
+  } catch { $('site-announcement').textContent = t('copyFailed'); }
+}
+
+document.addEventListener('click', (event) => {
+  const target = event.target instanceof Element ? event.target : null;
+  if (!target) return;
+  const lang = target.closest('[data-lang]');
+  if (lang) { setLanguage(lang.dataset.lang); return; }
+  const species = target.closest('[data-select-species], [data-try-species]');
+  if (species) { selectSpecies(species.dataset.selectSpecies || species.dataset.trySpecies, Boolean(species.dataset.trySpecies)); return; }
+  const action = target.closest('[data-command]');
+  if (action) { command(action.dataset.command); return; }
+  const size = target.closest('[data-stage-size]');
+  if (size) {
+    activeSize = size.dataset.stageSize;
+    document.querySelectorAll('[data-stage-size]').forEach((el) => el.setAttribute('aria-pressed', String(el === size)));
+    command('size', activeSize); return;
+  }
+  const stage = target.closest('[data-stage-evo]');
+  if (stage) {
+    activeStage = Number(stage.dataset.stageEvo);
+    document.querySelectorAll('[data-stage-evo]').forEach((el) => el.setAttribute('aria-pressed', String(el === stage)));
+    command('stage', activeStage); return;
+  }
+  const clip = target.closest('[data-video]');
+  if (clip) { selectVideo(Number(clip.dataset.video)); return; }
+  const shot = target.closest('[data-shot]');
+  if (shot) { showLightbox(Number(shot.dataset.shot), shot); return; }
+  const duo = target.closest('[data-duo]');
+  if (duo) {
+    activeDuo = duo.dataset.duo;
+    document.querySelectorAll('[data-duo]').forEach((el) => el.setAttribute('aria-pressed', String(el === duo)));
+    renderDuoLinks(); return;
+  }
+  const hash = target.closest('[data-copy-hash]');
+  if (hash) copyHash(hash.dataset.copyHash, hash);
+});
+
+window.addEventListener('message', (event) => {
+  if (event.origin !== location.origin || event.source !== frame.contentWindow) return;
+  if (event.data?.type === 'ZUI_SETTINGS' && event.data.species === activeSpecies) {
+    const options = document.querySelector('.stage-options');
+    options.open = true;
+    options.querySelector('summary').focus();
+    return;
+  }
+  if (event.data?.type !== 'ZUI_READY' || event.data.species !== activeSpecies) return;
+  clearTimeout(readyTimer);
+  $('stage-loading-overlay').dataset.visible = 'false';
+  command('lang', language);
+  command('size', activeSize);
+  command('stage', activeStage);
+});
+$('stage-retry').addEventListener('click', () => mountSpecies(activeSpecies, true));
+$('lightbox-close').addEventListener('click', () => dialog.close());
+$('lightbox-prev').addEventListener('click', () => { activeShot = (activeShot + PROOF_MEDIA.length - 1) % PROOF_MEDIA.length; updateLightbox(); });
+$('lightbox-next').addEventListener('click', () => { activeShot = (activeShot + 1) % PROOF_MEDIA.length; updateLightbox(); });
+dialog.addEventListener('click', (event) => {
+  if (event.target !== dialog) return;
+  const bounds = dialog.getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+});
+dialog.addEventListener('close', () => {
+  document.body.classList.remove('modal-open');
+  if (lightboxTrigger?.isConnected) lightboxTrigger.focus({ preventScroll: true });
+});
+window.addEventListener('keydown', (event) => {
+  if (dialog.open) {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      activeShot = (activeShot + (event.key === 'ArrowLeft' ? -1 : 1) + PROOF_MEDIA.length) % PROOF_MEDIA.length;
+      updateLightbox();
+    }
+    return;
+  }
+  if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"], video')) return;
+  const speciesButton = event.target instanceof Element ? event.target.closest('[data-select-species]') : null;
+  if (speciesButton && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+    event.preventDefault();
+    const index = SPECIES_ORDER.indexOf(activeSpecies);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? 5 : (index + (event.key === 'ArrowLeft' ? -1 : 1) + 6) % 6;
+    selectSpecies(SPECIES_ORDER[next]);
+    document.querySelector(`[data-select-species="${activeSpecies}"]`).focus();
+  }
+  if (event.key.toLowerCase() === 'r' && !event.ctrlKey && !event.metaKey && !event.altKey && !event.repeat) command('spin');
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
+window.addEventListener('pagehide', () => {
+  clearTimeout(navigationTimer); clearTimeout(readyTimer);
+  frame.contentWindow?.postMessage({ type: 'ZUI_DESTROY' }, location.origin);
+});
+window.addEventListener('pageshow', (event) => { if (event.persisted) mountSpecies(activeSpecies, true); });
+
 renderAll();
-setupInteractions();
-mountSpeciesInStage(activeSpecies, true);
+mountSpecies(activeSpecies);

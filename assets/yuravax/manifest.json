@@ -8,15 +8,11 @@
   "stages": {
     "1": {
       "label": "hatchling",
-      "sprite": "yuravax_1.webp",
-      "normal": "normals/yuravax_1.webp",
-      "preview": "preview/yuravax_1.webp"
+      "normal": "normals/yuravax_1.webp"
     },
     "2": {
       "label": "rookie",
-      "sprite": "yuravax_2.webp",
-      "normal": "normals/yuravax_2.webp",
-      "preview": "preview/yuravax_2.webp"
+      "normal": "normals/yuravax_2.webp"
     }
   }
 }

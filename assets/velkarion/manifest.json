@@ -8,15 +8,11 @@
   "stages": {
     "1": {
       "label": "hatchling",
-      "sprite": "velkarion_1.webp",
-      "normal": "normals/velkarion_1.webp",
-      "preview": "preview/velkarion_1.webp"
+      "normal": "normals/velkarion_1.webp"
     },
     "2": {
       "label": "rookie",
-      "sprite": "velkarion_2.webp",
-      "normal": "normals/velkarion_2.webp",
-      "preview": "preview/velkarion_2.webp"
+      "normal": "normals/velkarion_2.webp"
     }
   }
 }

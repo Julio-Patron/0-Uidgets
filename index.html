@@ -1,666 +1,170 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zero-UI 3D Desktop Bots v1.1.0 — 6 Standalone Windows 10/11 3D Companions + Universal BYOK AI Engine</title>
-    <meta
-      name="description"
-      content="Ditch square chat windows. 6 real-time 3D Zero-UI desktop companions for Windows 10/11 (x64 portable .exe) sharing the same universal engine: 100% offline 3D pets + optional BYOK AI (Local Ollama $0, Gemini, OpenAI) & custom Personality Cartridges."
-    />
-    <meta
-      name="keywords"
-      content="desktop pet, zero-ui, windows 11 companion, 3d desktop bot, ollama local ai, byok assistant, offline desktop pet, threejs webgl, portable exe, indie software"
-    />
-    <meta name="theme-color" content="#050811" />
-    <meta name="robots" content="index, follow" />
-
-    <!-- OpenGraph -->
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="Zero-UI 3D Desktop Bots v1.1.0 — 6 Living 3D Companions for Windows 10/11"
-    />
-    <meta
-      property="og:description"
-      content="6 standalone Windows 10/11 portable (.exe) 3D creatures sharing one universal engine: 100% offline 3D pets + optional BYOK AI (Local Ollama $0, Gemini, OpenAI) & swappable Personality Cartridges."
-    />
-    <meta property="og:image" content="./assets/showcase/og-squad-v110.jpg" />
-    <meta
-      property="og:image:alt"
-      content="All 6 Zero-UI 3D Desktop Companions running simultaneously on Windows 11"
-    />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Zero-UI 3D Desktop Bots v1.1.0 — 6 Living 3D Companions on Your Windows Taskbar"
-    />
-    <meta
-      name="twitter:description"
-      content="Same full universal engine in every bot: 100% offline 3D pet + optional BYOK AI (Local Ollama $0 / Gemini / OpenAI) & custom Cartridges. $12 Single or $49 Full 6-Bot Squad."
-    />
-    <meta name="twitter:image" content="./assets/showcase/og-squad-v110.jpg" />
-
-    <link id="dynamic-favicon" rel="icon" type="image/png" href="./buggy-avatar-3d.png" />
-    <link rel="stylesheet" href="./css/styles.css" />
-
-    <!-- JSON-LD Structured Data: SoftwareApplication + 6 Universal Species + Full Squad -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Zero-UI 3D Desktop Bots Squad (v1.1.0)",
-        "softwareVersion": "1.1.0",
-        "operatingSystem": "Windows 10, Windows 11 (x64)",
-        "applicationCategory": "DesktopEnhancementApplication",
-        "description": "Lineup of 6 standalone, frameless 3D Zero-UI desktop companions for Windows 10/11 (x64 portable .exe) sharing the exact same universal engine: real-time WebGL physics, 100% offline pet mode out of the box, optional BYOK AI (local Ollama, Google Gemini, OpenAI-compatible), and editable Personality Cartridges.",
-        "image": "./assets/showcase/og-squad-v110.jpg",
-        "offers": {
-          "@type": "AggregateOffer",
-          "priceCurrency": "USD",
-          "lowPrice": "12.00",
-          "highPrice": "49.00",
-          "offerCount": "7",
-          "availability": "https://schema.org/InStock",
-          "url": "https://elbuilder77.itch.io"
-        },
-        "hasPart": [
-          {
-            "@type": "SoftwareApplication",
-            "name": "Buggy v1.1.0 — 3D Emerald Jelly Desktop Companion (Universal Zero-UI Engine)",
-            "operatingSystem": "Windows 10, Windows 11 (x64)",
-            "applicationCategory": "DesktopEnhancementApplication",
-            "url": "https://elbuilder77.itch.io/buggy-3d-bot",
-            "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" }
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "Pyxol v1.1.0 — 3D Voxel Glitch Desktop Companion (Universal Zero-UI Engine)",
-            "operatingSystem": "Windows 10, Windows 11 (x64)",
-            "applicationCategory": "DesktopEnhancementApplication",
-            "url": "https://elbuilder77.itch.io/pyxol-3d-bot",
-            "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" }
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "Velkarion v1.1.0 — 3D Solar Mecha-Draco Desktop Companion (Universal Zero-UI Engine)",
-            "operatingSystem": "Windows 10, Windows 11 (x64)",
-            "applicationCategory": "DesktopEnhancementApplication",
-            "url": "https://elbuilder77.itch.io/velkarion-3d-bot",
-            "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" }
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "Nimpu v1.1.0 — Cozy 3D Cloud Desktop Companion (Universal Zero-UI Engine)",
-            "operatingSystem": "Windows 10, Windows 11 (x64)",
-            "applicationCategory": "DesktopEnhancementApplication",
-            "url": "https://elbuilder77.itch.io/nimpu-3d-bot",
-            "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" }
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "Lumilisk v1.1.0 — 3D Bioluminescent Sea Dragon Companion (Universal Zero-UI Engine)",
-            "operatingSystem": "Windows 10, Windows 11 (x64)",
-            "applicationCategory": "DesktopEnhancementApplication",
-            "url": "https://elbuilder77.itch.io/lumilisk-3d-bot",
-            "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" }
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "Yuravax v1.1.0 — 3D Celestial Bird Desktop Companion (Universal Zero-UI Engine)",
-            "operatingSystem": "Windows 10, Windows 11 (x64)",
-            "applicationCategory": "DesktopEnhancementApplication",
-            "url": "https://elbuilder77.itch.io/yuravax-3d-bot",
-            "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" }
-          }
-        ]
-      }
-    </script>
-  </head>
-  <body>
-    <!-- Sticky Windows 11 Acrylic Navigation -->
-    <header class="site-header">
-      <div class="container nav-inner">
-        <a href="#top" class="brand-link">
-          <span class="brand-orb" aria-hidden="true"></span>
-          <span>ZERO-UI 3D BOTS</span>
-          <span class="brand-version">v1.1.0 · Win 10/11</span>
-        </a>
-
-        <nav class="nav-links" aria-label="Primary Navigation">
-          <a href="#live-stage" id="nav-stage">Live 3D Stage</a>
-          <a href="#superpowers" id="nav-superpowers">Universal Engine</a>
-          <a href="#desktop-proof" id="nav-proof">Desktop Proof</a>
-          <a href="#catalog" id="nav-catalog">6 Species</a>
-          <a href="#pricing" id="nav-pricing">$12 vs $49 Squad</a>
-          <a href="#checksums" id="nav-checksums">SHA-256 &amp; VirusTotal</a>
-        </nav>
-
-        <div class="nav-actions">
-          <button
-            type="button"
-            class="lang-switch-btn"
-            id="lang-switch-btn"
-            title="Cambiar idioma a Español"
-          >
-            🌐 <span>ES</span>
-          </button>
-          <a href="#pricing" class="btn btn-sm btn-gold" id="nav-cta-squad">
-            Full 6-Bot Squad · $49
-          </a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zero-UI · A little life on your Windows desktop</title>
+  <meta name="description" content="Meet six playful 3D desktop companions for Windows 10/11. Try them in 3D and find your favorite. One-time purchase, no subscription." />
+  <meta name="theme-color" content="#080c10" />
+  <link rel="canonical" href="https://julio-patron.github.io/Widgets-Public-Repo/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://julio-patron.github.io/Widgets-Public-Repo/" />
+  <meta property="og:title" content="Zero-UI · A little life on your Windows desktop" />
+  <meta property="og:description" content="Six playful 3D companions. Your space, with a little more personality." />
+  <meta property="og:image" content="https://julio-patron.github.io/Widgets-Public-Repo/assets/showcase/desktop-companions.jpg" />
+  <meta property="og:image:alt" content="Zero-UI companions on a real Windows desktop." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Zero-UI · A little life on your Windows desktop" />
+  <meta name="twitter:description" content="Six playful 3D companions for Windows 10/11." />
+  <meta name="twitter:image" content="https://julio-patron.github.io/Widgets-Public-Repo/assets/showcase/desktop-companions.jpg" />
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="Zero-UI"><span class="brand-orb" aria-hidden="true"></span>zero-ui<span class="brand-caption">/ companions</span></a>
+      <nav class="nav-links" data-i18n-aria="navLabel" aria-label="Main navigation">
+        <a href="#catalog" data-i18n="navCatalog">The companions</a><a href="#desktop-proof" data-i18n="navProof">In your space</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="language-switch" role="group" data-i18n-aria="language" aria-label="Choose language">
+          <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button><span aria-hidden="true">/</span><button type="button" data-lang="es" lang="es" aria-pressed="false">ES</button>
         </div>
-      </div>
-    </header>
-
-    <main id="top">
-      <!-- ====================================================================
-           1. HERO & INTERACTIVE 3D BROWSER SIMULATOR ("TRY ALL 6 LIVE")
-           ==================================================================== -->
-      <section class="hero-section">
-        <div class="container">
-          <div class="hero-copy">
-            <span class="eyebrow-pill" id="hero-eyebrow">
-              v1.1.0 OFFICIAL RELEASE · WINDOWS 10/11 PORTABLE (.EXE) · SAME FULL ENGINE IN EVERY BOT
-            </span>
-            <h1 class="hero-title">
-              <span id="hero-title-1">Ditch the Square Chat Window.</span>
-              <span class="hero-title-accent" id="hero-title-2">
-                Put 6 Living 3D Companions on Your Windows Taskbar.
-              </span>
-            </h1>
-            <p class="hero-lead" id="hero-lead">
-              Six standalone, frameless 3D desktop creatures built on the exact same universal
-              Zero-UI engine. Every species runs 100% offline out of the box as a tactile 3D
-              pet—or connects to local Ollama ($0 API cost), Google Gemini, or any
-              OpenAI-compatible server with fully customizable prompts &amp; interchangeable
-              Personality Cartridges.
-            </p>
-
-            <div class="hero-trust-pills" id="hero-trust-pills">
-              <span class="trust-pill">🪟 Windows 10/11 x64 Portable (.exe)</span>
-              <span class="trust-pill">⚙️ Same Universal Engine in All 6 Bots</span>
-              <span class="trust-pill">🔌 100% Offline Pet + Optional Local Ollama ($0)</span>
-              <span class="trust-pill">🔒 Windows DPAPI Encryption · $0/mo Subscriptions</span>
-            </div>
-
-            <div class="hero-cta-row">
-              <div class="hero-cta-stack">
-                <a href="#pricing" class="btn btn-gold" id="hero-primary-cta">
-                  👑 Get Full 6-Bot Squad — $49
-                </a>
-                <span class="hero-cta-sub" id="hero-primary-sub">
-                  Save $65 (-57% vs $114 reg.) · $8.16/bot · Pay once forever
-                </span>
-              </div>
-              <a href="#catalog" class="btn btn-ghost" id="hero-secondary-cta">
-                Pick 1 Species ($12)
-              </a>
-            </div>
-          </div>
-
-          <!-- Interactive 3D Simulator Shell -->
-          <div class="simulator-shell" id="live-stage">
-            <p class="species-selector-label" id="species-selector-label">
-              Select 3D Species (switches live WebGL rig, physics &amp; theme accent):
-            </p>
-
-            <div
-              class="species-tabs"
-              id="species-tabs"
-              role="tablist"
-              aria-label="Select 3D Species"
-            ></div>
-
-            <div class="stage-workspace-grid">
-              <!-- Simulated Windows 11 Desktop Viewport -->
-              <div class="win11-monitor-card">
-                <div class="monitor-topbar">
-                  <span class="monitor-title">
-                    <span class="monitor-win-dots" aria-hidden="true">
-                      <i></i><i></i><i></i>
-                    </span>
-                    <span id="stage-header-title">Try All 6 Species Live in Browser</span>
-                  </span>
-                  <span class="webgl-context-badge" id="stage-header-badge">
-                    1 Active WebGL Context · 60 FPS
-                  </span>
-                </div>
-
-                <div class="iframe-stage-box">
-                  <iframe
-                    id="hero-stage-frame"
-                    title="Interactive 3D Zero-UI Windows 11 Desktop Stage"
-                    src="about:blank"
-                    loading="eager"
-                  ></iframe>
-                  <div class="stage-loading-overlay" id="stage-loading-overlay" data-visible="true">
-                    <span class="spinner-ring" aria-hidden="true"></span>
-                    <span id="stage-loading-text">Mounting isolated 3D WebGL stage…</span>
-                  </div>
-                </div>
-
-                <!-- Instant Live Controls Dock -->
-                <div class="stage-controls-dock">
-                  <div class="controls-row">
-                    <div class="control-group">
-                      <button type="button" class="ctrl-btn" id="ctrl-pet">
-                        💚 Pet (Click)
-                      </button>
-                      <button type="button" class="ctrl-btn" id="ctrl-spin">
-                        🔄 360° Spin (R)
-                      </button>
-                      <button type="button" class="ctrl-btn" id="ctrl-power">
-                        ⚡ 3D Power (Alt+Click)
-                      </button>
-                      <button type="button" class="ctrl-btn" id="ctrl-center">
-                        🎯 Re-Center
-                      </button>
-                    </div>
-
-                    <div class="control-group">
-                      <div class="segmented-pill" role="group" aria-label="Live Avatar Size">
-                        <span class="segmented-label" id="ctrl-size-label">Size</span>
-                        <button type="button" class="seg-btn" data-stage-size="sm" data-active="false">S</button>
-                        <button type="button" class="seg-btn" data-stage-size="md" data-active="false">M</button>
-                        <button type="button" class="seg-btn" data-stage-size="lg" data-active="false">L</button>
-                        <button type="button" class="seg-btn" data-stage-size="xl" data-active="true">XL</button>
-                      </div>
-
-                      <div class="segmented-pill" role="group" aria-label="Live Evolution Stage">
-                        <button
-                          type="button"
-                          class="seg-btn"
-                          id="ctrl-stage-1"
-                          data-stage-evo="1"
-                          data-active="false"
-                        >
-                          🥚 Hatchling
-                        </button>
-                        <button
-                          type="button"
-                          class="seg-btn"
-                          id="ctrl-stage-2"
-                          data-stage-evo="2"
-                          data-active="true"
-                        >
-                          ✨ Rookie
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="stage-drag-hint" id="stage-drag-hint">
-                    Tip: Drag the 3D body anywhere inside the simulated desktop, right-click it to
-                    inspect live Settings, or press R to spin.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Dynamic Species Inspector & Quick Buy Card -->
-              <aside class="species-inspector" id="species-inspector" aria-live="polite"></aside>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           2. ZERO-UI CONTRAST & UNIVERSAL ENGINE (5 NATIVE SUPERPOWERS)
-           ==================================================================== -->
-      <section class="section-block" id="superpowers">
-        <div class="container">
-          <div class="section-header">
-            <span class="section-kicker" id="contrast-kicker">WHY ZERO-UI WINS ON DESKTOP</span>
-            <h2 class="section-title" id="contrast-title">
-              The 3D Creature Sitting Above Your Taskbar Is the Entire Interface.
-            </h2>
-            <p class="section-subtitle" id="contrast-subtitle">
-              Traditional AI wrappers trap you inside another square window eating 40% of your
-              monitor, forcing constant Alt-Tabbing and $20/month cloud lock-in. Zero-UI v1.1.0
-              gives every species the full native desktop engine.
-            </p>
-          </div>
-
-          <div class="contrast-grid">
-            <div class="contrast-card">
-              <h3 id="contrast-old-title">❌ Square Chat Window Bloat</h3>
-              <ul class="contrast-list" id="contrast-old-list"></ul>
-            </div>
-            <div class="contrast-card is-winner">
-              <h3 id="contrast-new-title">✅ Zero-UI 3D Universal Engine (v1.1.0)</h3>
-              <ul class="contrast-list" id="contrast-new-list"></ul>
-            </div>
-          </div>
-
-          <div class="section-header">
-            <span class="section-kicker" id="sp-kicker">
-              UNIVERSAL ENGINE IN ALL 6 SPECIES · WINDOWS 10/11
-            </span>
-            <h2 class="section-title" id="sp-title">
-              5 Native Windows Superpowers Built Into Every Bot
-            </h2>
-            <p class="section-subtitle" id="sp-subtitle">
-              No creature is locked into a fixed role. Whichever 3D species you choose, you get the
-              exact same offline + BYOK engine and can customize or swap its role anytime:
-            </p>
-          </div>
-
-          <div class="superpowers-grid" id="superpowers-grid"></div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           3. WINDOWS 11 DESKTOP SHOWCASE (CLEAN VS CODE, TERMINAL & TASKBAR)
-           ==================================================================== -->
-      <section class="section-block" id="desktop-proof">
-        <div class="container">
-          <div class="section-header">
-            <span class="section-kicker" id="proof-kicker">
-              WINDOWS 11 DESKTOP SHOWCASE · ZERO WINDOW BORDERS
-            </span>
-            <h2 class="section-title" id="proof-title">
-              See the Portable .exe Squad Running Live on Windows 11
-            </h2>
-            <p class="section-subtitle" id="proof-subtitle">
-              Every creature is an independent, frameless Windows x64 executable (~106.8 MB). Keep
-              one floating cleanly over VS Code &amp; Windows Terminal—or summon all 6
-              simultaneously with isolated memory.
-            </p>
-          </div>
-
-          <div class="proof-layout">
-            <div class="proof-video-card">
-              <div class="proof-video-bar" id="proof-video-badge">
-                🎥 25s Windows 11 Desktop Capture (v1.1.0)
-              </div>
-              <video
-                controls
-                playsinline
-                muted
-                loop
-                preload="metadata"
-                poster="./assets/showcase/win11-squad-desktop.png"
-              >
-                <source src="./assets/showcase/desktop-squad-capture.mp4" type="video/mp4" />
-              </video>
-              <p class="proof-video-caption" id="proof-video-caption">
-                Frameless alpha = 0 rendering, tactile 3D reactions, live Hatchling ↔ Rookie
-                evolution, and native dark Settings on Windows 11.
-              </p>
-            </div>
-
-            <div class="proof-gallery-grid" id="proof-gallery-grid"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           4. OFFICIAL 6-SPECIES CATALOG ($12 EARLY BIRD — SAME FULL ENGINE)
-           ==================================================================== -->
-      <section class="section-block" id="catalog">
-        <div class="container">
-          <div class="section-header">
-            <span class="section-kicker" id="cat-kicker">
-              6 DISTINCT 3D SPECIES · 1 UNIVERSAL ENGINE (v1.1.0)
-            </span>
-            <h2 class="section-title" id="cat-title">
-              Choose Your 3D Species — Same Full Engine in Every Bot
-            </h2>
-            <p class="section-subtitle" id="cat-subtitle">
-              All 6 standalone editions ($12 Early Bird · reg. $19) run the exact same universal
-              Windows 10/11 engine, 5 BYOK superpowers, and custom Personality Cartridges. Pick by
-              3D creature &amp; physics—or get all 6 in the Squad Bundle.
-            </p>
-          </div>
-
-          <div class="catalog-grid" id="catalog-grid"></div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           5. PRICING ARCHITECTURE: CLEAN DECISION ($12 SINGLE VS $49 FULL SQUAD)
-           ==================================================================== -->
-      <section class="section-block" id="pricing">
-        <div class="container">
-          <div class="section-header">
-            <span class="section-kicker" id="price-kicker">
-              SIMPLE ONE-TIME PRICING · ZERO SUBSCRIPTIONS
-            </span>
-            <h2 class="section-title" id="price-title">
-              Pick One 3D Companion ($12) — or Unlock All Six ($49)
-            </h2>
-            <p class="section-subtitle" id="price-subtitle">
-              Clean binary choice: grab your favorite standalone 3D species for $12 Early Bird, or
-              get all 6 independent Windows .exe companions in the Full Squad Bundle for just
-              $8.16/bot.
-            </p>
-          </div>
-
-          <div class="pricing-two-col">
-            <!-- Option 1: Single 3D Companion ($12 USD) -->
-            <article class="single-tier-card">
-              <div>
-                <span class="promo-pill" id="single-badge">1 BOT · EARLY BIRD -37%</span>
-                <h3 class="single-tier-title" id="single-title">Single 3D Companion</h3>
-                <p class="single-tier-sub" id="single-subtitle">
-                  Choose any 1 of the 6 species above — includes the complete universal engine.
-                </p>
-
-                <div class="single-price-row">
-                  <div class="single-price-big">$12 <span>USD</span></div>
-                  <span class="strike-price" id="single-regular-anchor">$19 USD</span>
-                </div>
-                <span class="single-per-bot" id="single-per-bot">
-                  One-time payment · Yours forever
-                </span>
-
-                <ul class="single-bullets" id="single-bullets"></ul>
-              </div>
-
-              <div class="single-tier-foot">
-                <a href="#catalog" class="btn btn-ghost" id="single-cta-btn">
-                  Pick Your Species Above ($12) ↑
-                </a>
-                <p class="squad-cta-sub" style="text-align:center" id="single-cta-sub">
-                  Direct instant download on each creature’s itch.io page
-                </p>
-              </div>
-            </article>
-
-            <!-- Option 2 (Featured Best Value): Full 6-Bot Zero-UI Squad ($49 USD) -->
-            <article class="squad-hero-card">
-              <span class="squad-ribbon" id="squad-ribbon">
-                👑 BEST VALUE · SAVE $65 USD (-57% OFF)
-              </span>
-
-              <div class="squad-grid">
-                <div>
-                  <h3 class="squad-title" id="squad-title">Full 6-Bot Zero-UI Squad (v1.1.0)</h3>
-                  <p class="squad-subtitle" id="squad-subtitle">
-                    All 6 independent Windows 10/11 x64 portable .exe companions: Buggy, Pyxol,
-                    Velkarion, Nimpu, Lumilisk &amp; Yuravax.
-                  </p>
-
-                  <ul class="squad-bullets" id="squad-bullets"></ul>
-
-                  <p class="squad-member-strip-label" id="squad-preview-hint">
-                    Click any squad member to preview in 3D Hero Stage:
-                  </p>
-                  <div class="squad-member-chips" id="squad-member-chips"></div>
-                </div>
-
-                <div class="squad-checkout-panel">
-                  <span class="squad-price-anchor" id="squad-regular-anchor">$114 USD</span>
-                  <div class="squad-price-big">$49 <span>USD</span></div>
-                  <span class="squad-per-bot" id="squad-per-bot">
-                    Only $8.16 / bot · Save $23 vs buying 6 at $12
-                  </span>
-                  <a
-                    href="https://elbuilder77.itch.io"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-gold"
-                    id="squad-cta-btn"
-                  >
-                    👑 Get Full 6-Bot Squad on itch.io — $49
-                  </a>
-                  <p class="squad-cta-sub" id="squad-cta-sub">
-                    Instant access · All 6 isolated .exe portables (640.97 MB total) · Commercial
-                    &amp; personal license on your PCs
-                  </p>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====================================================================
-           6. TECHNICAL TRUST, 6 PORTABLE .EXE SHA-256 & VIRUSTOTAL REPORTS
-           ==================================================================== -->
-      <section class="section-block" id="checksums">
-        <div class="container">
-          <div class="section-header">
-            <span class="section-kicker" id="trust-kicker">
-              TECHNICAL TRUST, SHA-256 &amp; VIRUSTOTAL VERIFICATION
-            </span>
-            <h2 class="section-title" id="trust-title">
-              6 Official Portable .exe Binaries — 100% Verifiable
-            </h2>
-            <p class="section-subtitle" id="trust-subtitle">
-              Every release binary uploaded to itch.io &amp; Gumroad is deterministic, ASAR-isolated
-              (Electron 45.3.1, dirty: false), zero-telemetry, and directly inspectable on
-              VirusTotal.
-            </p>
-          </div>
-
-          <!-- SmartScreen & PowerShell Verification Callout -->
-          <div class="smartscreen-callout">
-            <div>
-              <h3 id="smartscreen-title">
-                🛡️ Transparent Note on Portable .exe &amp; Windows SmartScreen
-              </h3>
-              <p id="smartscreen-body">
-                Each bot ships as a clean, zero-telemetry standalone portable executable—no
-                background services when closed, no registry bloat, and no cloud installer wrapper.
-                Because indie portable binaries are distributed directly without invasive
-                installers, Windows SmartScreen may display a standard informational prompt on first
-                launch (“More info” → “Run anyway”). Verify any binary in 2 seconds via PowerShell
-                or inspect its clean VirusTotal report below.
-              </p>
-            </div>
-
-            <div class="ps-verify-box">
-              <div class="ps-verify-head">
-                <span id="ps-verify-label">Verify your downloaded .exe in Windows PowerShell:</span>
-                <button type="button" class="copy-hash-btn" id="copy-ps-btn">Copy Command</button>
-              </div>
-              <code class="ps-code-snippet" id="ps-verify-code">
-                Get-FileHash .\Buggy-1.1.0-portable.exe -Algorithm SHA256
-              </code>
-              <div style="margin-top:8px;text-align:right">
-                <a
-                  href="./SHA256SUMS-ALL-SQUAD.txt"
-                  target="_blank"
-                  rel="noopener"
-                  style="font-size:11.5px;color:var(--accent);font-weight:700"
-                  id="manifest-raw-link"
-                >
-                  📄 Raw SHA256SUMS-ALL-SQUAD.txt
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Official 6 Portable .exe SHA-256 & VirusTotal Table -->
-          <details class="manifest-accordion" open>
-            <summary>
-              <span id="manifest-accordion-summary">
-                🔍 Official v1.1.0 Windows Portable Executables — 6/6 SHA-256 &amp; VirusTotal
-                Reports (640.97 MB Total)
-              </span>
-              <span style="font-size:12px;color:var(--accent)">SHA-256 · VirusTotal ▾</span>
-            </summary>
-
-            <div class="table-scroll">
-              <table class="sha-table">
-                <thead>
-                  <tr>
-                    <th id="sha-col-species">Species</th>
-                    <th id="sha-col-artifact">Official Portable .exe</th>
-                    <th id="sha-col-size">Exact Size</th>
-                    <th id="sha-col-hash">SHA-256 Checksum</th>
-                    <th id="sha-col-action">VirusTotal &amp; Copy</th>
-                  </tr>
-                </thead>
-                <tbody id="sha-table-body"></tbody>
-              </table>
-            </div>
-
-            <div class="manifest-totals-bar">
-              <span id="tot-exe">6 Official Windows x64 Portables (*-1.1.0-portable.exe)</span>
-              <strong style="color:var(--text-primary)" id="tot-grand">
-                Total Squad Size: 640.97 MB (672,102,053 bytes) · 6/6 Verified
-              </strong>
-            </div>
-          </details>
-
-          <!-- Technical FAQ -->
-          <h3 style="margin:0 0 16px;font-size:20px" id="faq-title">Technical FAQ</h3>
-          <div class="faq-grid" id="faq-grid"></div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div class="footer-brand">
-          <div class="brand-link">
-            <span class="brand-orb" aria-hidden="true"></span>
-            <span>ZERO-UI 3D BOTS · v1.1.0</span>
-          </div>
-          <p id="footer-tagline">
-            Standalone 3D Zero-UI Desktop Companions for Windows 10/11 (x64 Portable) · Universal
-            Offline + Optional BYOK Engine.
-          </p>
-          <span class="footer-meta" id="footer-meta">
-            Release v1.1.0 · Zero Telemetry · One-Time Purchase · Built with Three.js &amp; Electron
-          </span>
-          <div style="margin-top:10px;font-size:12.5px">
-            <a href="./privacy.html" style="color:var(--accent);font-weight:600">
-              🔒 Privacy Policy / Política de Privacidad
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-links">
-          <h4 id="footer-links-title">Official Storefront Links (itch.io)</h4>
-          <div class="footer-store-list" id="footer-store-list"></div>
-          <a
-            href="https://elbuilder77.itch.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="footer-hub-link"
-            id="footer-hub-link"
-          >
-            Visit Creator Storefront (elbuilder77.itch.io) →
-          </a>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Screenshot Lightbox Modal -->
-    <div class="lightbox-backdrop" id="lightbox-backdrop" hidden role="dialog" aria-modal="true">
-      <div class="lightbox-dialog">
-        <img id="lightbox-img" src="./assets/showcase/win11-squad-desktop.png" alt="Desktop preview" />
-        <div class="lightbox-bar">
-          <span id="lightbox-caption"></span>
-          <button type="button" class="btn btn-sm btn-ghost" id="lightbox-close">✕ Close</button>
-        </div>
+        <a class="button button-small button-outline nav-cta" href="#catalog"><span data-i18n="navCta">Find your companion</span><span aria-hidden="true">↗</span></a>
       </div>
     </div>
-
-    <script type="module" src="./js/app.js"></script>
-  </body>
+  </header>
+  <main id="main">
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="heroEyebrow">A little companion. A brighter day.</p>
+        <h1 id="hero-title"><span data-i18n="heroTitle">Your desktop.</span><span class="hero-accent" data-i18n="heroAccent">A little more alive.</span></h1>
+        <p class="hero-lead" data-i18n="heroLead">Playful 3D companions for studying, creating, working, and taking a little break.</p>
+        <div class="hero-actions">
+          <a href="#catalog" class="button button-primary"><span data-i18n="heroCta">Meet your companion</span><span aria-hidden="true">↗</span></a>
+          <a href="#desktop-proof" class="text-link"><span class="play-icon" aria-hidden="true">▷</span><span data-i18n="heroWatch">See them in action</span></a>
+        </div>
+        <div class="hero-facts"><span data-i18n="heroWindows">Windows 10 / 11</span><span data-i18n="heroOffline">No internet needed</span><span data-i18n="heroPayOnce">One-time purchase</span></div>
+      </div>
+      <div class="live-stage" id="live-stage">
+        <div class="stage-heading"><span data-i18n="stageLabel">Try a little magic</span><span class="live-badge"><i aria-hidden="true"></i><span data-i18n="stageLive">Live 3D</span></span></div>
+        <div class="stage-viewport">
+          <iframe id="hero-stage-frame" title="Interactive 3D companion preview" data-i18n-title="stageFrame" allow="fullscreen" referrerpolicy="same-origin"></iframe>
+          <div class="stage-loading" id="stage-loading-overlay" data-visible="true" role="status">
+            <span class="loader-dot" aria-hidden="true"></span><span id="stage-loading-text" data-i18n="stageLoading">Your companion is on the way…</span>
+            <button type="button" id="stage-retry" class="button button-small button-outline" data-i18n="stageRetry" hidden>Try again</button>
+          </div>
+        </div>
+        <div class="stage-dock">
+          <div class="stage-action-row">
+            <div class="stage-actions">
+              <button type="button" class="control-button" data-command="pet"><span aria-hidden="true">♡</span><span data-i18n="pet">Pet</span></button>
+              <button type="button" class="control-button" data-command="spin"><span aria-hidden="true">↻</span><span data-i18n="spin">Spin</span></button>
+              <button type="button" class="control-button" data-command="power"><span aria-hidden="true">✧</span><span data-i18n="power">A little magic</span></button>
+              <button type="button" class="control-button icon-button" data-command="center" data-i18n-aria="center" data-i18n-title="center" aria-label="Recenter" title="Recenter">⌖</button>
+            </div>
+            <details class="stage-options">
+              <summary data-i18n="stageMore">Size &amp; stage</summary>
+              <div class="stage-options-panel">
+                <div class="segmented-group" role="group" data-i18n-aria="size" aria-label="Size"><span data-i18n="size">Size</span>
+                  <button type="button" data-stage-size="sm" aria-pressed="false">S</button><button type="button" data-stage-size="md" aria-pressed="false">M</button><button type="button" data-stage-size="lg" aria-pressed="false">L</button><button type="button" data-stage-size="xl" aria-pressed="true">XL</button>
+                </div>
+                <div class="segmented-group" role="group" data-i18n-aria="stage" aria-label="Stage"><button type="button" data-stage-evo="1" aria-pressed="false" data-i18n="hatchling">Hatchling</button><button type="button" data-stage-evo="2" aria-pressed="true" data-i18n="rookie">Rookie</button></div>
+              </div>
+            </details>
+          </div>
+          <p class="stage-hint" data-i18n="stageHint">Drag to move · Click to pet · R to spin</p>
+          <div class="species-tabs" id="species-tabs" role="group" data-i18n-aria="stageChoose" aria-label="Choose a companion"></div>
+          <div class="stage-identity" id="stage-identity" aria-live="polite"></div>
+        </div>
+        <p class="stage-disclaimer" data-i18n="stageDemo">Interactive preview · Desktop app sold separately</p>
+      </div>
+    </section>
+    <div class="benefit-strip container">
+      <span><i aria-hidden="true">↗</i><span data-i18n="benefitOne">No extra windows</span></span><span><i aria-hidden="true">♡</i><span data-i18n="benefitTwo">Pets &amp; little surprises</span></span><span><i aria-hidden="true">☾</i><span data-i18n="benefitThree">Take a break, guilt-free</span></span><span><i aria-hidden="true">✧</i><span data-i18n="benefitFour">AI only if you want</span></span>
+    </div>
+    <section class="section container" id="desktop-proof" aria-labelledby="proof-title">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="proofKicker">YOUR SPACE, WITH COMPANY</p><h2 id="proof-title" data-i18n="proofTitle">Fits right into your day.</h2></div><p data-i18n="proofLead">Real companions. Real Windows recordings.</p></div>
+      <div class="video-shell">
+        <video id="proof-video" controls playsinline muted preload="metadata" poster="./assets/showcase/desktop-companions.jpg" aria-describedby="video-caption">
+          <source src="./assets/showcase/desktop-companions.mp4" type="video/mp4" /><p data-i18n="videoFallback">Your browser cannot play this video.</p>
+        </video>
+        <div class="video-caption"><span id="video-caption">Make yourself at home</span><span class="recording-label">Windows 11 <span aria-hidden="true">↗</span></span></div>
+      </div>
+      <div id="video-picker" class="video-picker" role="group" data-i18n-aria="videoChoose" aria-label="Choose a desktop recording"></div>
+      <div class="proof-gallery" id="proof-gallery" data-i18n-aria="proofGallery" aria-label="A closer look"></div>
+      <p class="fine-print" data-i18n="proofFootnote">Actual desktop footage · Edited clips · No audio</p>
+    </section>
+    <section class="section catalog-section" id="catalog" aria-labelledby="catalog-title">
+      <div class="container"><div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">SIX PERSONALITIES. YOUR FAVORITE.</p><h2 id="catalog-title" data-i18n="catalogTitle">Who feels like you?</h2></div><p data-i18n="catalogLead">Same features. A different kind of company.</p></div><div class="catalog-grid" id="catalog-grid"></div></div>
+    </section>
+    <section class="section container" id="install" aria-labelledby="install-title">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="installKicker">TWO WAYS TO FEEL AT HOME</p><h2 id="install-title" data-i18n="installTitle">Your Windows. Your choice.</h2></div><span class="quiet-badge">Windows 10 / 11 · v1.1.0</span></div>
+      <div class="edition-grid">
+        <article class="edition-card">
+          <span class="edition-symbol windows-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <h3 data-i18n="storeName">Microsoft Store Edition</h3><p class="edition-subtitle" data-i18n="storeSubtitle">Install once. Settle right in.</p>
+          <ul><li data-i18n="storeFeature1">One-click installation</li><li data-i18n="storeFeature2">Microsoft-signed · No SmartScreen prompts</li><li data-i18n="storeFeature3">Automatic updates · Clean uninstall</li></ul>
+          <div id="store-edition-action" class="edition-action"></div><p class="fine-print" data-i18n="storeNote">MSIX v1.1.0.0 · Publisher: Julio-Patrón</p>
+        </article>
+        <article class="edition-card">
+          <span class="edition-symbol" aria-hidden="true">↧</span><h3 data-i18n="portableName">Direct Portable Edition</h3><p class="edition-subtitle" data-i18n="portableSubtitle">Download. Open. Enjoy.</p>
+          <ul><li data-i18n="portableFeature1">A single portable file</li><li data-i18n="portableFeature2">No installer or Microsoft account</li><li data-i18n="portableFeature3">Run from any folder · Web demo on itch.io</li></ul>
+          <a href="#catalog" class="text-link" data-i18n="installCta">Choose a companion</a><p class="fine-print" data-i18n="portableNote">v1.1.0 · Windows x64 · About 106.8 MB per companion</p>
+        </article>
+      </div>
+    </section>
+    <section class="section container" id="pricing" aria-labelledby="price-title">
+      <div class="section-heading centered"><p class="eyebrow" data-i18n="priceKicker">GOOD COMPANY. ONE SIMPLE PRICE.</p><h2 id="price-title" data-i18n="priceTitle">Pay once. Stay together.</h2><p data-i18n="priceLead">$0 subscription. All companion features included.</p></div>
+      <div class="pricing-grid">
+        <article class="price-card">
+          <span class="price-label" data-i18n="launch">Launch offer</span><h3 data-i18n="singleTitle">Just your favorite</h3><p data-i18n="singleSub">Any one of the six companions.</p>
+          <div class="price">$12 <span>USD</span><s aria-label="Regular price $19 USD" id="single-regular-price">$19</s></div><span class="price-detail" data-i18n="singleDetail">Both stages included</span>
+          <div class="price-bottom"><a href="#catalog" class="button button-outline" data-i18n="singleCta">Choose your one</a></div>
+        </article>
+        <article class="price-card duo-card">
+          <span class="price-label">02 / 06</span><h3 data-i18n="duoTitle">A perfect pair</h3><p data-i18n="duoSub">Three themed duos to choose from.</p>
+          <div class="price">$22 <span>USD</span></div><div class="duo-selector" id="duo-selector" role="group" data-i18n-aria="duoLabel" aria-label="Choose your duo"></div><div class="price-bottom" id="duo-store-links"></div>
+        </article>
+        <article class="price-card squad-card">
+          <span class="price-label" data-i18n="squadBadge">THE WHOLE FAMILY</span><h3 data-i18n="squadTitle">Full 6-Bot Squad</h3><p data-i18n="squadSub">All six. A desktop full of personality.</p>
+          <div class="price">$49 <span>USD</span></div><span class="price-detail" data-i18n="squadDetail">$8.16 / bot · Save $23 vs six singles</span>
+          <div class="squad-dots" id="squad-dots" data-i18n-aria="allSix" aria-label="All six companions included"></div><div class="price-bottom" id="squad-store-links"></div>
+        </article>
+      </div>
+      <p class="fine-print center-text" data-i18n="priceFootnote">USD · Launch prices · Final price and availability shown by each store.</p>
+    </section>
+    <section class="section trust-section container" id="checksums" aria-labelledby="trust-title">
+      <div class="trust-heading"><h2 id="trust-title" data-i18n="trustTitle">A few useful details</h2><p data-i18n="trustLead">Here whenever you need them.</p></div>
+      <div class="trust-content">
+        <details class="accordion" id="faq-accordion"><summary data-i18n="faqTitle">Questions, answered</summary><div id="faq-list" class="accordion-body"></div></details>
+        <details class="accordion" id="verification-accordion">
+          <summary data-i18n="checksumsTitle">Release verification · SHA-256</summary>
+          <div class="accordion-body">
+            <p data-i18n="checksumsIntro">Compare your file with its matching release hash. A hash identifies a file; it is not a safety guarantee.</p>
+            <p data-i18n="smartScreen">The direct portable edition may trigger Windows SmartScreen. Check its source and hash before deciding to open it.</p>
+            <h3 data-i18n="exeTitle">Portable · v1.1.0</h3><div id="exe-hashes"></div><a href="./SHA256SUMS-ALL-SQUAD.txt" class="text-link manifest-link" data-i18n="manifest">Portable hash manifest</a>
+            <h3 data-i18n="appxTitle">Store packages · v1.1.0.0</h3><p data-i18n="packageNote">These hashes identify the submitted .appx packages. Microsoft Store manages its own signed installation and updates.</p>
+            <div id="appx-hashes"></div><a href="./SHA256SUMS-STORE.txt" class="text-link manifest-link" data-i18n="appxManifest">Store package hash manifest</a>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer container">
+    <div><a class="brand" href="#top"><span class="brand-orb" aria-hidden="true"></span>zero-ui</a><p data-i18n="footerTag">A little company for your everyday.</p></div>
+    <div class="footer-links"><a href="./privacy.html" data-i18n="privacy">Privacy policy</a><span id="creator-links"></span><a href="#top" data-i18n="top">Back to top</a></div>
+    <span class="footer-version">© 2026 Julio-Patrón · v1.1.0</span>
+  </footer>
+  <dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-caption">
+    <div class="lightbox-toolbar"><span id="lightbox-counter"></span><button type="button" id="lightbox-close" class="control-button"><span data-i18n="close">Close</span><span aria-hidden="true">×</span></button></div>
+    <img id="lightbox-image" alt="" />
+    <div class="lightbox-bottom"><button type="button" class="control-button" id="lightbox-prev" data-i18n-aria="previous" aria-label="Previous screenshot">←</button><p id="lightbox-caption"></p><button type="button" class="control-button" id="lightbox-next" data-i18n-aria="next" aria-label="Next screenshot">→</button></div>
+  </dialog>
+  <p id="site-announcement" class="visually-hidden" role="status" aria-live="polite"></p>
+  <noscript><p class="container">Enable JavaScript for the interactive preview and catalog. / Activa JavaScript para el visor y el catálogo. <a href="./privacy.html">Privacy / Privacidad</a></p></noscript>
+</body>
 </html>

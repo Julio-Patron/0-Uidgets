@@ -1,0 +1,10 @@
+# Zero-UI Microsoft Store submission packages
+# Package version: 1.1.0.0 | Publisher display name: Julio-Patrón
+# SHA-256 checked against the original local .appx files.
+# Files are distributed through Microsoft Store, never through this repository.
+8c3763fd1c572fbbda69b12662981969419e5f26e5123f79f809c1badcba7c47  Buggy-1.1.0-store-x64.appx
+53f115b9901011e6d95c128bcdecc3597df6c2ec3836d13b3b24224000b8b366  Pyxol-1.1.0-store-x64.appx
+63a808df6aaafc388617ec944e6cb739c45108ba21d273ab7af0e82e65248611  Velkarion-1.1.0-store-x64.appx
+002ebe40a058a1ce88160d4615647d60c4067856ec530c02c437e6eae282df2f  Nimpu-1.1.0-store-x64.appx
+a40fe21ff404170088a65559cf32ca5847626073acaaa6a7f5b2898314e8da52  Lumilisk-1.1.0-store-x64.appx
+842373d0bbe77642ad800a149cd34f2d0e12f1f1373d80e63bd2a67fd796308e  Yuravax-1.1.0-store-x64.appx

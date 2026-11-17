@@ -41,29 +41,30 @@ function applyThemeAndHud() {
   const line1 = document.getElementById('sim-line-1');
   const line2 = document.getElementById('sim-line-2');
   const modePill = document.getElementById('tb-mode-pill');
-  const centerAvatar = document.getElementById('tb-center-avatar');
-  const trayAvatar = document.getElementById('tb-tray-avatar');
   const trayBtn = document.getElementById('tray-bot-btn');
+  const canvasControl = document.getElementById('ai-avatar-widget')?.shadowRoot?.querySelector('.zui-canvas-stage');
+  if (canvasControl) {
+    canvasControl.setAttribute('aria-label', currentLang === 'es'
+      ? `${spec.name} en 3D. Arrastra para mover, clic para acariciar, R para girar. Clic derecho para tamaño y etapa.`
+      : `${spec.name} in 3D. Drag to move, click to pet, R to spin. Right-click for size and stage.`);
+  }
+  document.title = currentLang === 'es' ? 'Zero-UI · Vista interactiva 3D' : 'Zero-UI · Interactive 3D preview';
 
-  if (hudName) hudName.textContent = `${spec.name} v1.1.0`;
+  if (hudName) hudName.textContent = spec.name;
   if (hudPhys) hudPhys.textContent = copy.physicsLabel;
   if (winTitle) winTitle.textContent = copy.desktopContext.winTitle;
   if (line1) line1.textContent = copy.desktopContext.line1;
   if (line2) line2.textContent = copy.desktopContext.line2;
   if (modePill) {
     modePill.textContent =
-      currentLang === 'es' ? '100% Offline · WebGL Activo' : '100% Offline · Live WebGL';
-  }
-  if (centerAvatar) centerAvatar.src = spec.avatar;
-  if (trayAvatar) {
-    trayAvatar.src = spec.avatar;
-    trayAvatar.alt = spec.name;
+      currentLang === 'es' ? 'Tu espacio' : 'Your space';
   }
   if (trayBtn) {
     trayBtn.title =
       currentLang === 'es'
-        ? `${spec.name} — Clic izq.: Acariciar · Clic der.: Ajustes en vivo`
-        : `${spec.name} — Left-click: Pet · Right-click: Live Settings`;
+        ? `${spec.name} — Acariciar`
+        : `${spec.name} — Pet`;
+    trayBtn.setAttribute('aria-label', trayBtn.title);
   }
 }
 
@@ -96,6 +97,12 @@ function injectStageCenterOverride(hostEl) {
     .zui-root[data-standalone="false"] {
       right: calc(50% - var(--zui-root-w, 256px) * 0.5) !important;
       bottom: 52px !important;
+    }
+    /* The storefront exposes its own bilingual preview controls. Desktop-only
+       configuration and speech labels are not part of this embedded demo. */
+    .zui-popover, .zui-chat, .zui-quick-cloud, .zui-chip-row,
+    .zui-bubble, .zui-status-tag, .zui-speech-line, .zui-orb-actions {
+      display: none !important;
     }
   `;
   hostEl.shadowRoot.appendChild(style);
@@ -208,10 +215,19 @@ async function mountIsolatedCreature() {
     size: currentSize,
     position: 'bottom-right',
     standalone: false,
-    allowSettingsOrb: true,
+    allowSettingsOrb: false,
   });
 
   injectStageCenterOverride(hostEl);
+  applyThemeAndHud();
+
+  if (window.parent !== window) {
+    hostEl?.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.parent.postMessage({ type: 'ZUI_SETTINGS', species: spec.id }, window.location.origin);
+    }, true);
+  }
 
   const trayBtn = document.getElementById('tray-bot-btn');
   trayBtn?.addEventListener('click', () => {
@@ -293,6 +309,7 @@ window.addEventListener('message', (event) => {
       default:
         break;
     }
+    applyThemeAndHud();
   }
 });
 

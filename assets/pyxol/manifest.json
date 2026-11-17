@@ -8,15 +8,11 @@
   "stages": {
     "1": {
       "label": "hatchling",
-      "sprite": "pyxol_1.webp",
-      "normal": "normals/pyxol_1.webp",
-      "preview": "preview/pyxol_1.webp"
+      "normal": "normals/pyxol_1.webp"
     },
     "2": {
       "label": "rookie",
-      "sprite": "pyxol_2.webp",
-      "normal": "normals/pyxol_2.webp",
-      "preview": "preview/pyxol_2.webp"
+      "normal": "normals/pyxol_2.webp"
     }
   }
 }
