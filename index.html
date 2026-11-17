@@ -86,36 +86,21 @@
     <div class="benefit-strip container">
       <span><i aria-hidden="true">↗</i><span data-i18n="benefitOne">No extra windows</span></span><span><i aria-hidden="true">♡</i><span data-i18n="benefitTwo">Pets &amp; little surprises</span></span><span><i aria-hidden="true">☾</i><span data-i18n="benefitThree">Take a break, guilt-free</span></span><span><i aria-hidden="true">✧</i><span data-i18n="benefitFour">AI only if you want</span></span>
     </div>
-    <section class="section container" id="desktop-proof" aria-labelledby="proof-title">
-      <div class="section-heading"><div><p class="eyebrow" data-i18n="proofKicker">YOUR SPACE, WITH COMPANY</p><h2 id="proof-title" data-i18n="proofTitle">Fits right into your day.</h2></div><p data-i18n="proofLead">Real companions. Real Windows recordings.</p></div>
-      <div class="video-shell">
-        <video id="proof-video" controls playsinline muted preload="metadata" poster="./assets/showcase/desktop-companions.jpg" aria-describedby="video-caption">
-          <source src="./assets/showcase/desktop-companions.mp4" type="video/mp4" /><p data-i18n="videoFallback">Your browser cannot play this video.</p>
-        </video>
-        <div class="video-caption"><span id="video-caption">Make yourself at home</span><span class="recording-label">Windows 11 <span aria-hidden="true">↗</span></span></div>
-      </div>
-      <div id="video-picker" class="video-picker" role="group" data-i18n-aria="videoChoose" aria-label="Choose a desktop recording"></div>
-      <div class="proof-gallery" id="proof-gallery" data-i18n-aria="proofGallery" aria-label="A closer look"></div>
-      <p class="fine-print" data-i18n="proofFootnote">Actual desktop footage · Edited clips · No audio</p>
-    </section>
     <section class="section catalog-section" id="catalog" aria-labelledby="catalog-title">
       <div class="container"><div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">SIX PERSONALITIES. YOUR FAVORITE.</p><h2 id="catalog-title" data-i18n="catalogTitle">Who feels like you?</h2></div><p data-i18n="catalogLead">Same features. A different kind of company.</p></div><div class="catalog-grid" id="catalog-grid"></div></div>
     </section>
-    <section class="section container" id="install" aria-labelledby="install-title">
-      <div class="section-heading"><div><p class="eyebrow" data-i18n="installKicker">TWO WAYS TO FEEL AT HOME</p><h2 id="install-title" data-i18n="installTitle">Your Windows. Your choice.</h2></div><span class="quiet-badge">Windows 10 / 11 · v1.1.0</span></div>
-      <div class="edition-grid">
-        <article class="edition-card">
-          <span class="edition-symbol windows-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <h3 data-i18n="storeName">Microsoft Store Edition</h3><p class="edition-subtitle" data-i18n="storeSubtitle">Install once. Settle right in.</p>
-          <ul><li data-i18n="storeFeature1">One-click installation</li><li data-i18n="storeFeature2">Microsoft-signed · No SmartScreen prompts</li><li data-i18n="storeFeature3">Automatic updates · Clean uninstall</li></ul>
-          <div id="store-edition-action" class="edition-action"></div><p class="fine-print" data-i18n="storeNote">MSIX v1.1.0.0 · Publisher: Julio-Patrón</p>
-        </article>
-        <article class="edition-card">
-          <span class="edition-symbol" aria-hidden="true">↧</span><h3 data-i18n="portableName">Direct Portable Edition</h3><p class="edition-subtitle" data-i18n="portableSubtitle">Download. Open. Enjoy.</p>
-          <ul><li data-i18n="portableFeature1">A single portable file</li><li data-i18n="portableFeature2">No installer or Microsoft account</li><li data-i18n="portableFeature3">Run from any folder · Web demo on itch.io</li></ul>
-          <a href="#catalog" class="text-link" data-i18n="installCta">Choose a companion</a><p class="fine-print" data-i18n="portableNote">v1.1.0 · Windows x64 · About 106.8 MB per companion</p>
-        </article>
+    <section class="section container desktop-proof" id="desktop-proof" aria-labelledby="proof-title">
+      <div class="proof-copy">
+        <p class="eyebrow" data-i18n="proofKicker">ON YOUR DESKTOP</p>
+        <h2 id="proof-title" data-i18n="proofTitle">See them on Windows.</h2>
+        <p class="proof-lead" data-i18n="proofLead">A little company while you do your thing.</p>
+        <p class="fine-print" id="proof-note"><span data-i18n="proofFootnote">Real recording · No audio</span> · <span id="video-duration">0:43</span></p>
       </div>
+      <figure class="video-shell">
+        <video id="proof-video" controls playsinline muted preload="metadata" width="1366" height="766" poster="./assets/showcase/desktop-companions.jpg" aria-describedby="proof-note">
+          <source src="./assets/showcase/desktop-companions.mp4" type="video/mp4" /><p data-i18n="videoFallback">Your browser cannot play this video.</p>
+        </video>
+      </figure>
     </section>
     <section class="section container" id="pricing" aria-labelledby="price-title">
       <div class="section-heading centered"><p class="eyebrow" data-i18n="priceKicker">GOOD COMPANY. ONE SIMPLE PRICE.</p><h2 id="price-title" data-i18n="priceTitle">Pay once. Stay together.</h2><p data-i18n="priceLead">$0 subscription. All companion features included.</p></div>
@@ -136,6 +121,22 @@
         </article>
       </div>
       <p class="fine-print center-text" data-i18n="priceFootnote">USD · Launch prices · Final price and availability shown by each store.</p>
+    </section>
+    <section class="section container" id="install" aria-labelledby="install-title">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="installKicker">TWO WAYS TO FEEL AT HOME</p><h2 id="install-title" data-i18n="installTitle">Your Windows. Your choice.</h2></div><span class="quiet-badge">Windows 10 / 11 · v1.1.0</span></div>
+      <div class="edition-grid">
+        <article class="edition-card">
+          <span class="edition-symbol windows-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <h3 data-i18n="storeName">Microsoft Store Edition</h3><p class="edition-subtitle" data-i18n="storeSubtitle">Install once. Settle right in.</p>
+          <ul><li data-i18n="storeFeature1">One-click installation</li><li data-i18n="storeFeature2">Microsoft-signed · No SmartScreen prompts</li><li data-i18n="storeFeature3">Automatic updates · Clean uninstall</li></ul>
+          <div id="store-edition-action" class="edition-action"></div><p class="fine-print" data-i18n="storeNote">MSIX v1.1.0.0 · Publisher: Julio-Patrón</p>
+        </article>
+        <article class="edition-card">
+          <span class="edition-symbol" aria-hidden="true">↧</span><h3 data-i18n="portableName">Direct Portable Edition</h3><p class="edition-subtitle" data-i18n="portableSubtitle">Download. Open. Enjoy.</p>
+          <ul><li data-i18n="portableFeature1">A single portable file</li><li data-i18n="portableFeature2">No installer or Microsoft account</li><li data-i18n="portableFeature3">Run from any folder · Web demo on itch.io</li></ul>
+          <a href="#catalog" class="text-link" data-i18n="installCta">Choose a companion</a><p class="fine-print" data-i18n="portableNote">v1.1.0 · Windows x64 · About 106.8 MB per companion</p>
+        </article>
+      </div>
     </section>
     <section class="section trust-section container" id="checksums" aria-labelledby="trust-title">
       <div class="trust-heading"><h2 id="trust-title" data-i18n="trustTitle">A few useful details</h2><p data-i18n="trustLead">Here whenever you need them.</p></div>
@@ -159,11 +160,6 @@
     <div class="footer-links"><a href="./privacy.html" data-i18n="privacy">Privacy policy</a><span id="creator-links"></span><a href="#top" data-i18n="top">Back to top</a></div>
     <span class="footer-version">© 2026 Julio-Patrón · v1.1.0</span>
   </footer>
-  <dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-caption">
-    <div class="lightbox-toolbar"><span id="lightbox-counter"></span><button type="button" id="lightbox-close" class="control-button"><span data-i18n="close">Close</span><span aria-hidden="true">×</span></button></div>
-    <img id="lightbox-image" alt="" />
-    <div class="lightbox-bottom"><button type="button" class="control-button" id="lightbox-prev" data-i18n-aria="previous" aria-label="Previous screenshot">←</button><p id="lightbox-caption"></p><button type="button" class="control-button" id="lightbox-next" data-i18n-aria="next" aria-label="Next screenshot">→</button></div>
-  </dialog>
   <p id="site-announcement" class="visually-hidden" role="status" aria-live="polite"></p>
   <noscript><p class="container">Enable JavaScript for the interactive preview and catalog. / Activa JavaScript para el visor y el catálogo. <a href="./privacy.html">Privacy / Privacidad</a></p></noscript>
 </body>

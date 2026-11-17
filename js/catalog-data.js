@@ -63,17 +63,13 @@ export const BUNDLES = [
   { id: 'dragonDuo', members: ['velkarion', 'lumilisk'], title: { en: 'Fire & tide', es: 'Fuego y marea' } },
   { id: 'dreamyDuo', members: ['yuravax', 'nimpu'], title: { en: 'Cloud & sky', es: 'Nube y cielo' } },
 ];
-export const PROOF_MEDIA = [
-  { id: 'desktop', src: './assets/showcase/desktop-companions.mp4', poster: './assets/showcase/desktop-companions.jpg', duration: '0:43', width: 1366, height: 766,
-    title: { en: 'Make yourself at home', es: 'Como en casa' },
-    alt: { en: 'Buggy, Nimpu and Lumilisk on a real Windows desktop.', es: 'Buggy, Nimpu y Lumilisk en un escritorio real de Windows.' } },
-  { id: 'details', src: './assets/showcase/companion-details.mp4', poster: './assets/showcase/companion-details.jpg', duration: '0:08', width: 650, height: 540,
-    title: { en: 'Small details, big personality', es: 'Pequeños detalles, mucha personalidad' },
-    alt: { en: 'Nimpu beside its size and stage settings in Windows.', es: 'Nimpu junto a sus ajustes de tamaño y etapa en Windows.' } },
-  { id: 'squad', src: './assets/showcase/squad-in-action.mp4', poster: './assets/showcase/squad-in-action.jpg', duration: '0:05', width: 1358, height: 632,
-    title: { en: 'Better together', es: 'Mejor en compañía' },
-    alt: { en: 'All six companions over a browser window on Windows.', es: 'Las seis criaturas sobre una ventana del navegador en Windows.' } },
-];
+export const PROOF_VIDEO = {
+  src: './assets/showcase/desktop-companions.mp4',
+  poster: './assets/showcase/desktop-companions.jpg',
+  duration: '0:43',
+  title: { en: 'Desktop companions on Windows', es: 'Compañeros de escritorio en Windows' },
+  alt: { en: 'Buggy, Nimpu and Lumilisk on a real Windows desktop.', es: 'Buggy, Nimpu y Lumilisk en un escritorio real de Windows.' },
+};
 
 export const I18N = {
   en: {
@@ -87,11 +83,10 @@ export const I18N = {
       stageLabel: 'Try a little magic', stageLive: 'Live 3D', stageLoading: 'Your companion is on the way…', stageHint: 'Drag to move · Click to pet · R to spin',
       stageDemo: 'Interactive preview · Desktop app sold separately', stageFrame: 'Interactive 3D companion preview', stageChoose: 'Choose a companion',
       pet: 'Pet', spin: 'Spin', power: 'A little magic', center: 'Recenter', size: 'Size', stage: 'Stage', hatchling: 'Hatchling', rookie: 'Rookie', stageMore: 'Size & stage', stageRetry: 'Try again',
-      stageError: 'The 3D preview could not load. Try again or watch the desktop videos below.',
+      stageError: 'The 3D preview could not load. Try again or watch the desktop video below.',
       benefitOne: 'No extra windows', benefitTwo: 'Pets & little surprises', benefitThree: 'Take a break, guilt-free', benefitFour: 'AI only if you want',
-      proofKicker: 'YOUR SPACE, WITH COMPANY', proofTitle: 'Fits right into your day.', proofLead: 'Real companions. Real Windows recordings.',
-      proofGallery: 'A closer look', proofFootnote: 'Actual desktop footage · Edited clips · No audio', videoChoose: 'Choose a desktop recording',
-      videoFallback: 'Your browser cannot play this video.', videoDownload: 'Open the video',
+      proofKicker: 'ON YOUR DESKTOP', proofTitle: 'See them on Windows.', proofLead: 'A little company while you do your thing.',
+      proofFootnote: 'Real recording · No audio', videoFallback: 'Your browser cannot play this video.',
       catalogKicker: 'SIX PERSONALITIES. YOUR FAVORITE.', catalogTitle: 'Who feels like you?', catalogLead: 'Same features. A different kind of company.',
       try: 'Meet in 3D', selected: 'On stage', buyOn: 'Get on', storeSoon: 'Microsoft Store · Coming soon', bundleSoon: 'Bundle links coming soon',
       launch: 'Launch offer', regular: 'Regular price', speciesUnit: 'per companion',
@@ -115,7 +110,6 @@ export const I18N = {
       smartScreen: 'The direct portable edition may trigger Windows SmartScreen. Check its source and hash before deciding to open it.',
       packageNote: 'These hashes identify the submitted .appx packages. Microsoft Store manages its own signed installation and updates.',
       footerTag: 'A little company for your everyday.', privacy: 'Privacy policy', creator: 'Visit the creator', top: 'Back to top',
-      close: 'Close', previous: 'Previous screenshot', next: 'Next screenshot', lightbox: 'Desktop screenshot',
     },
     faqs: [
       { q: 'Do I need internet or AI?', a: 'No. Your companion works offline, with AI off by default. Optional AI can help with notes, images and writing; connect your own provider if you want. Provider charges may apply. Local Ollama has no API fee.' },
@@ -136,11 +130,10 @@ export const I18N = {
       stageLabel: 'Prueba un poco de magia', stageLive: '3D en vivo', stageLoading: 'Tu compañero está en camino…', stageHint: 'Arrastra para mover · Clic para acariciar · R para girar',
       stageDemo: 'Vista interactiva · App de escritorio por separado', stageFrame: 'Vista previa interactiva del compañero 3D', stageChoose: 'Elige una criatura',
       pet: 'Acariciar', spin: 'Girar', power: 'Su magia', center: 'Centrar', size: 'Tamaño', stage: 'Etapa', hatchling: 'Cría', rookie: 'Rookie', stageMore: 'Tamaño y etapa', stageRetry: 'Reintentar',
-      stageError: 'No se pudo cargar la vista 3D. Reintenta o mira los videos de escritorio más abajo.',
+      stageError: 'No se pudo cargar la vista 3D. Reintenta o mira el video de escritorio más abajo.',
       benefitOne: 'Sin ventanas estorbosas', benefitTwo: 'Caricias y pequeñas sorpresas', benefitThree: 'Descansa sin perder el vínculo', benefitFour: 'IA solo si tú quieres',
-      proofKicker: 'TU ESPACIO, EN COMPAÑÍA', proofTitle: 'Un lugar en tu día.', proofLead: 'Compañeros reales. Grabaciones reales de Windows.',
-      proofGallery: 'Míralos de cerca', proofFootnote: 'Capturas reales de escritorio · Clips editados · Sin audio', videoChoose: 'Elegir grabación de escritorio',
-      videoFallback: 'Tu navegador no puede reproducir este video.', videoDownload: 'Abrir el video',
+      proofKicker: 'EN TU ESCRITORIO', proofTitle: 'Así se ven en Windows.', proofLead: 'Una pequeña compañía mientras haces lo tuyo.',
+      proofFootnote: 'Grabación real · Sin audio', videoFallback: 'Tu navegador no puede reproducir este video.',
       catalogKicker: 'SEIS PERSONALIDADES. TU FAVORITA.', catalogTitle: '¿Quién va contigo?', catalogLead: 'Las mismas funciones. Otra forma de acompañarte.',
       try: 'Conocer en 3D', selected: 'En el escenario', buyOn: 'Comprar en', storeSoon: 'Microsoft Store · Muy pronto', bundleSoon: 'Paquetes disponibles próximamente',
       launch: 'Precio de lanzamiento', regular: 'Precio regular', speciesUnit: 'por criatura',
@@ -164,7 +157,6 @@ export const I18N = {
       smartScreen: 'La edición portable directa puede activar Windows SmartScreen. Comprueba su origen y hash antes de decidir abrirla.',
       packageNote: 'Estos hashes identifican los .appx enviados. Microsoft Store gestiona su propia instalación firmada y sus actualizaciones.',
       footerTag: 'Un poco de compañía para tu día.', privacy: 'Política de privacidad', creator: 'Visita al creador', top: 'Volver al inicio',
-      close: 'Cerrar', previous: 'Captura anterior', next: 'Captura siguiente', lightbox: 'Captura de escritorio',
     },
     faqs: [
       { q: '¿Necesito internet o inteligencia artificial?', a: 'No. Tu compañero funciona sin conexión y trae la IA apagada. La IA opcional ayuda con apuntes, imágenes y textos; conecta tu propio proveedor si quieres. El proveedor puede cobrar por su uso. Ollama local no tiene coste de API.' },

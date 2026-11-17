@@ -1,4 +1,4 @@
-import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, PROOF_MEDIA } from './catalog-data.js';
+import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, PROOF_VIDEO } from './catalog-data.js';
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -9,15 +9,11 @@ let activeSpecies = SPECIES_ORDER.includes(params.get('species')) ? params.get('
 let activeSize = 'xl';
 let activeStage = 2;
 let activeDuo = BUNDLES[0].id;
-let activeVideo = 0;
-let activeShot = 0;
 let mountedSpecies = null;
 let navigationTimer;
 let readyTimer;
-let lightboxTrigger;
 const frame = $('hero-stage-frame');
 const video = $('proof-video');
-const dialog = $('lightbox');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const t = (key) => I18N[language].labels[key];
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -111,7 +107,7 @@ function renderStaticText() {
   document.querySelector('meta[name="description"]').content = dictionary.metaDescription;
   for (const selector of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) document.querySelector(selector).content = dictionary.metaTitle;
   for (const selector of ['meta[property="og:description"]', 'meta[name="twitter:description"]']) document.querySelector(selector).content = dictionary.metaDescription;
-  document.querySelector('meta[property="og:image:alt"]').content = PROOF_MEDIA[0].alt[language];
+  document.querySelector('meta[property="og:image:alt"]').content = PROOF_VIDEO.alt[language];
   document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria]').forEach((node) => node.setAttribute('aria-label', t(node.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-title]').forEach((node) => node.setAttribute('title', t(node.dataset.i18nTitle)));
@@ -137,33 +133,15 @@ function renderSpecies() {
   updateSpecies();
 }
 
-function updateVideoLabels() {
-  const media = PROOF_MEDIA[activeVideo];
-  $('video-caption').textContent = media.title[language];
-  video.setAttribute('aria-label', media.title[language]);
-  document.querySelectorAll('[data-video]').forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.video) === activeVideo)));
-}
-
 function renderMedia() {
-  $('video-picker').innerHTML = PROOF_MEDIA.map((media, index) =>
-    `<button type="button" class="video-choice" data-video="${index}" aria-pressed="${index === activeVideo}"><span class="video-number">0${index + 1}</span><span>${media.title[language]}</span><span class="video-duration">${media.duration}</span></button>`).join('');
-  $('proof-gallery').innerHTML = PROOF_MEDIA.map((media, index) =>
-    `<button type="button" class="proof-shot" data-shot="${index}" aria-haspopup="dialog" aria-label="${t('proofGallery')} · ${escapeHtml(media.title[language])}"><img src="${media.poster}" alt="${escapeHtml(media.alt[language])}" width="${media.width}" height="${media.height}" loading="lazy" decoding="async" /><span>${media.title[language]}<b aria-hidden="true">↗</b></span></button>`).join('');
-  updateVideoLabels();
-  if (dialog.open) updateLightbox();
-}
-
-function selectVideo(index) {
-  if (!PROOF_MEDIA[index] || index === activeVideo) return;
-  const wasPlaying = !video.paused;
-  video.pause();
-  activeVideo = index;
-  const media = PROOF_MEDIA[index];
-  video.poster = media.poster;
-  video.querySelector('source').src = media.src;
-  video.load();
-  updateVideoLabels();
-  if (wasPlaying) video.play().catch(() => {});
+  video.setAttribute('aria-label', PROOF_VIDEO.title[language]);
+  $('video-duration').textContent = PROOF_VIDEO.duration;
+  video.poster = PROOF_VIDEO.poster;
+  const source = video.querySelector('source');
+  if (source.getAttribute('src') !== PROOF_VIDEO.src) {
+    source.src = PROOF_VIDEO.src;
+    video.load();
+  }
 }
 
 function renderPricing() {
@@ -238,24 +216,6 @@ function setLanguage(next) {
   updateAddress();
 }
 
-function updateLightbox() {
-  const media = PROOF_MEDIA[activeShot];
-  $('lightbox-image').src = media.poster;
-  $('lightbox-image').alt = media.alt[language];
-  $('lightbox-caption').textContent = media.title[language];
-  $('lightbox-counter').textContent = `${activeShot + 1} / ${PROOF_MEDIA.length}`;
-}
-
-function showLightbox(index, trigger) {
-  activeShot = index;
-  lightboxTrigger = trigger;
-  updateLightbox();
-  video.pause();
-  dialog.showModal();
-  document.body.classList.add('modal-open');
-  $('lightbox-close').focus();
-}
-
 async function copyHash(hash, button) {
   try {
     if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(hash);
@@ -297,10 +257,6 @@ document.addEventListener('click', (event) => {
     document.querySelectorAll('[data-stage-evo]').forEach((el) => el.setAttribute('aria-pressed', String(el === stage)));
     command('stage', activeStage); return;
   }
-  const clip = target.closest('[data-video]');
-  if (clip) { selectVideo(Number(clip.dataset.video)); return; }
-  const shot = target.closest('[data-shot]');
-  if (shot) { showLightbox(Number(shot.dataset.shot), shot); return; }
   const duo = target.closest('[data-duo]');
   if (duo) {
     activeDuo = duo.dataset.duo;
@@ -327,27 +283,7 @@ window.addEventListener('message', (event) => {
   command('stage', activeStage);
 });
 $('stage-retry').addEventListener('click', () => mountSpecies(activeSpecies, true));
-$('lightbox-close').addEventListener('click', () => dialog.close());
-$('lightbox-prev').addEventListener('click', () => { activeShot = (activeShot + PROOF_MEDIA.length - 1) % PROOF_MEDIA.length; updateLightbox(); });
-$('lightbox-next').addEventListener('click', () => { activeShot = (activeShot + 1) % PROOF_MEDIA.length; updateLightbox(); });
-dialog.addEventListener('click', (event) => {
-  if (event.target !== dialog) return;
-  const bounds = dialog.getBoundingClientRect();
-  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
-});
-dialog.addEventListener('close', () => {
-  document.body.classList.remove('modal-open');
-  if (lightboxTrigger?.isConnected) lightboxTrigger.focus({ preventScroll: true });
-});
 window.addEventListener('keydown', (event) => {
-  if (dialog.open) {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      activeShot = (activeShot + (event.key === 'ArrowLeft' ? -1 : 1) + PROOF_MEDIA.length) % PROOF_MEDIA.length;
-      updateLightbox();
-    }
-    return;
-  }
   if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"], video')) return;
   const speciesButton = event.target instanceof Element ? event.target.closest('[data-select-species]') : null;
   if (speciesButton && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {

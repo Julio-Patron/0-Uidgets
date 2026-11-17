@@ -1,6 +1,6 @@
 # Zero-UI desktop companions
 
-Bilingual EN/ES static storefront for six Windows 10/11 companions, with an interactive 3D preview, real desktop recordings and one-time pricing.
+Bilingual EN/ES static storefront for six Windows 10/11 companions, with an interactive 3D preview, a real desktop recording and one-time pricing.
 
 - Website: https://julio-patron.github.io/Widgets-Public-Repo/
 - Microsoft Partner Center privacy URL: https://julio-patron.github.io/Widgets-Public-Repo/privacy.html
@@ -37,7 +37,9 @@ GitHub Pages deploys `main` from `/ (root)`. All asset paths work under `/Widget
 
 ## Media and verification
 
-`PROOF_MEDIA` in `js/catalog-data.js` configures the three desktop clips and their real-frame JPEG posters. Published clips have no audio, use H.264 with faststart metadata, and are under 3 MB each. The player uses `preload="metadata"`, `playsinline` and a poster; galleries load lazily and open in a keyboard-accessible lightbox.
+`PROOF_VIDEO` in `js/catalog-data.js` configures the single 43-second desktop recording and its real-frame JPEG poster. The H.264 video has no audio, uses faststart metadata and is under 3 MB. The player uses `preload="metadata"`, `playsinline` and a poster.
+
+The page flows from the live preview to the catalog, a compact desktop proof section, pricing, installation options and closed technical details. The video is capped at 620 px wide beside its introduction on desktop and stacks below it on mobile. There is no video picker or screenshot gallery.
 
 The original supplied recordings were edited to omit open conversations and account metrics. No creature illustrations substitute for real desktop footage.
 
