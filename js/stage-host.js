@@ -48,7 +48,7 @@ function applyThemeAndHud() {
       ? `${spec.name} en 3D. Arrastra para mover, clic para acariciar, R para girar. Clic derecho para tamaño y etapa.`
       : `${spec.name} in 3D. Drag to move, click to pet, R to spin. Right-click for size and stage.`);
   }
-  document.title = currentLang === 'es' ? 'Zero-UI · Vista interactiva 3D' : 'Zero-UI · Interactive 3D preview';
+  document.title = currentLang === 'es' ? '0-Uidgets · Vista interactiva 3D' : '0-Uidgets · Interactive 3D preview';
 
   if (hudName) hudName.textContent = spec.name;
   if (hudPhys) hudPhys.textContent = copy.physicsLabel;
@@ -57,7 +57,7 @@ function applyThemeAndHud() {
   if (line2) line2.textContent = copy.desktopContext.line2;
   if (modePill) {
     modePill.textContent =
-      currentLang === 'es' ? 'Tu espacio' : 'Your space';
+      currentLang === 'es' ? 'Escritorio' : 'Desktop';
   }
   if (trayBtn) {
     trayBtn.title =
@@ -317,5 +317,5 @@ window.addEventListener('pagehide', destroyWidgetAndReleaseWebGL);
 window.addEventListener('beforeunload', destroyWidgetAndReleaseWebGL);
 
 mountIsolatedCreature().catch((err) => {
-  console.error('[Zero-UI Stage] Failed to mount WebGL bundle:', err);
+  console.error('[0-Uidgets Stage] Failed to mount WebGL bundle:', err);
 });

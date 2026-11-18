@@ -151,7 +151,7 @@ function renderPricing() {
   $('squad-dots').innerHTML = SPECIES_ORDER.map((id) => `<button type="button" class="squad-dot" data-try-species="${id}" aria-label="${t('try')} · ${SPECIES_CATALOG[id].name}" title="${SPECIES_CATALOG[id].name}"><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i></button>`).join('');
   const squadLinks = STORE_LINKS.bundles.fullSquad;
   const available = channels.some(({ key }) => httpsUrl(squadLinks[key]));
-  $('squad-store-links').innerHTML = (available ? '' : `<a class="button" href="#catalog">${t('squadCta')} <span aria-hidden="true">↗</span></a>`) + storeButtons(squadLinks, 'Full 6-Bot Squad', true);
+  $('squad-store-links').innerHTML = (available ? '' : `<a class="button" href="#catalog">${t('squadCta')} <span aria-hidden="true">↗</span></a>`) + storeButtons(squadLinks, t('squadTitle'), true);
   const storeHub = httpsUrl(STORE_LINKS.creatorHub.microsoftStore);
   const storeSpecies = SPECIES_ORDER.some((id) => httpsUrl(STORE_LINKS.species[id].microsoftStore));
   const storeBundles = Object.values(STORE_LINKS.bundles).some((links) => httpsUrl(links.microsoftStore));
@@ -189,7 +189,7 @@ function renderStructuredData() {
   }
   // Publish only offers with real product URLs; pending bundles are not InStock.
   const products = SPECIES_ORDER.map((id) => ({
-    '@type': 'SoftwareApplication', name: 'Zero-UI ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.0',
+    '@type': 'SoftwareApplication', name: '0-Uidgets ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.0',
     operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
     offers: channels.filter(({ key }) => httpsUrl(STORE_LINKS.species[id][key])).map(({ key }) => ({
       '@type': 'Offer', price: '12.00', priceCurrency: 'USD', url: httpsUrl(STORE_LINKS.species[id][key]),

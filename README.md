@@ -1,6 +1,6 @@
-# Zero-UI desktop companions
+# 0-Uidgets
 
-Bilingual EN/ES static storefront for six Windows 10/11 companions, with an interactive 3D preview, a real desktop recording and one-time pricing.
+Bilingual EN/ES landing for six Windows 10/11 desktop widgets, with an interactive 3D preview, a real desktop recording and individual or bundle pricing.
 
 - Website: https://julio-patron.github.io/Widgets-Public-Repo/
 - Microsoft Partner Center privacy URL: https://julio-patron.github.io/Widgets-Public-Repo/privacy.html
