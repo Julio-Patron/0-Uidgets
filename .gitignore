@@ -13,12 +13,14 @@ node_modules/
 .qa/
 .superdesign/
 
-# This repository publishes only the static storefront and sanitized web demo.
+# Storefront and Stripe server source; never desktop payloads or credentials.
 *.exe
 *.appx
 *.msix
 *.appxbundle
 *.msixbundle
+*.msi
 *.ts
+*.tsx
 electron/
 .env*

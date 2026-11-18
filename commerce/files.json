@@ -1,0 +1,110 @@
+[
+  {
+    "id": "buggy-portable",
+    "species": "buggy",
+    "kind": "portable",
+    "filename": "Buggy-1.1.1-portable.exe",
+    "sha256": "6a62b07b935399ffdac962e57186a30fff8c0915b3862eead35676e337f4dd01",
+    "bytes": 112044638,
+    "pathname": "releases/1.1.1/buggy/6a62b07b935399ffdac962e57186a30fff8c0915b3862eead35676e337f4dd01/Buggy-1.1.1-portable.exe"
+  },
+  {
+    "id": "buggy-web-demo",
+    "species": "buggy",
+    "kind": "web-demo",
+    "filename": "Buggy-1.1.1-web-demo.zip",
+    "sha256": "f44d9dff3427f9719682c2838fc6d7e71738a060a782fc41856835b6d0dc1200",
+    "bytes": 589160,
+    "pathname": "releases/1.1.1/buggy/f44d9dff3427f9719682c2838fc6d7e71738a060a782fc41856835b6d0dc1200/Buggy-1.1.1-web-demo.zip"
+  },
+  {
+    "id": "pyxol-portable",
+    "species": "pyxol",
+    "kind": "portable",
+    "filename": "Pyxol-1.1.1-portable.exe",
+    "sha256": "92ca43e7c9d65febed1cef3af4e03f7dcc6278060855522530ee8ebd4fd0132d",
+    "bytes": 111941238,
+    "pathname": "releases/1.1.1/pyxol/92ca43e7c9d65febed1cef3af4e03f7dcc6278060855522530ee8ebd4fd0132d/Pyxol-1.1.1-portable.exe"
+  },
+  {
+    "id": "pyxol-web-demo",
+    "species": "pyxol",
+    "kind": "web-demo",
+    "filename": "Pyxol-1.1.1-web-demo.zip",
+    "sha256": "892e8576a10a958a58cc6161cf910b94f52d37fd6b0f98e964748e7fa03c379f",
+    "bytes": 636150,
+    "pathname": "releases/1.1.1/pyxol/892e8576a10a958a58cc6161cf910b94f52d37fd6b0f98e964748e7fa03c379f/Pyxol-1.1.1-web-demo.zip"
+  },
+  {
+    "id": "velkarion-portable",
+    "species": "velkarion",
+    "kind": "portable",
+    "filename": "Velkarion-1.1.1-portable.exe",
+    "sha256": "bbe62103775c755e2a886631fae285318b78e8eb68fd3e55d669873de04faaa2",
+    "bytes": 112140717,
+    "pathname": "releases/1.1.1/velkarion/bbe62103775c755e2a886631fae285318b78e8eb68fd3e55d669873de04faaa2/Velkarion-1.1.1-portable.exe"
+  },
+  {
+    "id": "velkarion-web-demo",
+    "species": "velkarion",
+    "kind": "web-demo",
+    "filename": "Velkarion-1.1.1-web-demo.zip",
+    "sha256": "4f8f6ad6f238e4c0c12ad52fd7b6c247a81b776b8e83ecea526c8c744500508b",
+    "bytes": 614563,
+    "pathname": "releases/1.1.1/velkarion/4f8f6ad6f238e4c0c12ad52fd7b6c247a81b776b8e83ecea526c8c744500508b/Velkarion-1.1.1-web-demo.zip"
+  },
+  {
+    "id": "nimpu-portable",
+    "species": "nimpu",
+    "kind": "portable",
+    "filename": "Nimpu-1.1.1-portable.exe",
+    "sha256": "7942150e643f873287819543deef4ec9684136f91fb57a9082c9d6d6601aed6f",
+    "bytes": 111933884,
+    "pathname": "releases/1.1.1/nimpu/7942150e643f873287819543deef4ec9684136f91fb57a9082c9d6d6601aed6f/Nimpu-1.1.1-portable.exe"
+  },
+  {
+    "id": "nimpu-web-demo",
+    "species": "nimpu",
+    "kind": "web-demo",
+    "filename": "Nimpu-1.1.1-web-demo.zip",
+    "sha256": "95f3085cb6821e63e816b0ce69b89ee3b83a11956b1f3773a78518d426f57783",
+    "bytes": 553236,
+    "pathname": "releases/1.1.1/nimpu/95f3085cb6821e63e816b0ce69b89ee3b83a11956b1f3773a78518d426f57783/Nimpu-1.1.1-web-demo.zip"
+  },
+  {
+    "id": "lumilisk-portable",
+    "species": "lumilisk",
+    "kind": "portable",
+    "filename": "Lumilisk-1.1.1-portable.exe",
+    "sha256": "662092de3a2d8f1ebf96b19bf74364e33c7f997839f2026e7b49a8345a324fcb",
+    "bytes": 111943371,
+    "pathname": "releases/1.1.1/lumilisk/662092de3a2d8f1ebf96b19bf74364e33c7f997839f2026e7b49a8345a324fcb/Lumilisk-1.1.1-portable.exe"
+  },
+  {
+    "id": "lumilisk-web-demo",
+    "species": "lumilisk",
+    "kind": "web-demo",
+    "filename": "Lumilisk-1.1.1-web-demo.zip",
+    "sha256": "a7680eefdbd17a4daaefbba4877c848df526a18faceab4ed8fd232c0f30282d3",
+    "bytes": 566129,
+    "pathname": "releases/1.1.1/lumilisk/a7680eefdbd17a4daaefbba4877c848df526a18faceab4ed8fd232c0f30282d3/Lumilisk-1.1.1-web-demo.zip"
+  },
+  {
+    "id": "yuravax-portable",
+    "species": "yuravax",
+    "kind": "portable",
+    "filename": "Yuravax-1.1.1-portable.exe",
+    "sha256": "d313c54fabba4b7fc352d435c1d18d8acca3ef7c0995970dca1a9b7d55478aad",
+    "bytes": 112128622,
+    "pathname": "releases/1.1.1/yuravax/d313c54fabba4b7fc352d435c1d18d8acca3ef7c0995970dca1a9b7d55478aad/Yuravax-1.1.1-portable.exe"
+  },
+  {
+    "id": "yuravax-web-demo",
+    "species": "yuravax",
+    "kind": "web-demo",
+    "filename": "Yuravax-1.1.1-web-demo.zip",
+    "sha256": "948a91c0101f80112e4fa006f4f17914764f8b21b6c320fe246245bf0e134938",
+    "bytes": 606964,
+    "pathname": "releases/1.1.1/yuravax/948a91c0101f80112e4fa006f4f17914764f8b21b6c320fe246245bf0e134938/Yuravax-1.1.1-web-demo.zip"
+  }
+]

@@ -1,10 +1,12 @@
 {
   "name": "zero-ui-bots-landing",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
-  "description": "Official public catalog, interactive 3D WebGL stage, and bundles landing page for Zero-UI 3D Desktop Bots (v1.1.0) on Windows 10/11.",
+  "description": "Official public catalog, interactive 3D WebGL stage, and bundles landing page for Zero-UI 3D Desktop Bots (v1.1.1) on Windows 10/11.",
   "type": "module",
   "scripts": {
-    "start": "npx serve . -l 8080"
+    "start": "npm --prefix commerce start",
+    "prepare:site": "npm --prefix commerce run prepare:site",
+    "test:commerce": "npm --prefix commerce test"
   }
 }

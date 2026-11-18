@@ -1,0 +1,105 @@
+{
+  "release": "1.1.1",
+  "currency": "usd",
+  "taxCode": "txcd_10202000",
+  "products": {
+    "buggy": {
+      "name": "0-Uidgets · Buggy",
+      "productId": "zero_uidgets_111_buggy",
+      "priceId": "price_1Ud8K8LchocTb6aTxXPHVFKi",
+      "amount": 1499,
+      "members": [
+        "buggy"
+      ]
+    },
+    "pyxol": {
+      "name": "0-Uidgets · Pyxol",
+      "productId": "zero_uidgets_111_pyxol",
+      "priceId": "price_1Ud8KOLchocTb6aTRPA2zyae",
+      "amount": 1499,
+      "members": [
+        "pyxol"
+      ]
+    },
+    "velkarion": {
+      "name": "0-Uidgets · Velkarion",
+      "productId": "zero_uidgets_111_velkarion",
+      "priceId": "price_1Ud8KhLchocTb6aT7auxEd64",
+      "amount": 1499,
+      "members": [
+        "velkarion"
+      ]
+    },
+    "nimpu": {
+      "name": "0-Uidgets · Nimpu",
+      "productId": "zero_uidgets_111_nimpu",
+      "priceId": "price_1Ud8KlLchocTb6aTK8o3zCmO",
+      "amount": 1499,
+      "members": [
+        "nimpu"
+      ]
+    },
+    "lumilisk": {
+      "name": "0-Uidgets · Lumilisk",
+      "productId": "zero_uidgets_111_lumilisk",
+      "priceId": "price_1Ud8KnLchocTb6aTMo9Yx8YN",
+      "amount": 1499,
+      "members": [
+        "lumilisk"
+      ]
+    },
+    "yuravax": {
+      "name": "0-Uidgets · Yuravax",
+      "productId": "zero_uidgets_111_yuravax",
+      "priceId": "price_1Ud8KqLchocTb6aToRQJZ6JZ",
+      "amount": 1499,
+      "members": [
+        "yuravax"
+      ]
+    },
+    "playfulDuo": {
+      "name": "0-Uidgets · Dúo Buggy + Pyxol",
+      "productId": "zero_uidgets_111_playfulDuo",
+      "priceId": "price_1Ud8KtLchocTb6aTAGWdrmV1",
+      "amount": 2699,
+      "members": [
+        "buggy",
+        "pyxol"
+      ]
+    },
+    "dragonDuo": {
+      "name": "0-Uidgets · Dúo Velkarion + Lumilisk",
+      "productId": "zero_uidgets_111_dragonDuo",
+      "priceId": "price_1Ud8KvLchocTb6aTeNiz5L6K",
+      "amount": 2699,
+      "members": [
+        "velkarion",
+        "lumilisk"
+      ]
+    },
+    "dreamyDuo": {
+      "name": "0-Uidgets · Dúo Yuravax + Nimpu",
+      "productId": "zero_uidgets_111_dreamyDuo",
+      "priceId": "price_1Ud8KxLchocTb6aTvPzjtulz",
+      "amount": 2699,
+      "members": [
+        "yuravax",
+        "nimpu"
+      ]
+    },
+    "fullSquad": {
+      "name": "0-Uidgets · Colección completa",
+      "productId": "zero_uidgets_111_fullSquad",
+      "priceId": "price_1Ud8KzLchocTb6aTs5xPbdwe",
+      "amount": 5999,
+      "members": [
+        "buggy",
+        "pyxol",
+        "velkarion",
+        "nimpu",
+        "lumilisk",
+        "yuravax"
+      ]
+    }
+  }
+}

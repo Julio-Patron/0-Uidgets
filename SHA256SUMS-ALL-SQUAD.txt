@@ -1,26 +1,6 @@
-# ============================================================================================================
-# FULL 6-BOT ZERO-UI SQUAD (v1.1.0) — OFFICIAL WINDOWS x64 PORTABLE EXECUTABLES & SHA-256 MANIFEST
-# ============================================================================================================
-# Platform: Windows 10/11 x64 Portable (Electron 45.3.1, ASAR isolated, DPAPI local encryption, dirty: false)
-# Engine:   100% Universal Zero-UI Engine across all 6 species (Offline 3D Pet + Optional BYOK + Cartridges)
-# Pricing:  $12.00 USD Early Bird individual (reg. $19.00) | $49.00 USD Full 6-Bot Squad ($8.16/bot)
-#
-# +-----------+-------------------------------+-------------+---------------+------------------------------------------------------------------+
-# | Species   | Official Windows Executable   | Size (MB)   | Size (Bytes)  | SHA-256                                                          |
-# +-----------+-------------------------------+-------------+---------------+------------------------------------------------------------------+
-# | buggy     | Buggy-1.1.0-portable.exe      | 106.85 MB   |   112,039,425 | f1e4c3b6da053dad06118693741fbc45b54492171a14d9acd95ea70c3ecd69e9 |
-# | pyxol     | Pyxol-1.1.0-portable.exe      | 106.75 MB   |   111,933,185 | f776ae66a6fc88aa8eb606fd0e642682dea49087d34065b2b248d43fd318f085 |
-# | velkarion | Velkarion-1.1.0-portable.exe  | 106.93 MB   |   112,127,125 | 44732fa09c3b021c2167fa66426ef71dfb821d217bf6d25ee250fff34a910b90 |
-# | nimpu     | Nimpu-1.1.0-portable.exe      | 106.74 MB   |   111,929,954 | 76b08a7f7c07742a05af93248fbf2f238cf081dec7fafbbfd386f603ce0c9e22 |
-# | lumilisk  | Lumilisk-1.1.0-portable.exe   | 106.75 MB   |   111,934,438 | a92afe3e4d7117d05b4babcf587dee52dc761ab97f25baf9a77dbe3b05ab5a00 |
-# | yuravax   | Yuravax-1.1.0-portable.exe    | 106.94 MB   |   112,137,926 | 667bcc058132ad92885f61a7400ca14dec2e1cea96402377af780e0be2aed1d9 |
-# +-----------+-------------------------------+-------------+---------------+------------------------------------------------------------------+
-# | TOTAL 6 OFFICIAL PORTABLE EXECUTABLES     | 640.97 MB   |   672,102,053 | 6 isolated standalone Windows x64 .exe binaries (100% verified)  |
-# +-------------------------------------------+-------------+---------------+------------------------------------------------------------------+
-
-f1e4c3b6da053dad06118693741fbc45b54492171a14d9acd95ea70c3ecd69e9  Buggy-1.1.0-portable.exe
-f776ae66a6fc88aa8eb606fd0e642682dea49087d34065b2b248d43fd318f085  Pyxol-1.1.0-portable.exe
-44732fa09c3b021c2167fa66426ef71dfb821d217bf6d25ee250fff34a910b90  Velkarion-1.1.0-portable.exe
-76b08a7f7c07742a05af93248fbf2f238cf081dec7fafbbfd386f603ce0c9e22  Nimpu-1.1.0-portable.exe
-a92afe3e4d7117d05b4babcf587dee52dc761ab97f25baf9a77dbe3b05ab5a00  Lumilisk-1.1.0-portable.exe
-667bcc058132ad92885f61a7400ca14dec2e1cea96402377af780e0be2aed1d9  Yuravax-1.1.0-portable.exe
+6a62b07b935399ffdac962e57186a30fff8c0915b3862eead35676e337f4dd01  Buggy-1.1.1-portable.exe
+92ca43e7c9d65febed1cef3af4e03f7dcc6278060855522530ee8ebd4fd0132d  Pyxol-1.1.1-portable.exe
+bbe62103775c755e2a886631fae285318b78e8eb68fd3e55d669873de04faaa2  Velkarion-1.1.1-portable.exe
+7942150e643f873287819543deef4ec9684136f91fb57a9082c9d6d6601aed6f  Nimpu-1.1.1-portable.exe
+662092de3a2d8f1ebf96b19bf74364e33c7f997839f2026e7b49a8345a324fcb  Lumilisk-1.1.1-portable.exe
+d313c54fabba4b7fc352d435c1d18d8acca3ef7c0995970dca1a9b7d55478aad  Yuravax-1.1.1-portable.exe

@@ -1,0 +1,9 @@
+{
+  "name": "zero-uidgets-commerce",
+  "private": true,
+  "version": "1.1.1",
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": { "test": "node --test test/*.test.mjs", "start": "node scripts/dev.mjs", "prepare:site": "node scripts/prepare-site.mjs" },
+  "dependencies": { "stripe": "23.1.0", "@vercel/blob": "2.9.0" }
+}

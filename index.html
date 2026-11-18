@@ -4,20 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>0-Uidgets 3D Bots</title>
-  <meta name="description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the models, watch a desktop recording and compare individual and bundle options." />
+  <meta name="description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the remodeled models and compare individual and bundle options." />
   <meta name="theme-color" content="#080c10" />
   <link rel="canonical" href="https://julio-patron.github.io/0-Uidgets/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://julio-patron.github.io/0-Uidgets/" />
   <meta property="og:site_name" content="0-Uidgets" />
   <meta property="og:title" content="0-Uidgets 3D Bots" />
-  <meta property="og:description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the models, watch a desktop recording and compare individual and bundle options." />
-  <meta property="og:image" content="https://julio-patron.github.io/0-Uidgets/assets/showcase/desktop-companions.jpg" />
-  <meta property="og:image:alt" content="0-Uidgets on a real Windows desktop." />
+  <meta property="og:description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the remodeled models and compare individual and bundle options." />
+  <meta property="og:image" content="https://julio-patron.github.io/0-Uidgets/assets/creatures/collection-1.1.1.png" />
+  <meta property="og:image:alt" content="0-Uidgets 1.1.1: the six current 3D companions." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="0-Uidgets 3D Bots" />
-  <meta name="twitter:description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the models, watch a desktop recording and compare individual and bundle options." />
-  <meta name="twitter:image" content="https://julio-patron.github.io/0-Uidgets/assets/showcase/desktop-companions.jpg" />
+  <meta name="twitter:description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the remodeled models and compare individual and bundle options." />
+  <meta name="twitter:image" content="https://julio-patron.github.io/0-Uidgets/assets/creatures/collection-1.1.1.png" />
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./css/styles.css" />
   <script type="module" src="./js/app.js"></script>
@@ -28,7 +28,7 @@
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="0-Uidgets"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets<span class="brand-caption">/ Windows</span></a>
       <nav class="nav-links" data-i18n-aria="navLabel" aria-label="Main navigation">
-        <a href="#catalog" data-i18n="navCatalog">Models</a><a href="#desktop-proof" data-i18n="navProof">Desktop video</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
+        <a href="#catalog" data-i18n="navCatalog">Models</a><a href="#live-stage" data-i18n="navProof">Live preview</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
       </nav>
       <div class="nav-actions">
         <div class="language-switch" role="group" data-i18n-aria="language" aria-label="Choose language">
@@ -41,12 +41,12 @@
   <main id="main">
     <section class="hero container" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow" data-i18n="heroEyebrow">Desktop widgets · v1.1.0</p>
+        <p class="eyebrow" data-i18n="heroEyebrow">Desktop widgets · v1.1.1</p>
         <h1 id="hero-title"><span data-i18n="heroTitle">0-Uidgets</span> <span class="hero-accent" data-i18n="heroAccent">3D Bots</span></h1>
         <p class="hero-lead" data-i18n="heroLead">Six interactive creatures with adjustable size and two growth stages.</p>
         <div class="hero-actions">
           <a href="#catalog" class="button button-primary"><span data-i18n="heroCta">Explore the models</span><span aria-hidden="true">↗</span></a>
-          <a href="#desktop-proof" class="text-link"><span class="play-icon" aria-hidden="true">▷</span><span data-i18n="heroWatch">Watch the video</span></a>
+          <a href="#live-stage" class="text-link"><span class="play-icon" aria-hidden="true">▷</span><span data-i18n="heroWatch">Try in 3D</span></a>
         </div>
         <div class="hero-facts"><span data-i18n="heroWindows">Windows 10 / 11</span><span data-i18n="heroOffline">Works offline</span><span data-i18n="heroPayOnce">One-time purchase</span></div>
       </div>
@@ -90,52 +90,39 @@
     <section class="section catalog-section" id="catalog" aria-labelledby="catalog-title">
       <div class="container"><div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">CATALOG</p><h2 id="catalog-title" data-i18n="catalogTitle">Six models.</h2></div><p data-i18n="catalogLead">Different designs, with the same features.</p></div><div class="catalog-grid" id="catalog-grid"></div></div>
     </section>
-    <section class="section container desktop-proof" id="desktop-proof" aria-labelledby="proof-title">
-      <div class="proof-copy">
-        <p class="eyebrow" data-i18n="proofKicker">DESKTOP RECORDING</p>
-        <h2 id="proof-title" data-i18n="proofTitle">Running on Windows.</h2>
-        <p class="proof-lead" data-i18n="proofLead">Movement, interaction and settings on a real desktop.</p>
-        <p class="fine-print" id="proof-note"><span data-i18n="proofFootnote">Real recording · No audio</span> · <span id="video-duration">0:43</span></p>
-      </div>
-      <figure class="video-shell">
-        <video id="proof-video" controls playsinline muted preload="metadata" width="1366" height="766" poster="./assets/showcase/desktop-companions.jpg" aria-describedby="proof-note">
-          <source src="./assets/showcase/desktop-companions.mp4" type="video/mp4" /><p data-i18n="videoFallback">Your browser cannot play this video.</p>
-        </video>
-      </figure>
-    </section>
     <section class="section container" id="pricing" aria-labelledby="price-title">
-      <div class="section-heading centered"><p class="eyebrow" data-i18n="priceKicker">PRICING</p><h2 id="price-title" data-i18n="priceTitle">Individual models and bundles.</h2><p data-i18n="priceLead">One-time purchase. No subscription.</p></div>
+      <div class="section-heading centered"><p class="eyebrow" data-i18n="priceKicker">PRICING</p><h2 id="price-title" data-i18n="priceTitle">Individual models and bundles.</h2><p data-i18n="priceLead">Direct purchase · Final price · No subscription.</p></div>
       <div class="pricing-grid">
         <article class="price-card">
           <span class="price-label" data-i18n="launch">Launch price</span><h3 data-i18n="singleTitle">Individual</h3><p data-i18n="singleSub">One model of your choice.</p>
-          <div class="price">$12 <span>USD</span><s aria-label="Regular price $19 USD" id="single-regular-price">$19</s></div><span class="price-detail" data-i18n="singleDetail">Both stages included</span>
+          <div class="price"><span data-price="single">$14.99</span> <span>USD</span></div><span class="price-detail" data-i18n="singleDetail">Both stages included</span>
           <div class="price-bottom"><a href="#catalog" class="button button-outline" data-i18n="singleCta">View models</a></div>
         </article>
         <article class="price-card duo-card">
           <span class="price-label">02 / 06</span><h3 data-i18n="duoTitle">Duo</h3><p data-i18n="duoSub">Two widgets in one bundle.</p>
-          <div class="price">$22 <span>USD</span></div><div class="duo-selector" id="duo-selector" role="group" data-i18n-aria="duoLabel" aria-label="Choose your duo"></div><div class="price-bottom" id="duo-store-links"></div>
+          <div class="price"><span data-price="duo">$26.99</span> <span>USD</span></div><div class="duo-selector" id="duo-selector" role="group" data-i18n-aria="duoLabel" aria-label="Choose your duo"></div><div class="price-bottom" id="duo-store-links"></div>
         </article>
         <article class="price-card squad-card">
           <span class="price-label" data-i18n="squadBadge">6 MODELS</span><h3 data-i18n="squadTitle">Complete collection</h3><p data-i18n="squadSub">Includes all six models.</p>
-          <div class="price">$49 <span>USD</span></div><span class="price-detail" data-i18n="squadDetail">$8.16 / widget</span>
+          <div class="price"><span data-price="collection">$59.99</span> <span>USD</span></div><span class="price-detail" data-i18n="squadDetail">≈ $10.00 / widget</span>
           <div class="squad-dots" id="squad-dots" data-i18n-aria="allSix" aria-label="All six models included"></div><div class="price-bottom" id="squad-store-links"></div>
         </article>
       </div>
-      <p class="fine-print center-text" data-i18n="priceFootnote">USD · Launch prices · Final price and availability shown by each store.</p>
+      <p class="fine-print center-text" data-i18n="priceFootnote">USD · Final launch prices for direct purchases. Other stores set their own prices and availability.</p>
     </section>
     <section class="section container" id="install" aria-labelledby="install-title">
-      <div class="section-heading"><div><p class="eyebrow" data-i18n="installKicker">INSTALLATION</p><h2 id="install-title" data-i18n="installTitle">Available editions.</h2></div><span class="quiet-badge">Windows 10 / 11 · v1.1.0</span></div>
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="installKicker">INSTALLATION</p><h2 id="install-title" data-i18n="installTitle">Available editions.</h2></div><span class="quiet-badge">Windows 10 / 11 · v1.1.1</span></div>
       <div class="edition-grid">
         <article class="edition-card">
           <span class="edition-symbol windows-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <h3 data-i18n="storeName">Microsoft Store Edition</h3><p class="edition-subtitle" data-i18n="storeSubtitle">Installation and updates through the Store.</p>
-          <ul><li data-i18n="storeFeature1">One-click installation</li><li data-i18n="storeFeature2">Microsoft-signed · No SmartScreen prompts</li><li data-i18n="storeFeature3">Automatic updates · Clean uninstall</li></ul>
-          <div id="store-edition-action" class="edition-action"></div><p class="fine-print" data-i18n="storeNote">MSIX v1.1.0.0 · Publisher: Julio-Patrón</p>
+          <ul><li data-i18n="storeFeature1">One-click installation</li><li data-i18n="storeFeature2">Store-managed installation</li><li data-i18n="storeFeature3">Automatic updates · Clean uninstall</li></ul>
+          <div id="store-edition-action" class="edition-action"></div><p class="fine-print" data-i18n="storeNote">APPX v1.1.1.0 prepared · Publisher: Julio-Patrón</p>
         </article>
         <article class="edition-card">
           <span class="edition-symbol" aria-hidden="true">↧</span><h3 data-i18n="portableName">Direct Portable Edition</h3><p class="edition-subtitle" data-i18n="portableSubtitle">Direct download, without an installer.</p>
           <ul><li data-i18n="portableFeature1">A single portable file</li><li data-i18n="portableFeature2">No installer or Microsoft account</li><li data-i18n="portableFeature3">Run from any folder · Web demo on itch.io</li></ul>
-          <a href="#catalog" class="text-link" data-i18n="installCta">View models</a><p class="fine-print" data-i18n="portableNote">v1.1.0 · Windows x64 · About 106.8 MB per widget</p>
+          <a href="#catalog" class="text-link" data-i18n="installCta">View models</a><p class="fine-print" data-i18n="portableNote">v1.1.1 · Windows x64 · About 107 MiB per widget</p>
         </article>
       </div>
     </section>
@@ -148,8 +135,8 @@
           <div class="accordion-body">
             <p data-i18n="checksumsIntro">Compare your file with its matching release hash. A hash identifies a file; it is not a safety guarantee.</p>
             <p data-i18n="smartScreen">The direct portable edition may trigger Windows SmartScreen. Check its source and hash before deciding to open it.</p>
-            <h3 data-i18n="exeTitle">Portable · v1.1.0</h3><div id="exe-hashes"></div><a href="./SHA256SUMS-ALL-SQUAD.txt" class="text-link manifest-link" data-i18n="manifest">Portable hash manifest</a>
-            <h3 data-i18n="appxTitle">Store packages · v1.1.0.0</h3><p data-i18n="packageNote">These hashes identify the submitted .appx packages. Microsoft Store manages its own signed installation and updates.</p>
+            <h3 data-i18n="exeTitle">Portable · v1.1.1</h3><div id="exe-hashes"></div><a href="./SHA256SUMS-ALL-SQUAD.txt" class="text-link manifest-link" data-i18n="manifest">Portable hash manifest</a>
+            <h3 data-i18n="appxTitle">Store packages · v1.1.1.0</h3><p data-i18n="packageNote">These hashes identify the prepared, unsigned .appx packages. They do not certify Microsoft approval or availability.</p>
             <div id="appx-hashes"></div><a href="./SHA256SUMS-STORE.txt" class="text-link manifest-link" data-i18n="appxManifest">Store package hash manifest</a>
           </div>
         </details>
@@ -159,7 +146,7 @@
   <footer class="site-footer container">
     <div><a class="brand" href="#top"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets</a><p data-i18n="footerTag">3D desktop widgets for Windows.</p></div>
     <div class="footer-links"><a href="./privacy.html" data-i18n="privacy">Privacy policy</a><span id="creator-links"></span><a href="#top" data-i18n="top">Back to top</a></div>
-    <span class="footer-version">© 2026 Julio-Patrón · v1.1.0</span>
+    <span class="footer-version">© 2026 Julio-Patrón · v1.1.1</span>
   </footer>
   <p id="site-announcement" class="visually-hidden" role="status" aria-live="polite"></p>
   <noscript><p class="container">Enable JavaScript for the interactive preview and catalog. / Activa JavaScript para el visor y el catálogo. <a href="./privacy.html">Privacy / Privacidad</a></p></noscript>

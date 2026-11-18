@@ -1,4 +1,5 @@
-import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, PROOF_VIDEO } from './catalog-data.js';
+import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, SHOWCASE } from './catalog-data.js';
+import { COMMERCE } from './commerce-config.js';
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -13,7 +14,6 @@ let mountedSpecies = null;
 let navigationTimer;
 let readyTimer;
 const frame = $('hero-stage-frame');
-const video = $('proof-video');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const t = (key) => I18N[language].labels[key];
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -32,11 +32,31 @@ function externalLink(url, label, className = 'store-link', accessibleLabel = la
   return safeUrl ? `<a class="${className}" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(accessibleLabel)}">${escapeHtml(label)} <span aria-hidden="true">↗</span></a>` : '';
 }
 
-function storeButtons(links, product, bundle = false) {
+function checkoutOrigin() {
+  const value = httpsUrl(COMMERCE.checkoutOrigin);
+  if (!value) return '';
+  const url = new URL(value);
+  return url.pathname === '/' && !url.search && !url.hash ? url.origin : '';
+}
+
+function directPurchase(sku, product) {
+  const origin = checkoutOrigin();
+  if (!origin) return `<span class="store-pending direct-pending">${t('checkoutSoon')}</span>`;
+  // Top-level POST gives the backend first-party cookies, including on mobile Safari.
+  // The server accepts only these SKU names and supplies the actual Stripe price.
+  return `<form method="post" action="${escapeHtml(origin)}/checkout" class="checkout-form">
+    <input type="hidden" name="sku" value="${escapeHtml(sku)}">
+    <input type="hidden" name="lang" value="${language}">
+    <button type="submit" class="store-link store-link-primary" aria-label="${t('checkout')} · ${escapeHtml(product)}">${t('checkout')} <span aria-hidden="true">↗</span></button>
+  </form>`;
+}
+
+function storeButtons(links, product, bundle = false, sku = '') {
   const available = channels.filter(({ key }) => httpsUrl(links?.[key]));
-  let html = available.map(({ key, label }, index) => externalLink(links[key], label,
-    'store-link' + (index === 0 ? ' store-link-primary' : ''), `${t('buyOn')} ${label} · ${product}`)).join('');
-  if (bundle && !available.length) html += `<span class="store-pending">${t('bundleSoon')}</span>`;
+  let html = sku ? directPurchase(sku, product) : '';
+  html += available.map(({ key, label }) => externalLink(links[key], label,
+    'store-link', `${t('buyOn')} ${label} · ${product}`)).join('');
+  if (bundle && !available.length && !sku) html += `<span class="store-pending">${t('bundleSoon')}</span>`;
   if (!httpsUrl(links?.microsoftStore)) html += `<span class="store-pending">${t('storeSoon')}</span>`;
   return `<div class="store-links">${html}</div>`;
 }
@@ -107,12 +127,12 @@ function renderStaticText() {
   document.querySelector('meta[name="description"]').content = dictionary.metaDescription;
   for (const selector of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) document.querySelector(selector).content = dictionary.metaTitle;
   for (const selector of ['meta[property="og:description"]', 'meta[name="twitter:description"]']) document.querySelector(selector).content = dictionary.metaDescription;
-  document.querySelector('meta[property="og:image:alt"]').content = PROOF_VIDEO.alt[language];
+  document.querySelector('meta[property="og:image:alt"]').content = SHOWCASE.alt[language];
   document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = t(node.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria]').forEach((node) => node.setAttribute('aria-label', t(node.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-title]').forEach((node) => node.setAttribute('title', t(node.dataset.i18nTitle)));
   document.querySelectorAll('[data-lang]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.lang === language)));
-  $('single-regular-price').setAttribute('aria-label', t('regular') + ' $19 USD');
+  document.querySelectorAll('[data-price]').forEach(node => { node.textContent = '$' + (COMMERCE.prices[node.dataset.price] / 100).toFixed(2); });
   if ($('stage-loading-overlay').dataset.error === 'true') $('stage-loading-text').textContent = t('stageError');
 }
 
@@ -125,23 +145,14 @@ function renderSpecies() {
     const sp = SPECIES_CATALOG[id];
     return `<article class="creature-card" style="--species-color:${sp.glowColor}">
       <div class="creature-heading"><h3>${sp.name}</h3><span class="creature-number">0${index + 1}</span></div>
+      <button class="creature-image" type="button" data-try-species="${id}" aria-label="${t('try')} · ${sp.name}"><img src="./assets/creatures/${id}-1.1.1.png" alt="${sp.name} · Rookie · 1.1.1" width="320" height="280" loading="lazy" decoding="async"></button>
       <p class="creature-vibe">${escapeHtml(sp.copy[language].tagline)}</p>
-      <div class="creature-preview-row"><button type="button" class="creature-preview" data-try-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${t('try')} · ${sp.name}"><i class="species-dot" aria-hidden="true"></i>${t('try')} <span aria-hidden="true">↗</span></button><strong class="mini-price">$12 <small>USD</small></strong></div>
-      ${storeButtons(STORE_LINKS.species[id], sp.name)}
+      <div class="creature-preview-row"><button type="button" class="creature-preview" data-try-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${t('try')} · ${sp.name}"><i class="species-dot" aria-hidden="true"></i>${t('try')} <span aria-hidden="true">↗</span></button><strong class="mini-price">$${(COMMERCE.prices.single / 100).toFixed(2)} <small>USD</small></strong></div>
+      <p class="price-tax">${t('vatIncluded')}</p>
+      ${storeButtons(STORE_LINKS.species[id], sp.name, false, id)}
     </article>`;
   }).join('');
   updateSpecies();
-}
-
-function renderMedia() {
-  video.setAttribute('aria-label', PROOF_VIDEO.title[language]);
-  $('video-duration').textContent = PROOF_VIDEO.duration;
-  video.poster = PROOF_VIDEO.poster;
-  const source = video.querySelector('source');
-  if (source.getAttribute('src') !== PROOF_VIDEO.src) {
-    source.src = PROOF_VIDEO.src;
-    video.load();
-  }
 }
 
 function renderPricing() {
@@ -150,8 +161,7 @@ function renderPricing() {
   renderDuoLinks();
   $('squad-dots').innerHTML = SPECIES_ORDER.map((id) => `<button type="button" class="squad-dot" data-try-species="${id}" aria-label="${t('try')} · ${SPECIES_CATALOG[id].name}" title="${SPECIES_CATALOG[id].name}"><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i></button>`).join('');
   const squadLinks = STORE_LINKS.bundles.fullSquad;
-  const available = channels.some(({ key }) => httpsUrl(squadLinks[key]));
-  $('squad-store-links').innerHTML = (available ? '' : `<a class="button" href="#catalog">${t('squadCta')} <span aria-hidden="true">↗</span></a>`) + storeButtons(squadLinks, t('squadTitle'), true);
+  $('squad-store-links').innerHTML = storeButtons(squadLinks, t('squadTitle'), true, 'fullSquad');
   const storeHub = httpsUrl(STORE_LINKS.creatorHub.microsoftStore);
   const storeSpecies = SPECIES_ORDER.some((id) => httpsUrl(STORE_LINKS.species[id].microsoftStore));
   const storeBundles = Object.values(STORE_LINKS.bundles).some((links) => httpsUrl(links.microsoftStore));
@@ -160,11 +170,12 @@ function renderPricing() {
       : storeBundles ? `<a class="text-link" href="#pricing">${t('navPricing')}</a>`
         : `<span class="quiet-badge">${t('storeSoon')}</span>`;
   $('creator-links').innerHTML = channels.map(({ key, label }) => externalLink(STORE_LINKS.creatorHub[key], t('creator') + ' · ' + label, 'footer-store')).join('');
+  if (checkoutOrigin()) $('creator-links').insertAdjacentHTML('afterbegin', `<a class="footer-store" href="${escapeHtml(checkoutOrigin())}/order">${t('downloads')}</a>`);
 }
 
 function renderDuoLinks() {
   const duo = BUNDLES.find(({ id }) => id === activeDuo);
-  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '), true);
+  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '), true, activeDuo);
 }
 
 function renderTrust() {
@@ -189,11 +200,10 @@ function renderStructuredData() {
   }
   // Publish only offers with real product URLs; pending bundles are not InStock.
   const products = SPECIES_ORDER.map((id) => ({
-    '@type': 'SoftwareApplication', name: '0-Uidgets ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.0',
+    '@type': 'SoftwareApplication', name: '0-Uidgets ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.1',
     operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
-    offers: channels.filter(({ key }) => httpsUrl(STORE_LINKS.species[id][key])).map(({ key }) => ({
-      '@type': 'Offer', price: '12.00', priceCurrency: 'USD', url: httpsUrl(STORE_LINKS.species[id][key]),
-    })),
+    // Other stores determine their own prices. Unactivated direct checkout has no offer.
+    ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: 'https://julio-patron.github.io/0-Uidgets/?species=' + id + '#catalog' } } : {}),
   }));
   script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })) });
 }
@@ -201,7 +211,6 @@ function renderStructuredData() {
 function renderAll() {
   renderStaticText();
   renderSpecies();
-  renderMedia();
   renderPricing();
   renderTrust();
   renderStructuredData();
@@ -295,7 +304,6 @@ window.addEventListener('keydown', (event) => {
   }
   if (event.key.toLowerCase() === 'r' && !event.ctrlKey && !event.metaKey && !event.altKey && !event.repeat) command('spin');
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
 window.addEventListener('pagehide', () => {
   clearTimeout(navigationTimer); clearTimeout(readyTimer);
   frame.contentWindow?.postMessage({ type: 'ZUI_DESTROY' }, location.origin);
