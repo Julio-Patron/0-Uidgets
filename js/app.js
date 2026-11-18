@@ -41,7 +41,7 @@ function checkoutOrigin() {
 
 function directPurchase(sku, product) {
   const origin = checkoutOrigin();
-  if (!origin) return `<span class="store-pending direct-pending">${t('checkoutSoon')}</span>`;
+  if (!origin) return '';
   // Top-level POST gives the backend first-party cookies, including on mobile Safari.
   // The server accepts only these SKU names and supplies the actual Stripe price.
   return `<form method="post" action="${escapeHtml(origin)}/checkout" class="checkout-form">
@@ -51,13 +51,12 @@ function directPurchase(sku, product) {
   </form>`;
 }
 
-function storeButtons(links, product, bundle = false, sku = '') {
+function storeButtons(links, product, sku) {
   const available = channels.filter(({ key }) => httpsUrl(links?.[key]));
   let html = sku ? directPurchase(sku, product) : '';
-  html += available.map(({ key, label }) => externalLink(links[key], label,
+  html += available.map(({ key, label }) => externalLink(links[key], `${t('buyOn')} ${label}`,
     'store-link', `${t('buyOn')} ${label} · ${product}`)).join('');
-  if (bundle && !available.length && !sku) html += `<span class="store-pending">${t('bundleSoon')}</span>`;
-  if (!httpsUrl(links?.microsoftStore)) html += `<span class="store-pending">${t('storeSoon')}</span>`;
+  if (!html) html = `<span class="store-pending">${t('offerPending')}</span>`;
   return `<div class="store-links">${html}</div>`;
 }
 
@@ -105,7 +104,15 @@ function updateSpecies() {
     const id = button.dataset.selectSpecies || button.dataset.trySpecies;
     button.setAttribute('aria-pressed', String(id === activeSpecies));
   });
-  $('stage-identity').innerHTML = `<strong>${species.name}</strong><span>${escapeHtml(species.copy[language].tagline)}</span>`;
+  $('stage-identity').innerHTML = `<strong>${species.name}</strong><span>${escapeHtml(I18N[language].bots[activeSpecies].role)}</span>`;
+  document.querySelectorAll('[data-preview-label]').forEach((label) => {
+    label.textContent = t(label.dataset.previewLabel === activeSpecies ? 'selected' : 'try');
+  });
+  document.querySelectorAll('.creature-card[data-species]').forEach((card) => {
+    card.dataset.active = String(card.dataset.species === activeSpecies);
+  });
+  $('single-select').value = activeSpecies;
+  renderSingleLinks();
 }
 
 function selectSpecies(id, scroll = false) {
@@ -133,6 +140,7 @@ function renderStaticText() {
   document.querySelectorAll('[data-i18n-title]').forEach((node) => node.setAttribute('title', t(node.dataset.i18nTitle)));
   document.querySelectorAll('[data-lang]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.lang === language)));
   document.querySelectorAll('[data-price]').forEach(node => { node.textContent = '$' + (COMMERCE.prices[node.dataset.price] / 100).toFixed(2); });
+  $('commerce-status').hidden = Boolean(checkoutOrigin());
   if ($('stage-loading-overlay').dataset.error === 'true') $('stage-loading-text').textContent = t('stageError');
 }
 
@@ -143,39 +151,38 @@ function renderSpecies() {
   }).join('');
   $('catalog-grid').innerHTML = SPECIES_ORDER.map((id, index) => {
     const sp = SPECIES_CATALOG[id];
-    return `<article class="creature-card" style="--species-color:${sp.glowColor}">
-      <div class="creature-heading"><h3>${sp.name}</h3><span class="creature-number">0${index + 1}</span></div>
-      <button class="creature-image" type="button" data-try-species="${id}" aria-label="${t('try')} · ${sp.name}"><img src="./assets/creatures/${id}-1.1.1.png" alt="${sp.name} · Rookie · 1.1.1" width="320" height="280" loading="lazy" decoding="async"></button>
-      <p class="creature-vibe">${escapeHtml(sp.copy[language].tagline)}</p>
-      <div class="creature-preview-row"><button type="button" class="creature-preview" data-try-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${t('try')} · ${sp.name}"><i class="species-dot" aria-hidden="true"></i>${t('try')} <span aria-hidden="true">↗</span></button><strong class="mini-price">$${(COMMERCE.prices.single / 100).toFixed(2)} <small>USD</small></strong></div>
-      <p class="price-tax">${t('vatIncluded')}</p>
-      ${storeButtons(STORE_LINKS.species[id], sp.name, false, id)}
+    const bot = I18N[language].bots[id];
+    return `<article class="creature-card" data-species="${id}" style="--species-color:${sp.glowColor}">
+      <div class="creature-art"><span class="creature-number">0${index + 1}</span><img src="./assets/creatures/${id}-1.1.1.png" alt="${escapeHtml(sp.name + ' · ' + sp.copy[language].tagline)}" width="320" height="280" loading="lazy" decoding="async"></div>
+      <div class="creature-content"><span class="creature-role">${escapeHtml(bot.role)}</span><h3>${sp.name}</h3>
+      <p class="creature-use">${escapeHtml(bot.summary)}</p>
+      <button type="button" class="creature-preview" data-try-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${t('try')} · ${sp.name}"><span data-preview-label="${id}">${t('try')}</span><span aria-hidden="true">↗</span></button></div>
     </article>`;
   }).join('');
   updateSpecies();
 }
 
 function renderPricing() {
+  $('single-select').innerHTML = SPECIES_ORDER.map((id) => `<option value="${id}"${id === activeSpecies ? ' selected' : ''}>${SPECIES_CATALOG[id].name}</option>`).join('');
+  renderSingleLinks();
   $('duo-selector').innerHTML = BUNDLES.map((bundle) =>
     `<button type="button" class="duo-option" data-duo="${bundle.id}" aria-pressed="${bundle.id === activeDuo}"><span class="duo-orbs" aria-hidden="true">${bundle.members.map((id) => `<i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}"></i>`).join('')}</span><span><strong>${bundle.title[language]}</strong><small>${bundle.members.map((id) => SPECIES_CATALOG[id].name).join(' + ')}</small></span></button>`).join('');
   renderDuoLinks();
-  $('squad-dots').innerHTML = SPECIES_ORDER.map((id) => `<button type="button" class="squad-dot" data-try-species="${id}" aria-label="${t('try')} · ${SPECIES_CATALOG[id].name}" title="${SPECIES_CATALOG[id].name}"><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i></button>`).join('');
+  $('squad-members').innerHTML = SPECIES_ORDER.map((id) => `<span><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i>${SPECIES_CATALOG[id].name}</span>`).join('');
   const squadLinks = STORE_LINKS.bundles.fullSquad;
-  $('squad-store-links').innerHTML = storeButtons(squadLinks, t('squadTitle'), true, 'fullSquad');
-  const storeHub = httpsUrl(STORE_LINKS.creatorHub.microsoftStore);
-  const storeSpecies = SPECIES_ORDER.some((id) => httpsUrl(STORE_LINKS.species[id].microsoftStore));
-  const storeBundles = Object.values(STORE_LINKS.bundles).some((links) => httpsUrl(links.microsoftStore));
-  $('store-edition-action').innerHTML = storeHub ? externalLink(storeHub, 'Microsoft Store', 'text-link')
-    : storeSpecies ? `<a class="text-link" href="#catalog">${t('installCta')}</a>`
-      : storeBundles ? `<a class="text-link" href="#pricing">${t('navPricing')}</a>`
-        : `<span class="quiet-badge">${t('storeSoon')}</span>`;
+  $('squad-store-links').innerHTML = storeButtons(squadLinks, t('squadTitle'), 'fullSquad');
   $('creator-links').innerHTML = channels.map(({ key, label }) => externalLink(STORE_LINKS.creatorHub[key], t('creator') + ' · ' + label, 'footer-store')).join('');
   if (checkoutOrigin()) $('creator-links').insertAdjacentHTML('afterbegin', `<a class="footer-store" href="${escapeHtml(checkoutOrigin())}/order">${t('downloads')}</a>`);
 }
 
+function renderSingleLinks() {
+  $('single-role').textContent = I18N[language].bots[activeSpecies].role;
+  $('single-store-links').innerHTML = storeButtons(STORE_LINKS.species[activeSpecies], SPECIES_CATALOG[activeSpecies].name, activeSpecies);
+}
+
 function renderDuoLinks() {
   const duo = BUNDLES.find(({ id }) => id === activeDuo);
-  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '), true, activeDuo);
+  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '), activeDuo);
 }
 
 function renderTrust() {
@@ -201,9 +208,10 @@ function renderStructuredData() {
   // Publish only offers with real product URLs; pending bundles are not InStock.
   const products = SPECIES_ORDER.map((id) => ({
     '@type': 'SoftwareApplication', name: '0-Uidgets ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.1',
+    description: I18N[language].bots[id].summary,
     operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
     // Other stores determine their own prices. Unactivated direct checkout has no offer.
-    ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: 'https://julio-patron.github.io/0-Uidgets/?species=' + id + '#catalog' } } : {}),
+    ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: 'https://julio-patron.github.io/0-Uidgets/?species=' + id + '#pricing' } } : {}),
   }));
   script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })) });
 }
@@ -275,6 +283,8 @@ document.addEventListener('click', (event) => {
   const hash = target.closest('[data-copy-hash]');
   if (hash) copyHash(hash.dataset.copyHash, hash);
 });
+
+$('single-select').addEventListener('change', (event) => selectSpecies(event.target.value));
 
 window.addEventListener('message', (event) => {
   if (event.origin !== location.origin || event.source !== frame.contentWindow) return;

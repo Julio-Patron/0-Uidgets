@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>0-Uidgets 3D Bots</title>
-  <meta name="description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the remodeled models and compare individual and bundle options." />
+  <meta name="description" content="Six 3D bots for Windows with optional BYOK AI and local Ollama. Work with screen snips, files and clipboard text. Customize their roles, recipes and local memory." />
   <meta name="theme-color" content="#080c10" />
   <link rel="canonical" href="https://julio-patron.github.io/0-Uidgets/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://julio-patron.github.io/0-Uidgets/" />
   <meta property="og:site_name" content="0-Uidgets" />
   <meta property="og:title" content="0-Uidgets 3D Bots" />
-  <meta property="og:description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the remodeled models and compare individual and bundle options." />
+  <meta property="og:description" content="Six 3D bots for Windows with optional BYOK AI and local Ollama. Work with screen snips, files and clipboard text. Customize their roles, recipes and local memory." />
   <meta property="og:image" content="https://julio-patron.github.io/0-Uidgets/assets/creatures/collection-1.1.1.png" />
   <meta property="og:image:alt" content="0-Uidgets 1.1.1: the six current 3D companions." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="0-Uidgets 3D Bots" />
-  <meta name="twitter:description" content="Six interactive 3D desktop widgets for Windows 10/11. Explore the remodeled models and compare individual and bundle options." />
+  <meta name="twitter:description" content="Six 3D bots for Windows with optional BYOK AI and local Ollama. Work with screen snips, files and clipboard text. Customize their roles, recipes and local memory." />
   <meta name="twitter:image" content="https://julio-patron.github.io/0-Uidgets/assets/creatures/collection-1.1.1.png" />
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./css/styles.css" />
@@ -28,27 +28,26 @@
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="0-Uidgets"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets<span class="brand-caption">/ Windows</span></a>
       <nav class="nav-links" data-i18n-aria="navLabel" aria-label="Main navigation">
-        <a href="#catalog" data-i18n="navCatalog">Models</a><a href="#live-stage" data-i18n="navProof">Live preview</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
+        <a href="#features" data-i18n="navFeatures">AI &amp; features</a><a href="#catalog" data-i18n="navCatalog">The bots</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
       </nav>
       <div class="nav-actions">
         <div class="language-switch" role="group" data-i18n-aria="language" aria-label="Choose language">
           <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button><span aria-hidden="true">/</span><button type="button" data-lang="es" lang="es" aria-pressed="false">ES</button>
         </div>
-        <a class="button button-small button-outline nav-cta" href="#catalog"><span data-i18n="navCta">View models</span><span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </header>
   <main id="main">
     <section class="hero container" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow" data-i18n="heroEyebrow">Desktop widgets · v1.1.1</p>
+        <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="heroEyebrow">Your API. Or your local AI.</span></p>
         <h1 id="hero-title"><span data-i18n="heroTitle">0-Uidgets</span> <span class="hero-accent" data-i18n="heroAccent">3D Bots</span></h1>
-        <p class="hero-lead" data-i18n="heroLead">Six interactive creatures with adjustable size and two growth stages.</p>
+        <p class="hero-promise" data-i18n="heroPromise">Put your AI on your desktop.</p>
+        <p class="hero-lead" data-i18n="heroLead">Chat, make sense of screen snips and work with your files. Connect your own API key or run a local model with Ollama.</p>
         <div class="hero-actions">
-          <a href="#catalog" class="button button-primary"><span data-i18n="heroCta">Explore the models</span><span aria-hidden="true">↗</span></a>
-          <a href="#live-stage" class="text-link"><span class="play-icon" aria-hidden="true">▷</span><span data-i18n="heroWatch">Try in 3D</span></a>
+          <a href="#features" class="button button-primary"><span data-i18n="heroCta">Explore what they can do</span><span aria-hidden="true">↓</span></a>
         </div>
-        <div class="hero-facts"><span data-i18n="heroWindows">Windows 10 / 11</span><span data-i18n="heroOffline">Works offline</span><span data-i18n="heroPayOnce">One-time purchase</span></div>
+        <div class="hero-facts"><span data-i18n="heroWindows">Windows 10 / 11 · x64</span><span data-i18n="heroOffline">AI is optional and off by default</span></div>
       </div>
       <div class="live-stage" id="live-stage">
         <div class="stage-heading"><span data-i18n="stageLabel">Interactive preview</span><span class="live-badge"><i aria-hidden="true"></i><span data-i18n="stageLive">Live 3D</span></span></div>
@@ -81,55 +80,66 @@
           <div class="species-tabs" id="species-tabs" role="group" data-i18n-aria="stageChoose" aria-label="Choose a model"></div>
           <div class="stage-identity" id="stage-identity" aria-live="polite"></div>
         </div>
-        <p class="stage-disclaimer" data-i18n="stageDemo">Browser preview · Windows app available separately</p>
+        <p class="stage-disclaimer" data-i18n="stageDemo">3D web demo · AI tools run in the Windows app</p>
       </div>
     </section>
-    <div class="benefit-strip container">
-      <span><i aria-hidden="true">↗</i><span data-i18n="benefitOne">No extra windows</span></span><span><i aria-hidden="true">♡</i><span data-i18n="benefitTwo">Responds to the cursor</span></span><span><i aria-hidden="true">☾</i><span data-i18n="benefitThree">Adjustable size</span></span><span><i aria-hidden="true">✧</i><span data-i18n="benefitFour">Optional AI</span></span>
-    </div>
+    <section class="section intelligence-section container" id="features" aria-labelledby="ai-title">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="aiKicker">01 / YOUR AI</p><h2 id="ai-title" data-i18n="aiTitle">Your model. Your choice.</h2></div><p data-i18n="aiLead">Choose where your AI runs. The bot connects directly to the provider you configure.</p></div>
+      <div class="ai-grid">
+        <article class="ai-card byok-card">
+          <div class="ai-card-top"><span class="mode-label">BYOK</span><span class="mode-symbol" aria-hidden="true">↗</span></div>
+          <h3 data-i18n="byokTitle">Bring your own key.</h3>
+          <p data-i18n="byokCopy">Connect Google Gemini or an OpenAI-compatible API. Use your own account, model and usage budget.</p>
+          <div class="provider-chips"><span>Google Gemini</span><span data-i18n="compatibleApi">OpenAI-compatible APIs</span></div>
+          <p class="mode-note" data-i18n="byokNote">Your submitted content goes directly to your provider. API usage is billed separately.</p>
+        </article>
+        <article class="ai-card local-card">
+          <div class="ai-card-top"><span class="mode-label" data-i18n="localBadge">LOCAL AI</span><span class="mode-symbol" aria-hidden="true">⌂</span></div>
+          <h3 data-i18n="localTitle">Keep it on your PC.</h3>
+          <p data-i18n="localCopy">Connect Ollama and use a local model. Your prompts, files and screen snips are processed on your own computer.</p>
+          <div class="local-flow" aria-hidden="true"><span>0-Uidgets</span><span>↔</span><span>Ollama</span><span class="local-flow-tag" data-i18n="localFlow">Your PC</span></div>
+          <p class="mode-note" data-i18n="localNote">Requires Ollama and a compatible local model. Performance depends on your hardware.</p>
+        </article>
+      </div>
+      <div class="privacy-line"><span class="privacy-mark" aria-hidden="true">◇</span><p data-i18n="privacyLine">Keys encrypted on Windows with DPAPI. No app telemetry. Screen capture only when you request it.</p></div>
+      <div class="workflow-heading"><h3 data-i18n="workflowTitle">From your desktop to a useful answer.</h3><p data-i18n="workflowLead">Three ways to give your bot context.</p></div>
+      <div class="workflow-grid">
+        <article class="workflow-item"><div class="workflow-top"><span class="workflow-number">01</span><kbd>Alt + Shift + S</kbd></div><h4 data-i18n="snipTitle">Snip your screen</h4><p data-i18n="snipCopy">Select a region to review an interface, interpret a chart or ask about a visible error. With Windows OCR support.</p></article>
+        <article class="workflow-item"><div class="workflow-top"><span class="workflow-number">02</span><span class="input-label">Drag &amp; Drop</span></div><h4 data-i18n="dropTitle">Drop a file</h4><p data-i18n="dropCopy">Drag a PDF, image, CSV, JSON or code file onto the bot to summarize, explain or structure its contents.</p></article>
+        <article class="workflow-item"><div class="workflow-top"><span class="workflow-number">03</span><kbd>Alt + Shift + C</kbd></div><h4 data-i18n="clipboardTitle">Transform your clipboard</h4><p data-i18n="clipboardCopy">Rewrite a message, clean up a snippet or format data. Trigger it with the shortcut or Shift + click, then paste the result.</p></article>
+      </div>
+      <p class="feature-note" data-i18n="aiRequirements">AI workflows require a configured provider. Image understanding depends on the selected model.</p>
+      <div class="brain-panel"><div><span class="eyebrow" data-i18n="brainKicker">MAKE IT YOURS</span><h3 data-i18n="brainTitle">A bot that works your way.</h3></div><div class="brain-features"><div><h4 data-i18n="roleTitle">Editable role</h4><p data-i18n="roleCopy">Change its system prompt and create up to 3 custom quick recipes.</p></div><div><h4 data-i18n="memoryTitle">Memory you can read</h4><p data-i18n="memoryCopy">Open, edit or clear your local memoria.md file whenever you want.</p></div><div><h4 data-i18n="cartridgeTitle">Share a personality</h4><p data-i18n="cartridgeCopy">Import or export roles and recipes as .json or .md, without keys or private memory.</p></div></div></div>
+    </section>
     <section class="section catalog-section" id="catalog" aria-labelledby="catalog-title">
-      <div class="container"><div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">CATALOG</p><h2 id="catalog-title" data-i18n="catalogTitle">Six models.</h2></div><p data-i18n="catalogLead">Different designs, with the same features.</p></div><div class="catalog-grid" id="catalog-grid"></div></div>
+      <div class="container"><div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">02 / THE BOTS</p><h2 id="catalog-title" data-i18n="catalogTitle">Choose your starting point.</h2></div><p data-i18n="catalogLead">Six designs with different starting roles and recipes. Every bot has the same tools; you can customize its role.</p></div><div class="catalog-grid" id="catalog-grid"></div><div class="desktop-features"><span data-i18n="desktopStages">Hatchling + Rookie</span><span data-i18n="desktopSizes">4 sizes</span><span data-i18n="desktopReminders">Local reminders</span><span data-i18n="desktopFullscreen">Fullscreen auto-hide</span></div></div>
     </section>
     <section class="section container" id="pricing" aria-labelledby="price-title">
-      <div class="section-heading centered"><p class="eyebrow" data-i18n="priceKicker">PRICING</p><h2 id="price-title" data-i18n="priceTitle">Individual models and bundles.</h2><p data-i18n="priceLead">Direct purchase · Final price · No subscription.</p></div>
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="priceKicker">03 / GET YOUR BOTS</p><h2 id="price-title" data-i18n="priceTitle">One bot. A duo. All six.</h2></div><p data-i18n="priceLead">One-time purchase. Both stages and all bot tools included. AI provider usage is separate.</p></div>
+      <p class="commerce-notice" id="commerce-status"><span class="status-dot" aria-hidden="true"></span><span data-i18n="checkoutStatus">Direct checkout is being prepared. You can explore the available external stores below.</span></p>
       <div class="pricing-grid">
         <article class="price-card">
-          <span class="price-label" data-i18n="launch">Launch price</span><h3 data-i18n="singleTitle">Individual</h3><p data-i18n="singleSub">One model of your choice.</p>
-          <div class="price"><span data-price="single">$14.99</span> <span>USD</span></div><span class="price-detail" data-i18n="singleDetail">Both stages included</span>
-          <div class="price-bottom"><a href="#catalog" class="button button-outline" data-i18n="singleCta">View models</a></div>
+          <span class="price-label" data-i18n="singleCount">01 BOT</span><h3 data-i18n="singleTitle">Individual</h3><p data-i18n="singleSub">Choose the bot that fits your workflow.</p>
+          <div class="price"><span data-price="single">$14.99</span> <small>USD</small></div>
+          <label class="select-label" for="single-select" data-i18n="singleLabel">Choose your bot</label><select id="single-select" class="bot-select"></select><p class="selected-role" id="single-role"></p>
+          <div class="price-bottom" id="single-store-links"></div>
         </article>
         <article class="price-card duo-card">
-          <span class="price-label">02 / 06</span><h3 data-i18n="duoTitle">Duo</h3><p data-i18n="duoSub">Two widgets in one bundle.</p>
-          <div class="price"><span data-price="duo">$26.99</span> <span>USD</span></div><div class="duo-selector" id="duo-selector" role="group" data-i18n-aria="duoLabel" aria-label="Choose your duo"></div><div class="price-bottom" id="duo-store-links"></div>
+          <span class="price-label">02 / 06</span><h3 data-i18n="duoTitle">Duo</h3><p data-i18n="duoSub">Two starting roles that work well together.</p>
+          <div class="price"><span data-price="duo">$26.99</span> <small>USD</small></div><div class="duo-selector" id="duo-selector" role="group" data-i18n-aria="duoLabel" aria-label="Choose your duo"></div><div class="price-bottom" id="duo-store-links"></div>
         </article>
         <article class="price-card squad-card">
-          <span class="price-label" data-i18n="squadBadge">6 MODELS</span><h3 data-i18n="squadTitle">Complete collection</h3><p data-i18n="squadSub">Includes all six models.</p>
-          <div class="price"><span data-price="collection">$59.99</span> <span>USD</span></div><span class="price-detail" data-i18n="squadDetail">≈ $10.00 / widget</span>
-          <div class="squad-dots" id="squad-dots" data-i18n-aria="allSix" aria-label="All six models included"></div><div class="price-bottom" id="squad-store-links"></div>
+          <span class="price-label" data-i18n="squadBadge">06 BOTS</span><h3 data-i18n="squadTitle">Complete collection</h3><p data-i18n="squadSub">The complete set for your desktop.</p>
+          <div class="price"><span data-price="collection">$59.99</span> <small>USD</small></div><span class="price-detail" data-i18n="squadDetail">All six designs and starting roles.</span>
+          <div class="squad-members" id="squad-members" data-i18n-aria="allSix" aria-label="All six bots included"></div><div class="price-bottom" id="squad-store-links"></div>
         </article>
       </div>
-      <p class="fine-print center-text" data-i18n="priceFootnote">USD · Final launch prices for direct purchases. Other stores set their own prices and availability.</p>
-    </section>
-    <section class="section container" id="install" aria-labelledby="install-title">
-      <div class="section-heading"><div><p class="eyebrow" data-i18n="installKicker">INSTALLATION</p><h2 id="install-title" data-i18n="installTitle">Available editions.</h2></div><span class="quiet-badge">Windows 10 / 11 · v1.1.1</span></div>
-      <div class="edition-grid">
-        <article class="edition-card">
-          <span class="edition-symbol windows-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <h3 data-i18n="storeName">Microsoft Store Edition</h3><p class="edition-subtitle" data-i18n="storeSubtitle">Installation and updates through the Store.</p>
-          <ul><li data-i18n="storeFeature1">One-click installation</li><li data-i18n="storeFeature2">Store-managed installation</li><li data-i18n="storeFeature3">Automatic updates · Clean uninstall</li></ul>
-          <div id="store-edition-action" class="edition-action"></div><p class="fine-print" data-i18n="storeNote">APPX v1.1.1.0 prepared · Publisher: Julio-Patrón</p>
-        </article>
-        <article class="edition-card">
-          <span class="edition-symbol" aria-hidden="true">↧</span><h3 data-i18n="portableName">Direct Portable Edition</h3><p class="edition-subtitle" data-i18n="portableSubtitle">Direct download, without an installer.</p>
-          <ul><li data-i18n="portableFeature1">A single portable file</li><li data-i18n="portableFeature2">No installer or Microsoft account</li><li data-i18n="portableFeature3">Run from any folder · Web demo on itch.io</li></ul>
-          <a href="#catalog" class="text-link" data-i18n="installCta">View models</a><p class="fine-print" data-i18n="portableNote">v1.1.1 · Windows x64 · About 107 MiB per widget</p>
-        </article>
-      </div>
+      <p class="fine-print" data-i18n="priceFootnote">Shown prices are for direct purchase in USD. External stores set their own prices and availability.</p>
     </section>
     <section class="section trust-section container" id="checksums" aria-labelledby="trust-title">
-      <div class="trust-heading"><h2 id="trust-title" data-i18n="trustTitle">Release information</h2><p data-i18n="trustLead">FAQs and file verification.</p></div>
+      <div class="trust-heading"><p class="eyebrow" data-i18n="faqKicker">THE DETAILS</p><h2 id="trust-title" data-i18n="trustTitle">Before you choose.</h2><p data-i18n="trustLead">Requirements, AI costs and everyday use.</p></div>
       <div class="trust-content">
-        <details class="accordion" id="faq-accordion"><summary data-i18n="faqTitle">Frequently asked questions</summary><div id="faq-list" class="accordion-body"></div></details>
+        <div id="faq-list"></div>
         <details class="accordion" id="verification-accordion">
           <summary data-i18n="checksumsTitle">Release verification · SHA-256</summary>
           <div class="accordion-body">
@@ -144,7 +154,7 @@
     </section>
   </main>
   <footer class="site-footer container">
-    <div><a class="brand" href="#top"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets</a><p data-i18n="footerTag">3D desktop widgets for Windows.</p></div>
+    <div><a class="brand" href="#top"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets</a><p data-i18n="footerTag">3D bots. Your AI. Your desktop.</p></div>
     <div class="footer-links"><a href="./privacy.html" data-i18n="privacy">Privacy policy</a><span id="creator-links"></span><a href="#top" data-i18n="top">Back to top</a></div>
     <span class="footer-version">© 2026 Julio-Patrón · v1.1.1</span>
   </footer>
