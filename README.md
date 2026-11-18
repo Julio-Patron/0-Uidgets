@@ -2,8 +2,8 @@
 
 Bilingual EN/ES landing for six Windows 10/11 desktop widgets, with an interactive 3D preview, a real desktop recording and individual or bundle pricing.
 
-- Website: https://julio-patron.github.io/Widgets-Public-Repo/
-- Microsoft Partner Center privacy URL: https://julio-patron.github.io/Widgets-Public-Repo/privacy.html
+- Website: https://julio-patron.github.io/0-Uidgets/
+- Public privacy page: https://julio-patron.github.io/0-Uidgets/privacy.html
 - Prices: $12 USD individual (launch; regular $19), $22 USD themed duo, $49 USD Full 6-Bot Squad.
 
 ## Store links
@@ -25,7 +25,9 @@ The verified Gumroad product URL is active for the $49 Full Squad. Individual co
 
 No build step or production dependencies. Serve the repository root with `npm start` or `python -m http.server 8080`, then open http://localhost:8080.
 
-GitHub Pages deploys `main` from `/ (root)`. All asset paths work under `/Widgets-Public-Repo/`. Language and species can be linked with `?lang=es&species=nimpu`.
+GitHub Pages deploys `main` from `/ (root)`. All asset paths work under `/0-Uidgets/`. Language and species can be linked with `?lang=es&species=nimpu`.
+
+Microsoft Partner Center must use the public privacy URL above. The previous `/Widgets-Public-Repo/privacy.html` address returns 404 after the repository rename.
 
 ## Public repository boundaries
 
