@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { siteOrigin } from '../lib/site-origin.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const source=root;
 const dest=path.join(root,'commerce/public');
@@ -20,18 +21,19 @@ function copy(from,to){
 fs.mkdirSync(dest,{recursive:true});
 for(const name of allow)copy(path.join(source,name),path.join(dest,name));
 fs.copyFileSync(path.join(root,'commerce/checkout-access.js'),path.join(dest,'checkout-access.js'));
-const origin=process.env.APP_ORIGIN;
+const origin=siteOrigin(process.env);
 if(origin){
   if(!/^https:\/\/[a-z0-9.-]+$/.test(origin))throw new Error('Invalid canonical origin');
   const file=path.join(dest,'index.html');let html=fs.readFileSync(file,'utf8');
   html=html.replaceAll('https://julio-patron.github.io/0-Uidgets/',origin+'/');fs.writeFileSync(file,html);
-  const appFile=path.join(dest,'js/app.js');let js=fs.readFileSync(appFile,'utf8');js=js.replaceAll('https://julio-patron.github.io/0-Uidgets/',origin+'/');fs.writeFileSync(appFile,js);
 }
 // Activation is explicit, requires an origin and must follow end-to-end verification.
 if(process.env.COMMERCE_ENABLED==='true'){
   if(!origin||process.env.TAX_READY!=='true')throw new Error('Checkout activation not ready');
   const file=path.join(dest,'js/commerce-config.js');fs.writeFileSync(file,fs.readFileSync(file,'utf8').replace("checkoutOrigin: ''",`checkoutOrigin: '${origin}'`));
 }
-fs.mkdirSync(out,{recursive:true});
-fs.writeFileSync(path.join(out,'site-copy-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+if(!process.env.VERCEL){
+  fs.mkdirSync(out,{recursive:true});
+  fs.writeFileSync(path.join(out,'site-copy-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+}
 console.log(`Prepared ${manifest.length} public assets without executables, credentials or desktop app source.`);

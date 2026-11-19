@@ -10,6 +10,7 @@ export function stripePayments({key,webhookSecret,accountId,livemode}) {
     create:(params,idempotencyKey)=>stripe().checkout.sessions.create(params,{idempotencyKey}),
     verifyEvent:(raw,signature)=>{if(!webhookSecret||!signature)throw new Error('Missing webhook credentials');return stripe().webhooks.constructEvent(raw,signature,webhookSecret,300);},
     async assertReady(item){
+      if(!webhookSecret)throw new PurchaseError('webhook_not_configured',503);
       const [account,price,tax,registrations]=await Promise.all([
         stripe().accounts.retrieve(null),
         stripe().prices.retrieve(item.priceId,{expand:['product']}),

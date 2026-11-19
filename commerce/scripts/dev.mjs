@@ -5,6 +5,7 @@ import { Readable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
 import api from '../api/index.mjs';
 const site=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../public');
+process.env.APP_ORIGIN ??= 'https://localhost';
 const server=http.createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,'http://127.0.0.1');

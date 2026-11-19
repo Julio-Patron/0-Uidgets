@@ -65,7 +65,11 @@ export function createShop({payments,storage,config,log=()=>{}}) {
     const url=new URL(req.url),route=url.pathname;
     if(route==='/health'&&req.method==='GET')return json({service:'0-uidgets',release,salesEnabled:config.enabled===true&&config.taxReady===true});
     if(route==='/purchase-privacy'&&req.method==='GET')return html('Privacidad de la compra / Purchase privacy',`<p>Stripe procesa el pago y los datos de facturación. 0-Uidgets conserva en almacenamiento privado la referencia de pago, el producto y el permiso de descarga. La aplicación de escritorio mantiene su memoria y ajustes en tu equipo.</p><p>Una cookie necesaria de 30 días permite volver a las descargas desde este navegador. El enlace privado equivale a una credencial: guárdalo sin compartirlo. Los enlaces de archivo caducan en 5 minutos.</p><p>Stripe processes payment and billing data. 0-Uidgets keeps the payment reference, product and download entitlement in private storage. A necessary 30-day cookie restores downloads in this browser. Keep your private access link secret; individual file links expire after 5 minutes.</p><p><a href="https://stripe.com/privacy">Privacidad de Stripe</a> · <a href="/privacy.html">Privacidad de la app de escritorio</a></p>`);
-    if(route==='/access'&&req.method==='GET')return html('Abrir descargas / Open downloads','<p id="access-message">Verificando el enlace privado… / Checking your private link…</p><script type="module" src="/checkout-access.js"></script>');
+    if(route==='/access'&&req.method==='GET'){
+      const page=html('Abrir descargas / Open downloads','<p id="access-message">Verificando el enlace privado… / Checking your private link…</p><script type="module" src="/checkout-access.js"></script>');
+      page.headers.set('Content-Security-Policy',baseHeaders['Content-Security-Policy']+"; connect-src 'self'");
+      return page;
+    }
     if(route==='/restore'&&req.method==='POST'){
       if(req.headers.get('origin')!==origin)return denied();
       if(!req.headers.get('content-type')?.startsWith('application/json'))return json({error:'unsupported_media_type'},415);
@@ -91,7 +95,7 @@ export function createShop({payments,storage,config,log=()=>{}}) {
         metadata:{app:'0-uidgets',sku,release_version:release,access_hash:accessHash(token)},
         custom_text:{submit:{message:lang==='es'?'Pago único. Descarga privada tras confirmar el pago.':'One-time payment. Private downloads after payment confirmation.'}}};
       // Repeated submits in a short window reuse the same hosted session.
-      const key=createHash('sha256').update([token,sku,Math.floor(Date.now()/600000),release].join(':')).digest('hex');
+      const key=createHash('sha256').update([token,sku,lang,Math.floor(Date.now()/600000),release].join(':')).digest('hex');
       const session=await payments.create(params,'zero-uidgets-'+key);
       const target=new URL(session.url);
       if(target.protocol!=='https:'||target.hostname!=='checkout.stripe.com'||!sessionValid(session.id))throw new PurchaseError('invalid_checkout');

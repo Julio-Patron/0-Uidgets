@@ -1,6 +1,7 @@
 import catalog from '../catalog.json' with { type:'json' };
 import { createShop } from '../lib/checkout.mjs';
 import { stripePayments, privateStorage } from '../lib/adapters.mjs';
+import { siteOrigin } from '../lib/site-origin.mjs';
 let shop;
 function runtime(){
   if(shop)return shop;
@@ -13,7 +14,7 @@ function runtime(){
   }
   const livemode=env.STRIPE_LIVEMODE==='true';
   if(!livemode&&!overrides&&env.COMMERCE_ENABLED==='true')throw new Error('Sandbox price mapping required');
-  shop=createShop({config:{origin:env.APP_ORIGIN,enabled:env.COMMERCE_ENABLED==='true',taxReady:env.TAX_READY==='true',livemode,products},
+  shop=createShop({config:{origin:siteOrigin(env),enabled:env.COMMERCE_ENABLED==='true',taxReady:env.TAX_READY==='true',livemode,products},
     payments:stripePayments({key:env.STRIPE_SECRET_KEY,webhookSecret:env.STRIPE_WEBHOOK_SECRET,accountId:env.STRIPE_ACCOUNT_ID,livemode}),
     storage:privateStorage(),log:(event,code)=>console.error(JSON.stringify({event,code}))});
   return shop;
