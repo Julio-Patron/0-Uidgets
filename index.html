@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>0-Uidgets 3D Bots</title>
-  <meta name="description" content="Six 3D bots for Windows with optional BYOK AI and local Ollama. Work with screen snips, files and clipboard text. Customize their roles, recipes and local memory." />
+  <meta name="description" content="Six 3D desktop companions for Windows with the same optional AI tools. Customize prompts and recipes. Explore PDF-to-Excel export in the upcoming Store edition." />
   <meta name="theme-color" content="#080c10" />
   <link rel="canonical" href="https://julio-patron.github.io/0-Uidgets/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://julio-patron.github.io/0-Uidgets/" />
   <meta property="og:site_name" content="0-Uidgets" />
   <meta property="og:title" content="0-Uidgets 3D Bots" />
-  <meta property="og:description" content="Six 3D bots for Windows with optional BYOK AI and local Ollama. Work with screen snips, files and clipboard text. Customize their roles, recipes and local memory." />
+  <meta property="og:description" content="Six 3D desktop companions for Windows with the same optional AI tools. Customize prompts and recipes. Explore PDF-to-Excel export in the upcoming Store edition." />
   <meta property="og:image" content="https://julio-patron.github.io/0-Uidgets/assets/creatures/collection-1.1.1.png" />
   <meta property="og:image:alt" content="0-Uidgets 1.1.1: the six current 3D companions." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="0-Uidgets 3D Bots" />
-  <meta name="twitter:description" content="Six 3D bots for Windows with optional BYOK AI and local Ollama. Work with screen snips, files and clipboard text. Customize their roles, recipes and local memory." />
+  <meta name="twitter:description" content="Six 3D desktop companions for Windows with the same optional AI tools. Customize prompts and recipes. Explore PDF-to-Excel export in the upcoming Store edition." />
   <meta name="twitter:image" content="https://julio-patron.github.io/0-Uidgets/assets/creatures/collection-1.1.1.png" />
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./css/styles.css" />
@@ -28,7 +28,7 @@
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="0-Uidgets"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets<span class="brand-caption">/ Windows</span></a>
       <nav class="nav-links" data-i18n-aria="navLabel" aria-label="Main navigation">
-        <a href="#features" data-i18n="navFeatures">AI &amp; features</a><a href="#catalog" data-i18n="navCatalog">The bots</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
+        <a href="#features" data-i18n="navFeatures">How it works</a><a href="#your-ai" data-i18n="navAi">Your AI</a><a href="#catalog" data-i18n="navCatalog">The bots</a><a href="#pricing" data-i18n="navPricing">Pricing</a>
       </nav>
       <div class="nav-actions">
         <div class="language-switch" role="group" data-i18n-aria="language" aria-label="Choose language">
@@ -40,15 +40,38 @@
   <main id="main">
     <section class="hero container" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="heroEyebrow">Your API. Or your local AI.</span></p>
-        <h1 id="hero-title"><span data-i18n="heroTitle">0-Uidgets</span> <span class="hero-accent" data-i18n="heroAccent">3D Bots</span></h1>
-        <p class="hero-promise" data-i18n="heroPromise">Put your AI on your desktop.</p>
-        <p class="hero-lead" data-i18n="heroLead">Chat, make sense of screen snips and work with your files. Connect your own API key or run a local model with Ollama.</p>
-        <div class="hero-actions">
-          <a href="#features" class="button button-primary"><span data-i18n="heroCta">Explore what they can do</span><span aria-hidden="true">↓</span></a>
-        </div>
-        <div class="hero-facts"><span data-i18n="heroWindows">Windows 10 / 11 · x64</span><span data-i18n="heroOffline">AI is optional and off by default</span></div>
+        <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="heroEyebrow">0-Uidgets · Desktop bots for Windows</span></p>
+        <h1 id="hero-title"><span data-i18n="heroTitle">Your 3D bot.</span><span class="hero-accent" data-i18n="heroAccent">One gesture away.</span></h1>
+        <p class="hero-lead" data-i18n="heroLead">Drop a document onto your bot for a summary, ask about a screen snip or rewrite clipboard text. Choose the creature you like and give it your own instructions.</p>
+        <div class="hero-actions"><a href="#catalog" class="button button-primary"><span data-i18n="heroCta">Find your bot</span><span aria-hidden="true">↓</span></a></div>
+        <a class="hero-ai-link" href="#your-ai"><span class="status-dot" aria-hidden="true"></span><span data-i18n="heroAiLink">Your AI: your API key or local Ollama</span><span aria-hidden="true">↗</span></a>
+        <p class="hero-requirement" data-i18n="heroRequirement">Windows 10 / 11 · AI tools require a provider you configure.</p>
       </div>
+      <div class="use-case" id="features" aria-labelledby="use-case-title">
+        <div class="use-case-header"><h2 id="use-case-title" data-i18n="examplesTitle">A little help with your day.</h2><span class="example-badge" data-i18n="exampleBadge">Illustrative examples</span></div>
+        <div class="case-tabs" role="tablist" data-i18n-aria="caseTabsLabel" aria-label="Explore a use case">
+          <button type="button" role="tab" id="case-tab-screen" data-use-case="screen" aria-selected="true" aria-controls="use-case-panel" tabindex="0" data-i18n="caseScreen">An error</button>
+          <button type="button" role="tab" id="case-tab-document" data-use-case="document" aria-selected="false" aria-controls="use-case-panel" tabindex="-1" data-i18n="caseDocument">PDFs to Excel</button>
+          <button type="button" role="tab" id="case-tab-clipboard" data-use-case="clipboard" aria-selected="false" aria-controls="use-case-panel" tabindex="-1" data-i18n="caseClipboard">A message</button>
+        </div>
+        <div id="use-case-panel" role="tabpanel" aria-labelledby="case-tab-screen" tabindex="0"></div>
+        <p class="example-note" data-i18n="exampleNote">Illustrative examples. PDF folders and Excel export are features of Store build 1.1.3, pending certification. Model responses vary.</p>
+      </div>
+    </section>
+    <section class="section intelligence-section container" id="your-ai" aria-labelledby="ai-title">
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="aiKicker">01 / CONNECT YOUR AI</p><h2 id="ai-title" data-i18n="aiTitle">Choose where the help comes from.</h2></div><p data-i18n="aiLead">Connect the bot once in settings. Use a cloud provider with your own key, or a model running on your PC.</p></div>
+      <div class="ai-grid">
+        <article class="ai-card byok-card"><div class="ai-card-top"><span class="mode-label">BYOK</span><span class="mode-symbol" aria-hidden="true">↗</span></div><h3 data-i18n="byokTitle">With your AI provider.</h3><p data-i18n="byokCopy">Bring your own API key for Gemini or an OpenAI-compatible service. The content you share goes directly to the provider you choose.</p><span class="mode-benefit" data-i18n="byokBenefit">Choose the model and account you want to use.</span></article>
+        <article class="ai-card local-card"><div class="ai-card-top"><span class="mode-label" data-i18n="localBadge">LOCAL AI</span><span class="mode-symbol" aria-hidden="true">⌂</span></div><h3 data-i18n="localTitle">On your own PC.</h3><p data-i18n="localCopy">Connect a local model through Ollama. Your messages, files and screen snips are processed on your computer.</p><span class="mode-benefit" data-i18n="localBenefit">Use your own hardware for local processing.</span></article>
+      </div>
+      <p class="ai-cost-note" data-i18n="aiCostNote">The bot purchase does not include AI credits. Cloud usage follows your provider’s pricing; local Ollama requires a compatible model and hardware.</p>
+      <details class="setup-details"><summary data-i18n="setupTitle">Setup, privacy and compatibility</summary><div class="setup-content"><ol><li data-i18n="setupStepOne">Open the bot in Windows and go to Settings → Artificial Intelligence.</li><li data-i18n="setupStepTwo">Configure your provider, API key and model, or connect your local Ollama instance.</li><li data-i18n="setupStepThree">Enable AI and choose what to share with your bot. AI is off by default.</li></ol><p data-i18n="privacyLine">Windows encrypts saved API keys. AI requests can include attachments, your instructions and saved context such as conversation history or memory.</p><p data-i18n="aiRequirements">Image understanding depends on the model you select. Local AI performance depends on your hardware.</p></div></details>
+      <div class="personalization"><div><p class="eyebrow" data-i18n="brainKicker">MAKE IT YOURS</p><h3 data-i18n="brainTitle">Tell it how you like to work.</h3></div><div class="personalization-copy"><p data-i18n="brainLead">Write your own system prompt, change what happens when you drop a file and save up to three quick recipes. You can edit the local memory too.</p><details class="personalization-details"><summary data-i18n="brainDetailsTitle">Roles, memory and shareable personalities</summary><p data-i18n="brainDetailsCopy">Edit its system prompt and your local memoria.md file. Import or export roles and recipes in .json or .md personality cartridges, without API keys or private memory.</p></details></div></div>
+    </section>
+    <section class="section catalog-section" id="catalog" aria-labelledby="catalog-title">
+      <div class="container">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">02 / CHOOSE YOUR BOT</p><h2 id="catalog-title" data-i18n="catalogTitle">Same tools. Your favorite design.</h2></div><p id="catalog-shared-tools" data-i18n="catalogLead">All six creatures use the same AI tools. Choose by appearance and movement, then set the role, prompt and recipes you want.</p></div>
+        <div class="bot-showcase"><div class="bot-preview-column">
       <div class="live-stage" id="live-stage">
         <div class="stage-heading"><span data-i18n="stageLabel">Interactive preview</span><span class="live-badge"><i aria-hidden="true"></i><span data-i18n="stageLive">Live 3D</span></span></div>
         <div class="stage-viewport">
@@ -77,60 +100,33 @@
             </details>
           </div>
           <p class="stage-hint" data-i18n="stageHint">Drag to move · Click to pet · R to spin</p>
-          <div class="species-tabs" id="species-tabs" role="group" data-i18n-aria="stageChoose" aria-label="Choose a model"></div>
           <div class="stage-identity" id="stage-identity" aria-live="polite"></div>
         </div>
         <p class="stage-disclaimer" data-i18n="stageDemo">3D web demo · AI tools run in the Windows app</p>
       </div>
-    </section>
-    <section class="section intelligence-section container" id="features" aria-labelledby="ai-title">
-      <div class="section-heading"><div><p class="eyebrow" data-i18n="aiKicker">01 / YOUR AI</p><h2 id="ai-title" data-i18n="aiTitle">Your model. Your choice.</h2></div><p data-i18n="aiLead">Choose where your AI runs. The bot connects directly to the provider you configure.</p></div>
-      <div class="ai-grid">
-        <article class="ai-card byok-card">
-          <div class="ai-card-top"><span class="mode-label">BYOK</span><span class="mode-symbol" aria-hidden="true">↗</span></div>
-          <h3 data-i18n="byokTitle">Bring your own key.</h3>
-          <p data-i18n="byokCopy">Connect Google Gemini or an OpenAI-compatible API. Use your own account, model and usage budget.</p>
-          <div class="provider-chips"><span>Google Gemini</span><span data-i18n="compatibleApi">OpenAI-compatible APIs</span></div>
-          <p class="mode-note" data-i18n="byokNote">Your submitted content goes directly to your provider. API usage is billed separately.</p>
-        </article>
-        <article class="ai-card local-card">
-          <div class="ai-card-top"><span class="mode-label" data-i18n="localBadge">LOCAL AI</span><span class="mode-symbol" aria-hidden="true">⌂</span></div>
-          <h3 data-i18n="localTitle">Keep it on your PC.</h3>
-          <p data-i18n="localCopy">Connect Ollama and use a local model. Your prompts, files and screen snips are processed on your own computer.</p>
-          <div class="local-flow" aria-hidden="true"><span>0-Uidgets</span><span>↔</span><span>Ollama</span><span class="local-flow-tag" data-i18n="localFlow">Your PC</span></div>
-          <p class="mode-note" data-i18n="localNote">Requires Ollama and a compatible local model. Performance depends on your hardware.</p>
-        </article>
+
+          <a class="button button-outline choose-current-bot" id="choose-current-bot" href="#pricing"></a>
+        </div><div><div class="catalog-grid" id="catalog-grid" role="group" data-i18n-aria="stageChoose" aria-describedby="catalog-shared-tools" aria-label="Choose a bot"></div><p class="catalog-role-note" data-i18n="roleNote">Each creature has two stages and keeps its own settings and memory.</p></div></div>
+        <div class="offline-strip"><div><span class="status-dot" aria-hidden="true"></span><h3 data-i18n="offlineTitle">You can also use it with AI off.</h3></div><p data-i18n="offlineCopy">Pet it, rotate it, switch stages or set a local reminder. Four sizes and optional fullscreen auto-hide, without an account or internet connection.</p></div>
       </div>
-      <div class="privacy-line"><span class="privacy-mark" aria-hidden="true">◇</span><p data-i18n="privacyLine">Keys encrypted on Windows with DPAPI. No app telemetry. Screen capture only when you request it.</p></div>
-      <div class="workflow-heading"><h3 data-i18n="workflowTitle">From your desktop to a useful answer.</h3><p data-i18n="workflowLead">Three ways to give your bot context.</p></div>
-      <div class="workflow-grid">
-        <article class="workflow-item"><div class="workflow-top"><span class="workflow-number">01</span><kbd>Alt + Shift + S</kbd></div><h4 data-i18n="snipTitle">Snip your screen</h4><p data-i18n="snipCopy">Select a region to review an interface, interpret a chart or ask about a visible error. With Windows OCR support.</p></article>
-        <article class="workflow-item"><div class="workflow-top"><span class="workflow-number">02</span><span class="input-label">Drag &amp; Drop</span></div><h4 data-i18n="dropTitle">Drop a file</h4><p data-i18n="dropCopy">Drag a PDF, image, CSV, JSON or code file onto the bot to summarize, explain or structure its contents.</p></article>
-        <article class="workflow-item"><div class="workflow-top"><span class="workflow-number">03</span><kbd>Alt + Shift + C</kbd></div><h4 data-i18n="clipboardTitle">Transform your clipboard</h4><p data-i18n="clipboardCopy">Rewrite a message, clean up a snippet or format data. Trigger it with the shortcut or Shift + click, then paste the result.</p></article>
-      </div>
-      <p class="feature-note" data-i18n="aiRequirements">AI workflows require a configured provider. Image understanding depends on the selected model.</p>
-      <div class="brain-panel"><div><span class="eyebrow" data-i18n="brainKicker">MAKE IT YOURS</span><h3 data-i18n="brainTitle">A bot that works your way.</h3></div><div class="brain-features"><div><h4 data-i18n="roleTitle">Editable role</h4><p data-i18n="roleCopy">Change its system prompt and create up to 3 custom quick recipes.</p></div><div><h4 data-i18n="memoryTitle">Memory you can read</h4><p data-i18n="memoryCopy">Open, edit or clear your local memoria.md file whenever you want.</p></div><div><h4 data-i18n="cartridgeTitle">Share a personality</h4><p data-i18n="cartridgeCopy">Import or export roles and recipes as .json or .md, without keys or private memory.</p></div></div></div>
-    </section>
-    <section class="section catalog-section" id="catalog" aria-labelledby="catalog-title">
-      <div class="container"><div class="section-heading"><div><p class="eyebrow" data-i18n="catalogKicker">02 / THE BOTS</p><h2 id="catalog-title" data-i18n="catalogTitle">Choose your starting point.</h2></div><p data-i18n="catalogLead">Six designs with different starting roles and recipes. Every bot has the same tools; you can customize its role.</p></div><div class="catalog-grid" id="catalog-grid"></div><div class="desktop-features"><span data-i18n="desktopStages">Hatchling + Rookie</span><span data-i18n="desktopSizes">4 sizes</span><span data-i18n="desktopReminders">Local reminders</span><span data-i18n="desktopFullscreen">Fullscreen auto-hide</span></div></div>
     </section>
     <section class="section container" id="pricing" aria-labelledby="price-title">
-      <div class="section-heading"><div><p class="eyebrow" data-i18n="priceKicker">03 / GET YOUR BOTS</p><h2 id="price-title" data-i18n="priceTitle">One bot. A duo. All six.</h2></div><p data-i18n="priceLead">One-time purchase. Both stages and all bot tools included. AI provider usage is separate.</p></div>
+      <div class="section-heading"><div><p class="eyebrow" data-i18n="priceKicker">03 / GET YOUR BOTS</p><h2 id="price-title" data-i18n="priceTitle">One bot. A duo. All six.</h2></div><p data-i18n="priceLead">The direct download is the Windows portable edition 1.1.1. Each purchase includes both stages. AI usage is billed separately by your provider.</p></div>
       <p class="commerce-notice" id="commerce-status"><span class="status-dot" aria-hidden="true"></span><span data-i18n="checkoutStatus">Direct checkout is being prepared. You can explore the available external stores below.</span></p>
       <div class="pricing-grid">
         <article class="price-card">
-          <span class="price-label" data-i18n="singleCount">01 BOT</span><h3 data-i18n="singleTitle">Individual</h3><p data-i18n="singleSub">Choose the bot that fits your workflow.</p>
+          <span class="price-label" data-i18n="singleCount">01 BOT</span><h3 data-i18n="singleTitle">Individual</h3><p data-i18n="singleSub">Your favorite design, with all the tools.</p>
           <div class="price"><span data-price="single">$14.99</span> <small>USD</small></div>
           <label class="select-label" for="single-select" data-i18n="singleLabel">Choose your bot</label><select id="single-select" class="bot-select"></select><p class="selected-role" id="single-role"></p>
           <div class="price-bottom" id="single-store-links"></div>
         </article>
         <article class="price-card duo-card">
-          <span class="price-label">02 / 06</span><h3 data-i18n="duoTitle">Duo</h3><p data-i18n="duoSub">Two starting roles that work well together.</p>
+          <span class="price-label" data-i18n="duoCount">02 BOTS</span><h3 data-i18n="duoTitle">Duo</h3><p data-i18n="duoSub">Two designs for your desktop.</p>
           <div class="price"><span data-price="duo">$26.99</span> <small>USD</small></div><div class="duo-selector" id="duo-selector" role="group" data-i18n-aria="duoLabel" aria-label="Choose your duo"></div><div class="price-bottom" id="duo-store-links"></div>
         </article>
         <article class="price-card squad-card">
           <span class="price-label" data-i18n="squadBadge">06 BOTS</span><h3 data-i18n="squadTitle">Complete collection</h3><p data-i18n="squadSub">The complete set for your desktop.</p>
-          <div class="price"><span data-price="collection">$59.99</span> <small>USD</small></div><span class="price-detail" data-i18n="squadDetail">All six designs and starting roles.</span>
+          <div class="price"><span data-price="collection">$59.99</span> <small>USD</small></div><span class="price-detail" data-i18n="squadDetail">All six bots, with every tool included.</span>
           <div class="squad-members" id="squad-members" data-i18n-aria="allSix" aria-label="All six bots included"></div><div class="price-bottom" id="squad-store-links"></div>
         </article>
       </div>
@@ -146,7 +142,7 @@
             <p data-i18n="checksumsIntro">Compare your file with its matching release hash. A hash identifies a file; it is not a safety guarantee.</p>
             <p data-i18n="smartScreen">The direct portable edition may trigger Windows SmartScreen. Check its source and hash before deciding to open it.</p>
             <h3 data-i18n="exeTitle">Portable · v1.1.1</h3><div id="exe-hashes"></div><a href="./SHA256SUMS-ALL-SQUAD.txt" class="text-link manifest-link" data-i18n="manifest">Portable hash manifest</a>
-            <h3 data-i18n="appxTitle">Store packages · v1.1.1.0</h3><p data-i18n="packageNote">These hashes identify the prepared, unsigned .appx packages. They do not certify Microsoft approval or availability.</p>
+            <h3 data-i18n="appxTitle">Store packages · v1.1.3.0</h3><p data-i18n="packageNote">These hashes identify the six unsigned 1.1.3 packages prepared for Microsoft Store. Store certification and availability are pending.</p>
             <div id="appx-hashes"></div><a href="./SHA256SUMS-STORE.txt" class="text-link manifest-link" data-i18n="appxManifest">Store package hash manifest</a>
           </div>
         </details>
@@ -156,7 +152,7 @@
   <footer class="site-footer container">
     <div><a class="brand" href="#top"><span class="brand-orb" aria-hidden="true"></span>0-Uidgets</a><p data-i18n="footerTag">3D bots. Your AI. Your desktop.</p></div>
     <div class="footer-links"><a href="./privacy.html" data-i18n="privacy">Privacy policy</a><span id="creator-links"></span><a href="#top" data-i18n="top">Back to top</a></div>
-    <span class="footer-version">© 2026 Julio-Patrón · v1.1.1</span>
+    <span class="footer-version" data-i18n="footerVersion">© 2026 Julio-Patrón · Portable 1.1.1 · Store build 1.1.3</span>
   </footer>
   <p id="site-announcement" class="visually-hidden" role="status" aria-live="polite"></p>
   <noscript><p class="container">Enable JavaScript for the interactive preview and catalog. / Activa JavaScript para el visor y el catálogo. <a href="./privacy.html">Privacy / Privacidad</a></p></noscript>

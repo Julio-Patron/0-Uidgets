@@ -1,6 +1,6 @@
-# 0-Uidgets 1.1.1
+# 0-Uidgets · Windows desktop bots
 
-Bilingual EN/ES landing for six Windows 10/11 desktop bots: five remodeled creatures and the original Buggy. The page introduces optional BYOK AI and local Ollama, explains screen snips, file drops and clipboard workflows, and presents each bot's starting role. Every product includes both stages. The interactive preview uses the six current bundles.
+Bilingual EN/ES landing for six Windows 10/11 desktop bots: five remodeled creatures and the original Buggy. The page introduces optional BYOK AI and local Ollama, explains screen snips, file drops and clipboard workflows, and describes the physical design of each bot. Every product includes both stages. The interactive preview uses the six current bundles.
 
 - Website: https://julio-patron.github.io/0-Uidgets/
 - Public privacy page: https://julio-patron.github.io/0-Uidgets/privacy.html
@@ -36,17 +36,17 @@ Microsoft Partner Center must use the public privacy URL above. The previous `/W
 - Never add `.exe`, `.appx`, `.msix`, installers, TypeScript source, `electron/`, credentials or private desktop app code. The Stripe server source belongs under `commerce/`, with secrets supplied by the deployment environment.
 - `privacy.html` remains bilingual and contains no itch.io or Gumroad links.
 - `stage.html` mounts exactly one sanitized `widget/*-widget.js` bundle. Keep `ZUI_DESTROY`, `destroyWidgetAndReleaseWebGL()` and `WEBGL_lose_context` intact. The parent cancels stale navigation requests before changing species.
-- The twelve `assets/<species>/normals/*_1.webp` / `*_2.webp` files are shader textures and must stay. The unused illustrations and preview sheets were removed. `buggy-avatar-3d.png` remains only because the unchanged privacy page uses it as its favicon.
+- The twelve `assets/<species>/normals/*_1.webp` / `*_2.webp` files are shader textures and must stay. The unused illustrations and preview sheets were removed. `buggy-avatar-3d.png` remains only because the privacy page uses it as its favicon.
 - The embedded stage uses the landing's bilingual preview controls; the Windows app's configuration UI is outside the web demonstration.
 
 ## Media and verification
 
 `assets/creatures/*-1.1.1.png` contains captures of the current web preview, not captures of an installed Windows application. The older recording remains archived in `assets/showcase/` but is no longer loaded by the landing or social cards. The private deployment preparation excludes it.
 
-The page flows from the live preview to AI options and workflows, a catalog organized by starting role, one pricing section, and FAQs with closed verification details. Individual purchases use a bot selector synchronized with the preview. Prices and checkout availability are stated in the pricing section; installation requirements live in the FAQs. Only one live renderer is used; catalog images add no WebGL contexts.
+The page flows from the live preview to AI options and workflows, a catalog organized by creature design, one pricing section, and FAQs with closed verification details. Individual purchases use a bot selector synchronized with the preview. Prices and checkout availability are stated in the pricing section; installation requirements live in the FAQs. Only one live renderer is used; catalog images add no WebGL contexts.
 
-Feature copy follows the 1.1.1 Partner Center bundle guide and the six per-bot store listings. All bots share the same tools; their starting prompts and recipes are customizable. The website demonstrates 3D interaction only. AI workflows run in the Windows app, require a configured provider, and depend on the selected model. The guide's Microsoft Store price suggestions do not replace the approved direct-purchase prices in `js/commerce-config.js`.
+The direct portable and web preview are version 1.1.1. The six unsigned Store packages are version 1.1.3.0 and await certification. The folder-to-Excel example explicitly identifies the Store build. All six have the same AI tools and support user-defined prompts and recipes. The website demonstrates 3D interaction only. AI workflows run in the Windows app, require a configured provider, and depend on the selected model. The guide's Microsoft Store price suggestions do not replace the approved direct-purchase prices in `js/commerce-config.js`.
 
-The Buggy bundle, stage host, shader textures and existing privacy page stay unchanged. No creature has been redesigned for this landing update.
+The desktop privacy page describes the context sent to the selected provider, folder processing and local Excel export.
 
-Release hashes are displayed inside closed technical details and mirrored in `SHA256SUMS-ALL-SQUAD.txt` and `SHA256SUMS-STORE.txt`. Store hashes identify the prepared unsigned 1.1.1 packages; they do not prove installation, Microsoft approval or Store availability.
+Release hashes are displayed inside closed technical details and mirrored in `SHA256SUMS-ALL-SQUAD.txt` and `SHA256SUMS-STORE.txt`. Store hashes identify the prepared unsigned 1.1.3 packages; they do not prove installation, Microsoft approval or Store availability.

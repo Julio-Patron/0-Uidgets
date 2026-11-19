@@ -1,5 +1,6 @@
 import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, SHOWCASE } from './catalog-data.js';
 import { COMMERCE } from './commerce-config.js';
+import { USE_CASES, USE_CASE_ORDER } from './use-cases.js';
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -10,6 +11,7 @@ let activeSpecies = SPECIES_ORDER.includes(params.get('species')) ? params.get('
 let activeSize = 'xl';
 let activeStage = 2;
 let activeDuo = BUNDLES[0].id;
+let activeUseCase = USE_CASE_ORDER[0];
 let mountedSpecies = null;
 let navigationTimer;
 let readyTimer;
@@ -104,14 +106,13 @@ function updateSpecies() {
     const id = button.dataset.selectSpecies || button.dataset.trySpecies;
     button.setAttribute('aria-pressed', String(id === activeSpecies));
   });
-  $('stage-identity').innerHTML = `<strong>${species.name}</strong><span>${escapeHtml(I18N[language].bots[activeSpecies].role)}</span>`;
-  document.querySelectorAll('[data-preview-label]').forEach((label) => {
-    label.textContent = t(label.dataset.previewLabel === activeSpecies ? 'selected' : 'try');
-  });
+  $('stage-identity').innerHTML = `<strong>${species.name}</strong><span>${escapeHtml(species.copy[language].tagline)}</span>`;
   document.querySelectorAll('.creature-card[data-species]').forEach((card) => {
     card.dataset.active = String(card.dataset.species === activeSpecies);
   });
   $('single-select').value = activeSpecies;
+  $('choose-current-bot').innerHTML = `<span>${escapeHtml(t('chooseCurrent') + ' ' + species.name)}</span><span aria-hidden="true">↓</span>`;
+  renderUseCase();
   renderSingleLinks();
 }
 
@@ -145,28 +146,46 @@ function renderStaticText() {
 }
 
 function renderSpecies() {
-  $('species-tabs').innerHTML = SPECIES_ORDER.map((id) => {
-    const sp = SPECIES_CATALOG[id];
-    return `<button type="button" class="species-tab" data-select-species="${id}" aria-pressed="${id === activeSpecies}" style="--species-color:${sp.glowColor}"><i class="species-dot" aria-hidden="true"></i>${sp.name}</button>`;
-  }).join('');
   $('catalog-grid').innerHTML = SPECIES_ORDER.map((id, index) => {
     const sp = SPECIES_CATALOG[id];
-    const bot = I18N[language].bots[id];
     return `<article class="creature-card" data-species="${id}" style="--species-color:${sp.glowColor}">
-      <div class="creature-art"><span class="creature-number">0${index + 1}</span><img src="./assets/creatures/${id}-1.1.1.png" alt="${escapeHtml(sp.name + ' · ' + sp.copy[language].tagline)}" width="320" height="280" loading="lazy" decoding="async"></div>
-      <div class="creature-content"><span class="creature-role">${escapeHtml(bot.role)}</span><h3>${sp.name}</h3>
-      <p class="creature-use">${escapeHtml(bot.summary)}</p>
-      <button type="button" class="creature-preview" data-try-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${t('try')} · ${sp.name}"><span data-preview-label="${id}">${t('try')}</span><span aria-hidden="true">↗</span></button></div>
+      <button type="button" class="bot-choice" data-select-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${escapeHtml(t('try') + ' · ' + sp.name)}">
+        <span class="creature-art"><span class="creature-number">0${index + 1}</span><img src="./assets/creatures/${id}-1.1.1.png" alt="" width="320" height="280" loading="lazy" decoding="async"></span>
+        <span class="creature-content"><strong>${sp.name}</strong><span class="creature-role">${escapeHtml(sp.copy[language].tagline)}</span></span>
+      </button>
     </article>`;
   }).join('');
   updateSpecies();
+}
+
+function renderUseCase() {
+  const example = USE_CASES[language][activeUseCase];
+  document.querySelectorAll('[data-use-case]').forEach((tab) => {
+    const selected = tab.dataset.useCase === activeUseCase;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  });
+  const panel = $('use-case-panel');
+  panel.setAttribute('aria-labelledby', 'case-tab-' + activeUseCase);
+  panel.innerHTML = `<h3 class="case-title">${escapeHtml(example.title)}</h3>
+    <div class="case-source"><span class="case-label">01 / ${escapeHtml(example.sourceLabel)}</span><p>${escapeHtml(example.source)}</p></div>
+    <div class="case-gesture"><img src="./assets/creatures/${activeSpecies}-1.1.1.png" width="72" height="63" alt=""><div><span class="case-label">02 / ${escapeHtml(example.gesture)}</span><p>${escapeHtml(example.request)}</p></div></div>
+    <div class="case-result"><span class="case-label">03 / ${escapeHtml(t('exampleResult'))}</span><p>${escapeHtml(example.result)}</p></div>
+    <p class="case-outcome"><span aria-hidden="true">↳</span>${escapeHtml(example.outcome)}</p>`;
+}
+
+function selectUseCase(id, focus = false) {
+  if (!USE_CASE_ORDER.includes(id)) return;
+  activeUseCase = id;
+  renderUseCase();
+  if (focus) $('case-tab-' + id).focus();
 }
 
 function renderPricing() {
   $('single-select').innerHTML = SPECIES_ORDER.map((id) => `<option value="${id}"${id === activeSpecies ? ' selected' : ''}>${SPECIES_CATALOG[id].name}</option>`).join('');
   renderSingleLinks();
   $('duo-selector').innerHTML = BUNDLES.map((bundle) =>
-    `<button type="button" class="duo-option" data-duo="${bundle.id}" aria-pressed="${bundle.id === activeDuo}"><span class="duo-orbs" aria-hidden="true">${bundle.members.map((id) => `<i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}"></i>`).join('')}</span><span><strong>${bundle.title[language]}</strong><small>${bundle.members.map((id) => SPECIES_CATALOG[id].name).join(' + ')}</small></span></button>`).join('');
+    `<button type="button" class="duo-option" data-duo="${bundle.id}" aria-pressed="${bundle.id === activeDuo}"><span class="duo-orbs" aria-hidden="true">${bundle.members.map((id) => `<i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}"></i>`).join('')}</span><span>${bundle.members.map((id) => SPECIES_CATALOG[id].name).join(' + ')}</span></button>`).join('');
   renderDuoLinks();
   $('squad-members').innerHTML = SPECIES_ORDER.map((id) => `<span><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i>${SPECIES_CATALOG[id].name}</span>`).join('');
   const squadLinks = STORE_LINKS.bundles.fullSquad;
@@ -176,7 +195,7 @@ function renderPricing() {
 }
 
 function renderSingleLinks() {
-  $('single-role').textContent = I18N[language].bots[activeSpecies].role;
+  $('single-role').textContent = SPECIES_CATALOG[activeSpecies].copy[language].tagline;
   $('single-store-links').innerHTML = storeButtons(STORE_LINKS.species[activeSpecies], SPECIES_CATALOG[activeSpecies].name, activeSpecies);
 }
 
@@ -208,7 +227,7 @@ function renderStructuredData() {
   // Publish only offers with real product URLs; pending bundles are not InStock.
   const products = SPECIES_ORDER.map((id) => ({
     '@type': 'SoftwareApplication', name: '0-Uidgets ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.1',
-    description: I18N[language].bots[id].summary,
+    description: SPECIES_CATALOG[id].copy[language].tagline + ' ' + t('catalogLead'),
     operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
     // Other stores determine their own prices. Unactivated direct checkout has no offer.
     ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: 'https://julio-patron.github.io/0-Uidgets/?species=' + id + '#pricing' } } : {}),
@@ -258,6 +277,8 @@ document.addEventListener('click', (event) => {
   if (!target) return;
   const lang = target.closest('[data-lang]');
   if (lang) { setLanguage(lang.dataset.lang); return; }
+  const useCase = target.closest('[data-use-case]');
+  if (useCase) { selectUseCase(useCase.dataset.useCase); return; }
   const species = target.closest('[data-select-species], [data-try-species]');
   if (species) { selectSpecies(species.dataset.selectSpecies || species.dataset.trySpecies, Boolean(species.dataset.trySpecies)); return; }
   const action = target.closest('[data-command]');
@@ -304,6 +325,14 @@ window.addEventListener('message', (event) => {
 $('stage-retry').addEventListener('click', () => mountSpecies(activeSpecies, true));
 window.addEventListener('keydown', (event) => {
   if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"], video')) return;
+  const caseTab = event.target instanceof Element ? event.target.closest('[data-use-case]') : null;
+  if (caseTab && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+    event.preventDefault();
+    const index = USE_CASE_ORDER.indexOf(activeUseCase);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? USE_CASE_ORDER.length - 1 : (index + (event.key === 'ArrowLeft' ? -1 : 1) + USE_CASE_ORDER.length) % USE_CASE_ORDER.length;
+    selectUseCase(USE_CASE_ORDER[next], true);
+    return;
+  }
   const speciesButton = event.target instanceof Element ? event.target.closest('[data-select-species]') : null;
   if (speciesButton && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
     event.preventDefault();
