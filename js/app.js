@@ -16,7 +16,6 @@ let mountedSpecies = null;
 let navigationTimer;
 let readyTimer;
 const frame = $('hero-stage-frame');
-const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const t = (key) => I18N[language].labels[key];
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const httpsUrl = (value) => {
@@ -102,30 +101,22 @@ function updateSpecies() {
   const species = SPECIES_CATALOG[activeSpecies];
   document.documentElement.style.setProperty('--accent', species.glowColor);
   document.documentElement.style.setProperty('--accent-rgb', species.glowRgb);
-  document.querySelectorAll('[data-select-species], [data-try-species]').forEach((button) => {
-    const id = button.dataset.selectSpecies || button.dataset.trySpecies;
+  document.querySelectorAll('[data-select-species]').forEach((button) => {
+    const id = button.dataset.selectSpecies;
     button.setAttribute('aria-pressed', String(id === activeSpecies));
   });
   $('stage-identity').innerHTML = `<strong>${species.name}</strong><span>${escapeHtml(species.copy[language].tagline)}</span>`;
-  document.querySelectorAll('.creature-card[data-species]').forEach((card) => {
-    card.dataset.active = String(card.dataset.species === activeSpecies);
-  });
   $('single-select').value = activeSpecies;
-  $('choose-current-bot').innerHTML = `<span>${escapeHtml(t('chooseCurrent') + ' ' + species.name)}</span><span aria-hidden="true">↓</span>`;
   renderUseCase();
   renderSingleLinks();
 }
 
-function selectSpecies(id, scroll = false) {
+function selectSpecies(id) {
   if (!Object.hasOwn(SPECIES_CATALOG, id)) return;
   activeSpecies = id;
   updateSpecies();
   updateAddress();
   mountSpecies(id);
-  if (scroll) {
-    $('live-stage').scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'center' });
-    document.querySelector(`[data-select-species="${id}"]`)?.focus({ preventScroll: true });
-  }
 }
 
 function renderStaticText() {
@@ -146,14 +137,12 @@ function renderStaticText() {
 }
 
 function renderSpecies() {
-  $('catalog-grid').innerHTML = SPECIES_ORDER.map((id, index) => {
+  $('catalog-grid').innerHTML = SPECIES_ORDER.map((id) => {
     const sp = SPECIES_CATALOG[id];
-    return `<article class="creature-card" data-species="${id}" style="--species-color:${sp.glowColor}">
-      <button type="button" class="bot-choice" data-select-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${escapeHtml(t('try') + ' · ' + sp.name)}">
-        <span class="creature-art"><span class="creature-number">0${index + 1}</span><img src="./assets/creatures/${id}-1.1.1.png" alt="" width="320" height="280" loading="lazy" decoding="async"></span>
-        <span class="creature-content"><strong>${sp.name}</strong><span class="creature-role">${escapeHtml(sp.copy[language].tagline)}</span></span>
-      </button>
-    </article>`;
+    return `<button type="button" class="bot-choice" data-select-species="${id}" aria-pressed="${id === activeSpecies}" aria-label="${escapeHtml(t('try') + ' · ' + sp.name)}" style="--species-color:${sp.glowColor}">
+      <img src="./assets/creatures/${id}-1.1.1.png" alt="" width="80" height="64" decoding="async">
+      <span>${sp.name}</span>
+    </button>`;
   }).join('');
   updateSpecies();
 }
@@ -168,9 +157,9 @@ function renderUseCase() {
   const panel = $('use-case-panel');
   panel.setAttribute('aria-labelledby', 'case-tab-' + activeUseCase);
   panel.innerHTML = `<h3 class="case-title">${escapeHtml(example.title)}</h3>
-    <div class="case-source"><span class="case-label">01 / ${escapeHtml(example.sourceLabel)}</span><p>${escapeHtml(example.source)}</p></div>
-    <div class="case-gesture"><img src="./assets/creatures/${activeSpecies}-1.1.1.png" width="72" height="63" alt=""><div><span class="case-label">02 / ${escapeHtml(example.gesture)}</span><p>${escapeHtml(example.request)}</p></div></div>
-    <div class="case-result"><span class="case-label">03 / ${escapeHtml(t('exampleResult'))}</span><p>${escapeHtml(example.result)}</p></div>
+    <div class="case-source"><span class="case-label">${escapeHtml(example.sourceLabel)}</span><p>${escapeHtml(example.source)}</p></div>
+    <div class="case-gesture"><img src="./assets/creatures/${activeSpecies}-1.1.1.png" width="72" height="63" alt=""><div><span class="case-label">${escapeHtml(example.gesture)}</span><p>${escapeHtml(example.request)}</p></div></div>
+    <div class="case-result"><span class="case-label">${escapeHtml(t('exampleResult'))}</span><p>${escapeHtml(example.result)}</p></div>
     <p class="case-outcome"><span aria-hidden="true">↳</span>${escapeHtml(example.outcome)}</p>`;
 }
 
@@ -230,7 +219,7 @@ function renderStructuredData() {
     description: SPECIES_CATALOG[id].copy[language].tagline + ' ' + t('catalogLead'),
     operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
     // Other stores determine their own prices. Unactivated direct checkout has no offer.
-    ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: 'https://julio-patron.github.io/0-Uidgets/?species=' + id + '#pricing' } } : {}),
+    ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: checkoutOrigin() + '/?species=' + id + '#pricing' } } : {}),
   }));
   script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })) });
 }
@@ -279,8 +268,8 @@ document.addEventListener('click', (event) => {
   if (lang) { setLanguage(lang.dataset.lang); return; }
   const useCase = target.closest('[data-use-case]');
   if (useCase) { selectUseCase(useCase.dataset.useCase); return; }
-  const species = target.closest('[data-select-species], [data-try-species]');
-  if (species) { selectSpecies(species.dataset.selectSpecies || species.dataset.trySpecies, Boolean(species.dataset.trySpecies)); return; }
+  const species = target.closest('[data-select-species]');
+  if (species) { selectSpecies(species.dataset.selectSpecies); return; }
   const action = target.closest('[data-command]');
   if (action) { command(action.dataset.command); return; }
   const size = target.closest('[data-stage-size]');

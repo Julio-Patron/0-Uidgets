@@ -27,7 +27,7 @@ Existing Gumroad and itch.io links remain. Microsoft Store is still coming soon:
 
 The static landing itself has no production dependencies. For the local review, run `npm --prefix commerce run prepare:site`, then `npm --prefix commerce start` and open http://127.0.0.1:8091. This serves only the prepared public files. Avoid serving the repository root after adding the purchase server.
 
-Vercel Pro is the proposed host for the landing and private purchase backend. This revision has not been pushed or deployed. All asset paths still work under `/0-Uidgets/`. Language and species can be linked with `?lang=es&species=nimpu`.
+For Vercel, import `Julio-Patron/0-Uidgets`, select `commerce` as the Root Directory and allow source files outside that directory in the build. `commerce/vercel.json` runs `npm run prepare:site`, serves `public/` and routes purchase requests to Node.js Functions. A catalog-only deployment uses the Vercel hostname automatically. Set `APP_ORIGIN` explicitly before enabling checkout. Language and species can be linked with `?lang=es&species=nimpu`.
 
 Microsoft Partner Center must use the public privacy URL above. The previous `/Widgets-Public-Repo/privacy.html` address returns 404 after the repository rename.
 
@@ -43,7 +43,7 @@ Microsoft Partner Center must use the public privacy URL above. The previous `/W
 
 `assets/creatures/*-1.1.1.png` contains captures of the current web preview, not captures of an installed Windows application. The older recording remains archived in `assets/showcase/` but is no longer loaded by the landing or social cards. The private deployment preparation excludes it.
 
-The page flows from the live preview to AI options and workflows, a catalog organized by creature design, one pricing section, and FAQs with closed verification details. Individual purchases use a bot selector synchronized with the preview. Prices and checkout availability are stated in the pricing section; installation requirements live in the FAQs. Only one live renderer is used; catalog images add no WebGL contexts.
+Visitors can try all six designs in the first screen, explore illustrated Windows workflows, review AI setup and then choose a purchase. The pricing selector and the live preview share the selected species. Installation and release hashes are in the FAQs.
 
 The direct portable and web preview are version 1.1.1. The six unsigned Store packages are version 1.1.3.0 and await certification. The folder-to-Excel example explicitly identifies the Store build. All six have the same AI tools and support user-defined prompts and recipes. The website demonstrates 3D interaction only. AI workflows run in the Windows app, require a configured provider, and depend on the selected model. The guide's Microsoft Store price suggestions do not replace the approved direct-purchase prices in `js/commerce-config.js`.
 
