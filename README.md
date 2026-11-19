@@ -2,8 +2,8 @@
 
 Bilingual EN/ES landing for six Windows 10/11 desktop bots: five remodeled creatures and the original Buggy. The page introduces optional BYOK AI and local Ollama, explains screen snips, file drops and clipboard workflows, and describes the physical design of each bot. Every product includes both stages. The interactive preview uses the six current bundles.
 
-- Website: https://julio-patron.github.io/0-Uidgets/
-- Public privacy page: https://julio-patron.github.io/0-Uidgets/privacy.html
+- Website: https://zero-uidgets.vercel.app/
+- Public privacy page: https://zero-uidgets.vercel.app/privacy.html
 - Approved final prices for direct purchase: $14.99 USD individual, $26.99 USD themed duo, $59.99 USD full collection. Tax collection is not configured; direct sales remain disabled.
 
 ## Store links

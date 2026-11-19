@@ -2,7 +2,7 @@
 
 Servidor de compras de **zero-ui-bots-landing**, preparado para Vercel Pro. La landing de la raíz se copia a `commerce/public/` mediante una lista explícita de archivos permitidos. El código del servidor vive en `commerce/api/` y `commerce/lib/`; sólo se ejecutará en Functions y no se incluye en la carpeta pública servida al navegador. Las credenciales y los archivos vendidos quedan fuera de Git. Este proyecto no pertenece al repositorio Widgets.
 
-Estado: **sin desplegar ni activar ventas**. La creación del proyecto en el equipo Pro conectado fue rechazada por Vercel con HTTP 403. No hay almacenamiento provisionado, secretos de servidor, webhook registrado ni prueba de pago de extremo a extremo.
+La landing y las Functions se publican en https://zero-uidgets.vercel.app. El equipo `admin-25337337` tiene un proyecto dedicado llamado `zero-uidgets`. El almacén privado `zero-uidgets-releases` está en `iad1` y usa OIDC. Stripe tiene registrado el webhook de producción en `/stripe/webhook`. El cobro directo sigue desactivado.
 
 ## Flujo implementado
 
@@ -47,11 +47,8 @@ Para regenerar `files.json`, `node scripts/catalog-files.mjs --packages '<ruta e
 
 ## Pendientes para habilitar
 
-- Crear o proporcionar acceso al proyecto `zero-uidgets` en el equipo Pro `admin-25337337`, cuenta `admin@lexcorporativo.com.mx`. No utilizar el proyecto Lex Laboral.
-- Crear y conectar un almacén Blob **private** en `iad1`; obtener acceso OIDC para el proyecto y comprobar los doce objetos mediante el script de subida. Costes según almacenamiento, operaciones y transferencia; Pro no implica descargas ilimitadas.
-- Configurar el origen definitivo en `APP_ORIGIN`. La preparación local lo usa para canonical y metadatos, y sólo activa botones si ambas banderas de habilitación son verdaderas. La página existente `privacy.html` no se modifica.
 - Conectar el sandbox de Stripe, crear allí los diez productos con los mismos productId del catálogo y configurar sus Price IDs mediante `STRIPE_PRICE_IDS_JSON`. Guardar claves restringidas y firma del webhook como variables **sensitive** en Vercel, nunca en Git ni en el chat. Dar a la clave sólo lectura de cuenta, Prices, Products, Stripe Tax y PaymentIntents/Charges, y lectura/escritura de Checkout Sessions; verificar los permisos con el sandbox.
-- Registrar `/stripe/webhook` con `checkout.session.completed` y `checkout.session.async_payment_succeeded`. Los eventos ajenos a 0-Uidgets se ignoran. Probar firma, repetición, pago diferido, pago fallido, cancelación, cierre de pestaña, recuperación, reembolso, disputa y caducidad de enlaces usando servicios reales en sandbox.
+- En el sandbox, registrar `/stripe/webhook` con `checkout.session.completed` y `checkout.session.async_payment_succeeded`. Los eventos ajenos a 0-Uidgets se ignoran. Probar firma, repetición, pago diferido, pago fallido, cancelación, cierre de pestaña, recuperación, reembolso, disputa y caducidad de enlaces usando servicios reales en sandbox.
 - Resolver el alta y tratamiento fiscal con los datos del vendedor. No añadir registros por inferencia ni asumir que el 16 % se aplica a cualquier comprador. Verificar el cálculo fiscal antes de habilitar. Completar datos comerciales y condiciones de compra del vendedor.
 - Configurar límites de solicitudes para los endpoints de compra/recuperación en Vercel y revisar el acceso público necesario del webhook sin retirar protección de las previsualizaciones.
 - Tras validar, activar productos, preparar la landing con su origen y publicar únicamente con autorización. No se ha hecho ninguna compra o cobro de prueba en modo real.

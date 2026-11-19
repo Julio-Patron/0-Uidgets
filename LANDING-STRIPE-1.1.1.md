@@ -1,6 +1,6 @@
 # Landing y compras de 0-Uidgets · 1.1.1
 
-Actualizado el 18 de noviembre de 2026. **Preparación local y catálogo de Stripe completados; venta directa y despliegue pendientes.** No se ha publicado, hecho push ni recompilado ningún producto.
+Informe histórico de preparación del 18 de noviembre de 2026. El estado de la venta directa y del despliegue en Vercel se mantiene en [la guía de compras](commerce/README.md).
 
 ## Decisiones confirmadas
 

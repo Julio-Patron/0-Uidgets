@@ -20,7 +20,7 @@ function paidSession(sku='buggy'){
 }
 function fixture({session=paidSession(),enabled=true,taxReady=true}={}){
   const orders=new Map(),calls={created:[],downloads:[],ready:0,ensure:0},logs=[];
-  const realVerifier=stripePayments({key:'local-fixture-no-network',webhookSecret:secret,livemode:false});
+  const realVerifier=stripePayments({webhookSecret:secret,livemode:false});
   const payments={retrieve:async()=>structuredClone(session),create:async(params,key)=>{calls.created.push({params,key});return {id:sid,url:'https://checkout.stripe.com/c/pay/'+sid};},assertReady:async()=>{calls.ready++;},verifyEvent:realVerifier.verifyEvent};
   const storage={ensureOrder:async(order)=>{calls.ensure++;if(orders.has(order.sessionId))assert.deepEqual(orders.get(order.sessionId),order);orders.set(order.sessionId,order);},assertFiles:async f=>{assert.ok(f.length>=2);},downloadUrl:async(file,until)=>{calls.downloads.push({file,until});return 'https://test.private.blob.vercel-storage.com/private-download?signature=fixture';}};
   const shop=createShop({payments,storage,config:{origin,enabled,taxReady,livemode:false},log:(...args)=>logs.push(args)});

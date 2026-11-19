@@ -25,7 +25,7 @@ const origin=siteOrigin(process.env);
 if(origin){
   if(!/^https:\/\/[a-z0-9.-]+$/.test(origin))throw new Error('Invalid canonical origin');
   const file=path.join(dest,'index.html');let html=fs.readFileSync(file,'utf8');
-  html=html.replaceAll('https://julio-patron.github.io/0-Uidgets/',origin+'/');fs.writeFileSync(file,html);
+  html=html.replaceAll('https://zero-uidgets.vercel.app/',origin+'/');fs.writeFileSync(file,html);
 }
 // Activation is explicit, requires an origin and must follow end-to-end verification.
 if(process.env.COMMERCE_ENABLED==='true'){

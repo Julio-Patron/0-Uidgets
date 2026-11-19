@@ -24,3 +24,4 @@ node_modules/
 *.tsx
 electron/
 .env*
+.vercel
