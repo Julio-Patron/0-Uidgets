@@ -1,7 +1,12 @@
-// Set the verified HTTPS backend origin only after checkout and private delivery pass.
-// No keys, storage URLs, executable files or server code belong in this repository.
-export const COMMERCE = Object.freeze({
-  checkoutOrigin: '',
-  currency: 'USD',
-  prices: Object.freeze({ single: 1499, duo: 2699, collection: 5999 }),
-});
+// Catalog entries contain verified public product pages copied from Microsoft Store.
+export function microsoftProductUrl(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    const productPath = /^\/(?:store\/)?detail\/(?:[^/]+\/)?[a-z0-9]{12}\/?$/i;
+    return url.origin === 'https://apps.microsoft.com' && !url.username && !url.password && productPath.test(url.pathname)
+      ? url.href : '';
+  } catch {
+    return '';
+  }
+}

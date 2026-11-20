@@ -1,5 +1,5 @@
 import { I18N, SPECIES_CATALOG, SPECIES_ORDER, STORE_LINKS, BUNDLES, SHOWCASE } from './catalog-data.js';
-import { COMMERCE } from './commerce-config.js';
+import { microsoftProductUrl } from './commerce-config.js';
 import { USE_CASES, USE_CASE_ORDER } from './use-cases.js';
 
 const $ = (id) => document.getElementById(id);
@@ -23,7 +23,6 @@ const httpsUrl = (value) => {
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? url.href : ''; } catch { return ''; }
 };
 const channels = [
-  { key: 'microsoftStore', label: 'Microsoft Store' },
   { key: 'itchIo', label: 'itch.io' },
   { key: 'gumroad', label: 'Gumroad' },
 ];
@@ -33,32 +32,16 @@ function externalLink(url, label, className = 'store-link', accessibleLabel = la
   return safeUrl ? `<a class="${className}" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(accessibleLabel)}">${escapeHtml(label)} <span aria-hidden="true">↗</span></a>` : '';
 }
 
-function checkoutOrigin() {
-  const value = httpsUrl(COMMERCE.checkoutOrigin);
-  if (!value) return '';
-  const url = new URL(value);
-  return url.pathname === '/' && !url.search && !url.hash ? url.origin : '';
+function microsoftStoreAction(links, product) {
+  const url = microsoftProductUrl(links.microsoftStore);
+  if (!url) return `<span class="store-pending">${t('storePending')}</span>`;
+  return externalLink(url, t('viewInStore'), 'store-link store-link-primary', `${t('viewInStore')} · ${product}`);
 }
 
-function directPurchase(sku, product) {
-  const origin = checkoutOrigin();
-  if (!origin) return '';
-  // Top-level POST gives the backend first-party cookies, including on mobile Safari.
-  // The server accepts only these SKU names and supplies the actual Stripe price.
-  return `<form method="post" action="${escapeHtml(origin)}/checkout" class="checkout-form">
-    <input type="hidden" name="sku" value="${escapeHtml(sku)}">
-    <input type="hidden" name="lang" value="${language}">
-    <button type="submit" class="store-link store-link-primary" aria-label="${t('checkout')} · ${escapeHtml(product)}">${t('checkout')} <span aria-hidden="true">↗</span></button>
-  </form>`;
-}
-
-function storeButtons(links, product, sku) {
-  const available = channels.filter(({ key }) => httpsUrl(links?.[key]));
-  let html = sku ? directPurchase(sku, product) : '';
-  html += available.map(({ key, label }) => externalLink(links[key], `${t('buyOn')} ${label}`,
+function storeButtons(links, product) {
+  const otherStores = channels.map(({ key, label }) => externalLink(links[key], `${t('buyOn')} ${label}`,
     'store-link', `${t('buyOn')} ${label} · ${product}`)).join('');
-  if (!html) html = `<span class="store-pending">${t('offerPending')}</span>`;
-  return `<div class="store-links">${html}</div>`;
+  return `<div class="store-links">${microsoftStoreAction(links, product)}${otherStores}</div>`;
 }
 
 function updateAddress() {
@@ -131,8 +114,6 @@ function renderStaticText() {
   document.querySelectorAll('[data-i18n-aria]').forEach((node) => node.setAttribute('aria-label', t(node.dataset.i18nAria)));
   document.querySelectorAll('[data-i18n-title]').forEach((node) => node.setAttribute('title', t(node.dataset.i18nTitle)));
   document.querySelectorAll('[data-lang]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.lang === language)));
-  document.querySelectorAll('[data-price]').forEach(node => { node.textContent = '$' + (COMMERCE.prices[node.dataset.price] / 100).toFixed(2); });
-  $('commerce-status').hidden = Boolean(checkoutOrigin());
   if ($('stage-loading-overlay').dataset.error === 'true') $('stage-loading-text').textContent = t('stageError');
 }
 
@@ -178,19 +159,21 @@ function renderPricing() {
   renderDuoLinks();
   $('squad-members').innerHTML = SPECIES_ORDER.map((id) => `<span><i class="species-dot" style="--species-color:${SPECIES_CATALOG[id].glowColor}" aria-hidden="true"></i>${SPECIES_CATALOG[id].name}</span>`).join('');
   const squadLinks = STORE_LINKS.bundles.fullSquad;
-  $('squad-store-links').innerHTML = storeButtons(squadLinks, t('squadTitle'), 'fullSquad');
+  $('squad-store-links').innerHTML = storeButtons(squadLinks, t('squadTitle'));
   $('creator-links').innerHTML = channels.map(({ key, label }) => externalLink(STORE_LINKS.creatorHub[key], t('creator') + ' · ' + label, 'footer-store')).join('');
-  if (checkoutOrigin()) $('creator-links').insertAdjacentHTML('afterbegin', `<a class="footer-store" href="${escapeHtml(checkoutOrigin())}/order">${t('downloads')}</a>`);
 }
 
 function renderSingleLinks() {
-  $('single-role').textContent = SPECIES_CATALOG[activeSpecies].copy[language].tagline;
-  $('single-store-links').innerHTML = storeButtons(STORE_LINKS.species[activeSpecies], SPECIES_CATALOG[activeSpecies].name, activeSpecies);
+  const species = SPECIES_CATALOG[activeSpecies];
+  const links = STORE_LINKS.species[activeSpecies];
+  $('single-role').textContent = species.copy[language].tagline;
+  $('stage-store').innerHTML = microsoftStoreAction(links, species.name);
+  $('single-store-links').innerHTML = storeButtons(links, species.name);
 }
 
 function renderDuoLinks() {
   const duo = BUNDLES.find(({ id }) => id === activeDuo);
-  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '), activeDuo);
+  $('duo-store-links').innerHTML = storeButtons(STORE_LINKS.bundles[activeDuo], duo.members.map((id) => SPECIES_CATALOG[id].name).join(' + '));
 }
 
 function renderTrust() {
@@ -213,13 +196,10 @@ function renderStructuredData() {
     script.type = 'application/ld+json';
     document.head.append(script);
   }
-  // Publish only offers with real product URLs; pending bundles are not InStock.
   const products = SPECIES_ORDER.map((id) => ({
     '@type': 'SoftwareApplication', name: '0-Uidgets ' + SPECIES_CATALOG[id].name, softwareVersion: '1.1.1',
     description: SPECIES_CATALOG[id].copy[language].tagline + ' ' + t('catalogLead'),
     operatingSystem: 'Windows 10, Windows 11 (x64)', applicationCategory: 'DesktopEnhancementApplication',
-    // Other stores determine their own prices. Unactivated direct checkout has no offer.
-    ...(checkoutOrigin() ? { offers: { '@type': 'Offer', price: (COMMERCE.prices.single / 100).toFixed(2), priceCurrency: COMMERCE.currency, url: checkoutOrigin() + '/?species=' + id + '#pricing' } } : {}),
   }));
   script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: products.map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })) });
 }

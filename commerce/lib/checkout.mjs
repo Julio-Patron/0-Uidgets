@@ -1,4 +1,4 @@
-import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { createHash, timingSafeEqual } from 'node:crypto';
 import catalog from '../catalog.json' with { type: 'json' };
 import releaseFiles from '../files.json' with { type: 'json' };
 
@@ -63,7 +63,7 @@ export function createShop({payments,storage,config,log=()=>{}}) {
 
   async function handle(req) {
     const url=new URL(req.url),route=url.pathname;
-    if(route==='/health'&&req.method==='GET')return json({service:'0-uidgets',release,salesEnabled:config.enabled===true&&config.taxReady===true});
+    if(route==='/health'&&req.method==='GET')return json({service:'0-uidgets',release,salesEnabled:false});
     if(route==='/purchase-privacy'&&req.method==='GET')return html('Privacidad de la compra / Purchase privacy',`<p>Stripe procesa el pago y los datos de facturación. 0-Uidgets conserva en almacenamiento privado la referencia de pago, el producto y el permiso de descarga. La aplicación de escritorio mantiene su memoria y ajustes en tu equipo.</p><p>Una cookie necesaria de 30 días permite volver a las descargas desde este navegador. El enlace privado equivale a una credencial: guárdalo sin compartirlo. Los enlaces de archivo caducan en 5 minutos.</p><p>Stripe processes payment and billing data. 0-Uidgets keeps the payment reference, product and download entitlement in private storage. A necessary 30-day cookie restores downloads in this browser. Keep your private access link secret; individual file links expire after 5 minutes.</p><p><a href="https://stripe.com/privacy">Privacidad de Stripe</a> · <a href="/privacy.html">Privacidad de la app de escritorio</a></p>`);
     if(route==='/access'&&req.method==='GET'){
       const page=html('Abrir descargas / Open downloads','<p id="access-message">Verificando el enlace privado… / Checking your private link…</p><script type="module" src="/checkout-access.js"></script>');
@@ -78,30 +78,8 @@ export function createShop({payments,storage,config,log=()=>{}}) {
       const headers=new Headers(baseHeaders);headers.set('Content-Type','application/json');headers.append('Set-Cookie',cookieHeader('__Host-zui_access',data.token));headers.append('Set-Cookie',cookieHeader('__Host-zui_order',data.sessionId));
       return new Response(JSON.stringify({location:'/order?session_id='+data.sessionId}),{status:200,headers});
     }
-    if(route==='/checkout'&&req.method==='POST'){
-      if(!config.enabled||!config.taxReady)return html('Compra directa próximamente / Direct purchase coming soon','<p>La tienda todavía está en preparación. / The store is still being prepared.</p>','es',503);
-      if(req.headers.get('origin')!==origin)return denied();
-      if(!req.headers.get('content-type')?.startsWith('application/x-www-form-urlencoded'))return json({error:'unsupported_media_type'},415);
-      const form=new URLSearchParams(await smallBody(req));
-      const sku=form.get('sku');const item=Object.hasOwn(products,sku??'')?products[sku]:null;
-      if(!item||form.getAll('sku').length!==1)return json({error:'invalid_product'},400);
-      const lang=form.get('lang')==='en'?'en':'es';
-      const oldToken=cookie(req,'__Host-zui_access');const token=tokenValid(oldToken)?oldToken:randomBytes(32).toString('base64url');
-      // Inspect account/tax readiness, Price and private release availability before taking payment.
-      await payments.assertReady(item);
-      await storage.assertFiles(files.filter(f=>item.members.includes(f.species)));
-      const params={mode:'payment',ui_mode:'hosted_page',origin_context:'web',integration_identifier:'0-uidgets-checkout-bxrwqjpm',line_items:[{price:item.priceId,quantity:1}],automatic_tax:{enabled:true},adaptive_pricing:{enabled:false},locale:lang,
-        success_url:origin+'/order?session_id={CHECKOUT_SESSION_ID}',cancel_url:origin+'/?checkout=cancelled#pricing',
-        metadata:{app:'0-uidgets',sku,release_version:release,access_hash:accessHash(token)},
-        custom_text:{submit:{message:lang==='es'?'Pago único. Descarga privada tras confirmar el pago.':'One-time payment. Private downloads after payment confirmation.'}}};
-      // Repeated submits in a short window reuse the same hosted session.
-      const key=createHash('sha256').update([token,sku,lang,Math.floor(Date.now()/600000),release].join(':')).digest('hex');
-      const session=await payments.create(params,'zero-uidgets-'+key);
-      const target=new URL(session.url);
-      if(target.protocol!=='https:'||target.hostname!=='checkout.stripe.com'||!sessionValid(session.id))throw new PurchaseError('invalid_checkout');
-      const headers=new Headers(baseHeaders);headers.set('Location',target.href);headers.append('Set-Cookie',cookieHeader('__Host-zui_access',token));headers.append('Set-Cookie',cookieHeader('__Host-zui_order',session.id));
-      return new Response(null,{status:303,headers});
-    }
+    if (route === '/checkout') return html('Compra en tiendas / Buy in stores',
+      '<p><a href="/#pricing">Ver tiendas / Browse stores</a></p><p><a href="/order">Compras anteriores / Previous purchases</a></p>', 'es', 410);
     if(route==='/stripe/webhook'&&req.method==='POST'){
       const raw=await smallBody(req,262144);let event;
       try{event=payments.verifyEvent(raw,req.headers.get('stripe-signature'));}catch{return json({error:'invalid_signature'},400);}
