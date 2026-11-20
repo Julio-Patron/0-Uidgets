@@ -13,9 +13,8 @@ function runtime(){
     for(const [sku,item]of Object.entries(products)){if(!/^price_[a-zA-Z0-9]+$/.test(overrides[sku]??''))throw new Error('Invalid price mapping');item.priceId=overrides[sku];}
   }
   const livemode=env.STRIPE_LIVEMODE==='true';
-  if(!livemode&&!overrides&&env.COMMERCE_ENABLED==='true')throw new Error('Sandbox price mapping required');
-  shop=createShop({config:{origin:siteOrigin(env),enabled:env.COMMERCE_ENABLED==='true',taxReady:env.TAX_READY==='true',livemode,products},
-    payments:stripePayments({key:env.STRIPE_SECRET_KEY,webhookSecret:env.STRIPE_WEBHOOK_SECRET,accountId:env.STRIPE_ACCOUNT_ID,livemode}),
+  shop=createShop({config:{origin:siteOrigin(env),livemode,products},
+    payments:stripePayments({key:env.STRIPE_SECRET_KEY,webhookSecret:env.STRIPE_WEBHOOK_SECRET}),
     storage:privateStorage(),log:(event,code)=>console.error(JSON.stringify({event,code}))});
   return shop;
 }

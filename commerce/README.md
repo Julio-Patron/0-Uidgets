@@ -1,56 +1,15 @@
-# Compras de 0-Uidgets
+# Acceso a compras anteriores
 
-Servidor de compras de **zero-ui-bots-landing**, preparado para Vercel Pro. La landing de la raíz se copia a `commerce/public/` mediante una lista explícita de archivos permitidos. El código del servidor vive en `commerce/api/` y `commerce/lib/`; sólo se ejecutará en Functions y no se incluye en la carpeta pública servida al navegador. Las credenciales y los archivos vendidos quedan fuera de Git. Este proyecto no pertenece al repositorio Widgets.
+Las compras nuevas se realizan en las tiendas enlazadas desde [el catálogo](https://zero-uidgets.vercel.app/#pricing). Las funciones de esta carpeta atienden a quienes adquirieron una descarga por el antiguo pago directo.
 
-La landing y las Functions se publican en https://zero-uidgets.vercel.app. El equipo `admin-25337337` tiene un proyecto dedicado llamado `zero-uidgets`. El almacén privado `zero-uidgets-releases` está en `iad1` y usa OIDC. Stripe tiene registrado el webhook de producción en `/stripe/webhook`. El cobro directo sigue desactivado.
+| Ruta | Función |
+| --- | --- |
+| `/order` | Muestra las descargas de un pedido verificado en el navegador del comprador. |
+| `/access` y `/restore` | Restablecen el acceso a partir del enlace privado del pedido. |
+| `/download` | Comprueba el pago y el archivo adquirido antes de emitir una URL temporal. |
+| `/stripe/webhook` | Recibe notificaciones firmadas sobre pagos anteriores. |
+| `/checkout` | Devuelve HTTP 410 con enlaces al catálogo y a las compras anteriores. |
 
-## Flujo implementado
+La verificación de compras anteriores usa el catálogo histórico, Stripe y almacenamiento privado. Las credenciales se configuran en el entorno del servidor. La preparación de la web y las pruebas locales se pueden ejecutar sin credenciales de pago.
 
-1. La landing envía por POST el SKU y el idioma a `/checkout`. Los diez SKU y sus importes provienen de `catalog.json`, nunca del precio enviado por el navegador.
-2. Antes de crear Checkout, el servidor verifica la cuenta, la actividad del producto/precio, los registros fiscales activos y la presencia de cada archivo privado.
-3. Stripe devuelve al comprador a `/order`. La confirmación y los webhooks firmados llaman al mismo procedimiento de entrega. Se exige pago confirmado, importe, moneda, Price ID, modo, versión y ausencia de reembolso/disputa. Un pago pendiente no libera archivos.
-4. Un registro privado inmutable guarda el derecho de descarga sin nombre, correo, tarjeta ni dirección del comprador. La escritura condicional tolera webhooks repetidos y la llegada simultánea del comprador.
-5. `/download` vuelve a comprobar pago, prueba de acceso y pertenencia del archivo a lo comprado antes de emitir una URL de Blob privada que caduca en cinco minutos. El EXE no atraviesa la Function ni aparece en el repositorio público.
-6. Una cookie necesaria permite volver desde el mismo navegador durante 30 días. La página de compra entrega también un enlace privado con la credencial en el fragmento de URL, que no se envía en el Referer. Se restaura mediante POST. No se ha implementado entrega por correo ni cuentas de comprador; si se pierden enlace y cookie, la recuperación será asistida mediante la referencia de pago.
-
-## Catálogo confirmado
-
-Cuenta Stripe real autorizada: SES-Rerank (`acct_1ULGj6LchocTb6aT`). Se crearon diez productos inactivos y diez precios de pago único en USD, verificados mediante lectura de la API. `catalog.json` conserva sus identificadores.
-
-| Oferta | Importe final previsto | Importe en centavos |
-|---|---:|---:|
-| Cada criatura | US$14.99 | 1499 |
-| Cada uno de los tres dúos | US$26.99 | 2699 |
-| Colección de seis | US$59.99 | 5999 |
-
-Los Price tienen `tax_behavior: inclusive`: un impuesto aplicable saldría de ese total. **Esto no configura ni acredita el cobro de IVA.** El usuario confirmó no estar registrado fiscalmente en ningún país; Stripe devuelve cero registros. No se creó ninguno ni se alteraron los ajustes fiscales existentes. `TAX_READY=false` y `COMMERCE_ENABLED=false` mantienen cerrada la venta.
-
-La categoría `txcd_10202000`, software descargable para uso personal, procede del catálogo oficial de Stripe y fue confirmada por el usuario. [Categorías fiscales de Stripe](https://docs.stripe.com/tax/tax-codes).
-
-## Revisión local
-
-Las dependencias de esta carpeta están fijadas en un lockfile independiente: Stripe 23.1.0 y Vercel Blob 2.9.0. No se modificó el lockfile del producto.
-
-```powershell
-cd commerce
-npm ci --ignore-scripts
-npm test
-npm run prepare:site
-npm start
-```
-
-El servidor de revisión sólo escucha en `127.0.0.1:8091`. Los botones directos quedan desactivados. El flujo real usa cookies `Secure` y un origen HTTPS fijo; no se deben debilitar esas condiciones para probar pagos por HTTP.
-
-`node scripts/upload-release.mjs --release-dir '<ruta externa a dist-release>'` verifica los doce archivos originales sin subirlos. Añadir `--upload` los sube a un almacén privado autenticado y vuelve a leer cada objeto para verificar SHA-256 y tamaño. Los APPX originales de Microsoft Store no se suben a este canal. El script exige que los archivos vendidos permanezcan fuera del repositorio de la landing.
-
-Para regenerar `files.json`, `node scripts/catalog-files.mjs --packages '<ruta externa a packages.json>'` lee explícitamente el manifiesto validado. La landing y el servidor arrancan sin necesitar una copia de Widgets. Las evidencias locales se guardan en `.qa/stripe-1.1.1/`, ignorado por Git; los JSON ya existentes conservan las rutas y fechas de las pruebas originales.
-
-## Pendientes para habilitar
-
-- Conectar el sandbox de Stripe, crear allí los diez productos con los mismos productId del catálogo y configurar sus Price IDs mediante `STRIPE_PRICE_IDS_JSON`. Guardar claves restringidas y firma del webhook como variables **sensitive** en Vercel, nunca en Git ni en el chat. Dar a la clave sólo lectura de cuenta, Prices, Products, Stripe Tax y PaymentIntents/Charges, y lectura/escritura de Checkout Sessions; verificar los permisos con el sandbox.
-- En el sandbox, registrar `/stripe/webhook` con `checkout.session.completed` y `checkout.session.async_payment_succeeded`. Los eventos ajenos a 0-Uidgets se ignoran. Probar firma, repetición, pago diferido, pago fallido, cancelación, cierre de pestaña, recuperación, reembolso, disputa y caducidad de enlaces usando servicios reales en sandbox.
-- Resolver el alta y tratamiento fiscal con los datos del vendedor. No añadir registros por inferencia ni asumir que el 16 % se aplica a cualquier comprador. Verificar el cálculo fiscal antes de habilitar. Completar datos comerciales y condiciones de compra del vendedor.
-- Configurar límites de solicitudes para los endpoints de compra/recuperación en Vercel y revisar el acceso público necesario del webhook sin retirar protección de las previsualizaciones.
-- Tras validar, activar productos, preparar la landing con su origen y publicar únicamente con autorización. No se ha hecho ninguna compra o cobro de prueba en modo real.
-
-Las pruebas locales usan respuestas controladas de Stripe/almacenamiento, la verificación real de firmas del SDK y las rutas del servidor con ventas cerradas. **No sustituyen una compra ni una descarga contra Stripe y Blob reales.** Tampoco acreditan ejecución de los EXE o instalación APPX: esas pruebas de 1.1.1 siguen pendientes en una VM.
+[Instrucciones para compilar y probar la web](../README.md#comprobar-la-web) · [Política de privacidad](https://zero-uidgets.vercel.app/privacy.html)

@@ -1,52 +1,36 @@
-# 0-Uidgets · Windows desktop bots
+# 0-Uidgets · Criaturas 3D para Windows
 
-Bilingual EN/ES landing for six Windows 10/11 desktop bots: five remodeled creatures and the original Buggy. The page introduces optional BYOK AI and local Ollama, explains screen snips, file drops and clipboard workflows, and describes the physical design of each bot. Every product includes both stages. The interactive preview uses the six current bundles.
+Buggy, Lumilisk, Nimpu, Pyxol, Velkarion y Yuravax son seis compañeros de escritorio para Windows 10 y 11 de 64 bits. En la web puedes elegir una criatura, acariciarla, girarla y probar sus dos etapas. Las herramientas opcionales de IA se usan en la aplicación de Windows.
 
-- Website: https://zero-uidgets.vercel.app/
-- Public privacy page: https://zero-uidgets.vercel.app/privacy.html
-- Approved final prices for direct purchase: $14.99 USD individual, $26.99 USD themed duo, $59.99 USD full collection. Tax collection is not configured; direct sales remain disabled.
+[Explorar el catálogo en español](https://zero-uidgets.vercel.app/?lang=es) · [Browse in English](https://zero-uidgets.vercel.app/?lang=en) · [Política de privacidad](https://zero-uidgets.vercel.app/privacy.html)
 
-## Store links
+## Tiendas y descargas
 
-`STORE_LINKS` in `js/catalog-data.js` keeps independent `itchIo`, `gumroad` and `microsoftStore` URLs. Empty URLs create no links. These external stores set their own prices and availability.
+Elige una criatura en el visor 3D o en la tarjeta **Individual**. **Ver en Microsoft Store** abre su ficha oficial. **Próximamente en Microsoft Store** indica que aún no hay una ficha confirmada para esa selección. Cada dúo y la colección completa tienen su propia disponibilidad. La tarjeta de cada producto también muestra sus tiendas alternativas cuando están disponibles.
 
-`js/commerce-config.js` contains the approved direct prices and an empty `checkoutOrigin`. Set an exact verified HTTPS backend origin only after payment and private delivery pass end-to-end checks. The top-level form submits only a SKU and language; the server chooses the Stripe Price. The purchase server belongs to this repository under `commerce/`; sold files and credentials remain outside Git. Server modules are excluded from the static output served to browsers.
+Si compraste antes mediante el pago directo, abre **Compras anteriores** desde el navegador con el que pagaste o utiliza el enlace privado de tu pedido. [Acceder a mis descargas](https://zero-uidgets.vercel.app/order)
 
-| Bundle key | Companions |
-| --- | --- |
-| `playfulDuo` | Buggy + Pyxol |
-| `dragonDuo` | Velkarion + Lumilisk |
-| `dreamyDuo` | Yuravax + Nimpu |
-| `fullSquad` | All six |
+## Publicar la siguiente criatura
 
-The creator hub is configured separately under `STORE_LINKS.creatorHub`.
+1. Abre la ficha pública del producto en Microsoft Store y comprueba el nombre de la criatura.
+2. En [el catálogo](js/catalog-data.js), pega la URL de la ficha en `STORE_LINKS.species.<criatura>.microsoftStore`. Por ejemplo, para Lumilisk edita `STORE_LINKS.species.lumilisk.microsoftStore`.
+3. Publica el cambio. El visor y la tarjeta individual usan ese mismo campo en ambos idiomas. Déjalo vacío mientras la ficha esté pendiente.
 
-Existing Gumroad and itch.io links remain. Microsoft Store is still coming soon: the owner reports all six names reserved, only Buggy uploaded, and no Submit yet.
+Las fichas de los paquetes se configuran en `STORE_LINKS.bundles`, bajo `playfulDuo`, `dragonDuo`, `dreamyDuo` o `fullSquad`. Los enlaces de itch.io y Gumroad se editan en sus propios campos.
 
-## Preview and hosting
+## Comprobar la web
 
-The static landing itself has no production dependencies. For the local review, run `npm --prefix commerce run prepare:site`, then `npm --prefix commerce start` and open http://127.0.0.1:8091. This serves only the prepared public files. Avoid serving the repository root after adding the purchase server.
+Con Node.js 24 o posterior, ejecuta desde la raíz del repositorio.
 
-For Vercel, import `Julio-Patron/0-Uidgets`, select `commerce` as the Root Directory and allow source files outside that directory in the build. `commerce/vercel.json` runs `npm run prepare:site`, serves `public/` and routes purchase requests to Node.js Functions. A catalog-only deployment uses the Vercel hostname automatically. Set `APP_ORIGIN` explicitly before enabling checkout. Language and species can be linked with `?lang=es&species=nimpu`.
+```sh
+npm --prefix commerce ci --ignore-scripts
+npm run test:commerce
+npm run prepare:site
+npm start
+```
 
-Microsoft Partner Center must use the public privacy URL above. The previous `/Widgets-Public-Repo/privacy.html` address returns 404 after the repository rename.
+Abre [la vista local](http://127.0.0.1:8091). Puedes seleccionar idioma y criatura con `?lang=en&species=nimpu`.
 
-## Public repository boundaries
+Vercel usa `commerce/` como raíz del proyecto. La [preparación del sitio](commerce/scripts/prepare-site.mjs) copia únicamente los archivos públicos del catálogo a `commerce/public/`. Las funciones de [compras anteriores](commerce/README.md) se ejecutan en el servidor.
 
-- Never add `.exe`, `.appx`, `.msix`, installers, TypeScript source, `electron/`, credentials or private desktop app code. The Stripe server source belongs under `commerce/`, with secrets supplied by the deployment environment.
-- `privacy.html` remains bilingual and contains no itch.io or Gumroad links.
-- `stage.html` mounts exactly one sanitized `widget/*-widget.js` bundle. Keep `ZUI_DESTROY`, `destroyWidgetAndReleaseWebGL()` and `WEBGL_lose_context` intact. The parent cancels stale navigation requests before changing species.
-- The twelve `assets/<species>/normals/*_1.webp` / `*_2.webp` files are shader textures and must stay. The unused illustrations and preview sheets were removed. `buggy-avatar-3d.png` remains only because the privacy page uses it as its favicon.
-- The embedded stage uses the landing's bilingual preview controls; the Windows app's configuration UI is outside the web demonstration.
-
-## Media and verification
-
-`assets/creatures/*-1.1.1.png` contains captures of the current web preview, not captures of an installed Windows application. The older recording remains archived in `assets/showcase/` but is no longer loaded by the landing or social cards. The private deployment preparation excludes it.
-
-Visitors can try all six designs in the first screen, explore illustrated Windows workflows, review AI setup and then choose a purchase. The pricing selector and the live preview share the selected species. Installation and release hashes are in the FAQs.
-
-The direct portable and web preview are version 1.1.1. The six unsigned Store packages are version 1.1.3.0 and await certification. The folder-to-Excel example explicitly identifies the Store build. All six have the same AI tools and support user-defined prompts and recipes. The website demonstrates 3D interaction only. AI workflows run in the Windows app, require a configured provider, and depend on the selected model. The guide's Microsoft Store price suggestions do not replace the approved direct-purchase prices in `js/commerce-config.js`.
-
-The desktop privacy page describes the context sent to the selected provider, folder processing and local Excel export.
-
-Release hashes are displayed inside closed technical details and mirrored in `SHA256SUMS-ALL-SQUAD.txt` and `SHA256SUMS-STORE.txt`. Store hashes identify the prepared unsigned 1.1.3 packages; they do not prove installation, Microsoft approval or Store availability.
+Este repositorio contiene los archivos redistribuibles de la web y lo necesario para compilarla y comprobarla. Los instaladores, los pedidos, las credenciales y el material de trabajo local se mantienen fuera de Git.

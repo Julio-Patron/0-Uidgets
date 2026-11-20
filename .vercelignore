@@ -1,0 +1,24 @@
+# Local material excluded from source uploads made with the Vercel CLI.
+.git/
+.qa/
+.superdesign/
+.agents/
+.codex/
+.aws/
+.vscode/
+.idea/
+**/.env*
+**/*.log
+**/*.pem
+**/*.key
+**/node_modules/
+**/*.exe
+**/*.appx
+**/*.msix
+assets/showcase/
+LANDING-STRIPE-1.1.1.md
+commerce/public/
+commerce/test/
+commerce/scripts/dev.mjs
+commerce/scripts/catalog-files.mjs
+commerce/scripts/upload-release.mjs
