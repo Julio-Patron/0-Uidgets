@@ -6,11 +6,11 @@ export const STORE_LINKS = {
   creatorHub: { itchIo: 'https://elbuilder77.itch.io', gumroad: '', microsoftStore: '' },
   species: {
     buggy:     { itchIo: 'https://elbuilder77.itch.io/buggy-3d-bot',     gumroad: '', microsoftStore: 'https://apps.microsoft.com/detail/9PBFN2DHJGBG?hl=es-es&gl=MX&ocid=pdpshare' },
-    pyxol:     { itchIo: 'https://elbuilder77.itch.io/pyxol-3d-bot',     gumroad: '', microsoftStore: '' },
-    velkarion: { itchIo: 'https://elbuilder77.itch.io/velkarion-3d-bot', gumroad: '', microsoftStore: '' },
-    nimpu:     { itchIo: 'https://elbuilder77.itch.io/nimpu-3d-bot',     gumroad: '', microsoftStore: '' },
-    lumilisk:  { itchIo: 'https://elbuilder77.itch.io/lumilisk-3d-bot',  gumroad: '', microsoftStore: '' },
-    yuravax:   { itchIo: 'https://elbuilder77.itch.io/yuravax-3d-bot',   gumroad: '', microsoftStore: '' },
+    pyxol:     { itchIo: 'https://elbuilder77.itch.io/pyxol-3d-desktop-bot',     gumroad: '', microsoftStore: '' },
+    velkarion: { itchIo: 'https://elbuilder77.itch.io/velkarion-3d-desktop-bot', gumroad: '', microsoftStore: '' },
+    nimpu:     { itchIo: 'https://elbuilder77.itch.io/nimpu-3d-desktop-bot-runs-offline-or-powered-by-ai-ollama-byok',     gumroad: '', microsoftStore: '' },
+    lumilisk:  { itchIo: 'https://elbuilder77.itch.io/lumilisk-3d-desktop-bot-runs-offline-or-powered-by-ai-ollama-byok',  gumroad: '', microsoftStore: '' },
+    yuravax:   { itchIo: 'https://elbuilder77.itch.io/yuravax-3d-desktop-bot-runs-offline-or-powered-by-ai-ollama-byok',   gumroad: '', microsoftStore: '' },
   },
   bundles: {
     playfulDuo: { itchIo: '', gumroad: '', microsoftStore: '' },
